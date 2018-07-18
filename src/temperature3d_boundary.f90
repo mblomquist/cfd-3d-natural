@@ -27,7 +27,7 @@ subroutine temperature3d_boundary
   ! Check Boundary Condition Type
   if (T_bc_wc .eq. 1) then
     ! Given Input Condition
-    b_T(1,2:n-2,2:l-2) = T_bc_wv
+    b_T(1,2:n-2,2:l-2) = (T_bc_wv-T_c)/(T_h-T_c)
   elseif (T_bc_wc .eq. 2) then
     ! Symmetry Condition
     Ae_T(1,2:n-2,2:l-2) = 1.
@@ -50,7 +50,7 @@ subroutine temperature3d_boundary
   ! Check Boundary Condition Type
   if (T_bc_ec .eq. 1) then
     ! Given Input Condition
-    b_T(m-1,2:n-2,2:l-2) = T_bc_ev
+    b_T(m-1,2:n-2,2:l-2) = (T_bc_ev-T_c)/(T_h-T_c)
   elseif (T_bc_ec .eq. 2) then
     ! Symmetry Condition
     Aw_T(m-1,2:n-2,2:l-2) = 1.
@@ -73,7 +73,7 @@ subroutine temperature3d_boundary
   ! Check Boundary Condition Type
   if (T_bc_sc .eq. 1) then
     ! Given Input Condition
-    b_T(2:m-1,1,2:l-2) = T_bc_sv
+    b_T(2:m-1,1,2:l-2) = (T_bc_sv-T_c)/(T_h-T_c)
   elseif (T_bc_sc .eq. 2) then
     ! Symmetry Condition
     An_T(2:m-1,1,2:l-2) = 1.
@@ -96,7 +96,7 @@ subroutine temperature3d_boundary
   ! Check Boundary Condition Type
   if (T_bc_nc .eq. 1) then
     ! Given Input Condition
-    b_T(2:m-1,n-1,2:l-2) = T_bc_nv
+    b_T(2:m-1,n-1,2:l-2) = (T_bc_nv-T_c)/(T_h-T_c)
   elseif (T_bc_nc .eq. 2) then
     ! Symmetry Condition
     As_T(2:m-1,n-1,2:l-2) = 1.
@@ -119,7 +119,7 @@ subroutine temperature3d_boundary
   ! Check Boundary Condition Type
   if (T_bc_bc .eq. 1) then
     ! Given Input Condition
-    b_T(2:m-1,2:n-2,1) = T_bc_bv
+    b_T(2:m-1,2:n-2,1) = (T_bc_bv-T_c)/(T_h-T_c)
   elseif (T_bc_bc .eq. 2) then
     ! Symmetry Condition
     At_T(2:m-1,2:n-2,1) = 1.
@@ -142,7 +142,7 @@ subroutine temperature3d_boundary
   ! Check Boundary Condition Type
   if (T_bc_tc .eq. 1) then
     ! Given Input Condition
-    b_T(2:m-1,2:n-2,l-1) = T_bc_tv
+    b_T(2:m-1,2:n-2,l-1) = (T_bc_tv-T_c)/(T_h-T_c)
   elseif (T_bc_tc .eq. 2) then
     ! Symmetry Condition
     Ab_T(2:m-1,2:n-2,l-1) = 1.

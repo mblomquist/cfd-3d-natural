@@ -6,7 +6,7 @@
 ! This subroutine calculates the boundary source terms, sets interior source
 ! terms, sets boundary values, and initializes the temperature grid.
 
-subroutine temperature2d
+subroutine temperature3d
 
   ! Pull in standard variable header
   include "var3d.dec"
@@ -35,4 +35,4 @@ subroutine temperature2d
 
   return
 
-end subroutine temperature2d
+end subroutine temperature3d

@@ -20,24 +20,24 @@ subroutine simpler3d
   ! Solve Temperature for Natural Convection First
   print *, "Step 0: Solve Temperature Equation"
   call temperature3d_solve
-  
+
   do i = 1,itrmax
 
     ! Calculate velocity coefficients
-    call velocity_source2d("u")
-    call velocity_source2d("v")
-    call velocity_source2d("w")
+    call velocity3d_source("u")
+    call velocity3d_source("v")
+    call velocity3d_source("w")
 
     ! Step 2: Calculate Pseudo-Velocities
     print *, "Step 1: Solve Pseudo-Velocities"
     call pseudo3d_solve
-    
+
     ! Step 3: Solve Pressure Equation
     print *, "Step 2: Solve Pressure Equation"
     call pressure3d_solve
-    
-	! Set p_star := P
-	P_star = P
+
+	  ! Set p_star := P
+	  P_star = P
 
     ! Step 4: Solve Momentum Equations
     print *, "Step 4: Solve Momentum Equations"
@@ -46,7 +46,7 @@ subroutine simpler3d
     ! Step 5: Solve Pressure Equation
     print *, "Step 5: Solve Pressure Correction"
     call pressure3d_correct
-    
+
     ! Step 6: Correct Velocities
     !print *, "Step 6: Correct Velocities"
     call velocity3d_correct
@@ -60,7 +60,7 @@ subroutine simpler3d
     call convergence3d(i)
 
     if (i .eq. 1) then
-      
+
 	  ! Print Current Information to Terminal
 	  print *, "Iteration:", i
       print *, "Relative Momentum Error: ", R_e(i)
@@ -74,7 +74,7 @@ subroutine simpler3d
       print *, "Relative Energy Error:", R_t(i)
 
 	  ! Check for Convergence
-	  if ((R_e .le. simpler_tol) .and. (R_t .le. simpler_tol)) then
+	  if ((R_e(i) .le. simpler_tol) .and. (R_t(i) .le. simpler_tol)) then
 
         print *, "Simpler completed in: ", i
         exit

@@ -10,13 +10,13 @@
 subroutine pressure3d
 
   ! Pull in standard variable header
-  include "var2d.dec"
+  include "var3d.dec"
 
   ! Initialize Pressure Field
   P = 0
   P_star = 0
   P_prime = 0
-  
+
   ! Initialize coefficients
   Aw_p = 0.
   Ae_p = 0.

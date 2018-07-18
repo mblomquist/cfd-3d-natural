@@ -48,7 +48,7 @@ subroutine pseudo3d_solve
 					   As_u(i,j,k)*u_star(i,j-1,k)+ &
 					   At_u(i,j,k)*u_star(i,j,k+1)+ &
 					   b_u(i,j,k))/Ap_u(i,j,k)
-			else if (k .eq. l-1)
+			else if (k .eq. l-1) then
 			  u_hat = (Ae_u(i,j,k)*u_star(i+1,j,k)+ &
 					   As_u(i,j,k)*u_star(i,j-1,k)+ &
 					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
@@ -89,7 +89,7 @@ subroutine pseudo3d_solve
 			           An_u(i,j,k)*u_star(i,j+1,k)+ &
 					   At_u(i,j,k)*u_star(i,j,k+1)+ &
 					   b_u(i,j,k))/Ap_u(i,j,k)
-			else if (k .eq. l-1)
+			else if (k .eq. l-1) then
 			  u_hat = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
 			           An_u(i,j,k)*u_star(i,j+1,k)+ &
 					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
@@ -246,7 +246,7 @@ subroutine pseudo3d_solve
 					   As_v(i,j,k)*v_star(i,j-1,k)+ &
 					   At_v(i,j,k)*v_star(i,j,k+1)+ &
 					   b_v(i,j,k))/Ap_v(i,j,k)
-			else if (k .eq. l-1)
+			else if (k .eq. l-1) then
 			  v_hat = (Ae_v(i,j,k)*v_star(i+1,j,k)+ &
 					   As_v(i,j,k)*v_star(i,j-1,k)+ &
 					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
@@ -287,7 +287,7 @@ subroutine pseudo3d_solve
 			           An_v(i,j,k)*v_star(i,j+1,k)+ &
 					   At_v(i,j,k)*v_star(i,j,k+1)+ &
 					   b_v(i,j,k))/Ap_v(i,j,k)
-			else if (k .eq. l-1)
+			else if (k .eq. l-1) then
 			  v_hat = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
 			           An_v(i,j,k)*v_star(i,j+1,k)+ &
 					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
@@ -444,7 +444,7 @@ subroutine pseudo3d_solve
 					   As_w(i,j,k)*w_star(i,j-1,k)+ &
 					   At_w(i,j,k)*w_star(i,j,k+1)+ &
 					   b_w(i,j,k))/Ap_w(i,j,k)
-			else if (k .eq. l)
+			else if (k .eq. l) then
 			  w_hat = (Ae_w(i,j,k)*w_star(i+1,j,k)+ &
 					   As_w(i,j,k)*w_star(i,j-1,k)+ &
 					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
@@ -485,7 +485,7 @@ subroutine pseudo3d_solve
 			           An_w(i,j,k)*w_star(i,j+1,k)+ &
 					   At_w(i,j,k)*w_star(i,j,k+1)+ &
 					   b_w(i,j,k))/Ap_w(i,j,k)
-			else if (k .eq. l)
+			else if (k .eq. l) then
 			  w_hat = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
 			           An_w(i,j,k)*w_star(i,j+1,k)+ &
 					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &

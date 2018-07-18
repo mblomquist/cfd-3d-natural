@@ -7,7 +7,7 @@
 subroutine initialize3d
 
   ! Pull in standard variable header
-  include "var2d.dec"
+  include "var3d.dec"
 
   ! Read Input File ..........
   open(unit = 2, file = "input3d.txt")
@@ -33,8 +33,12 @@ subroutine initialize3d
   read(2,*)
   read(2,*) T_bc_wc, T_bc_ec, T_bc_nc, T_bc_sc, T_bc_bc, T_bc_tc
   read(2,*)
-  read(2,*) itrmax, maxit, solver_tol, simpler_tol, alpha_v, alpha_t, solver
+  read(2,*) maxit, solver_tol, simpler_tol, alpha_v, alpha_t, solver
   close(2)
+
+  ! Determine T_h and T_c
+  T_h = maxval((/T_bc_wv, T_bc_ev, T_bc_sv, T_bc_nv, T_bc_bv, T_bc_tv/))
+  T_c = minval((/T_bc_wv, T_bc_ev, T_bc_sv, T_bc_nv, T_bc_bv, T_bc_tv/))
 
   ! Calculate parameters
   alpha = k_const / Cp / rho
@@ -62,4 +66,4 @@ subroutine initialize3d
 
   return
 
-end subroutine initialize2d
+end subroutine initialize3d

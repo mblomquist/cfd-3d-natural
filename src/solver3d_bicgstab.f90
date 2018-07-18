@@ -20,7 +20,7 @@
 !   maxit :: on exit, this value contains the number of iterations of the BiCGStab algorithm
 !   tol :: on exit, this value represents the normalized residual
 
-subroutine solver2d_bicgstab(As_in, Aw, Ap_in, Ae, An, b, phi, m, n, tol, maxit)
+subroutine solver3d_bicgstab(As_in, Aw, Ap_in, Ae, An, b, phi, m, n, tol, maxit)
 
   ! Define implicit
   implicit none
@@ -144,4 +144,4 @@ subroutine solver2d_bicgstab(As_in, Aw, Ap_in, Ae, An, b, phi, m, n, tol, maxit)
 
   return
 
-end subroutine solver2d_bicgstab
+end subroutine solver3d_bicgstab

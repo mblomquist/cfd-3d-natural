@@ -6,7 +6,7 @@
 ! This program solves a two-dimensional discretization problem utilizing a line-by-line
 ! TDMA (tri-diagonal matrix algorithm).
 !
-subroutine solver2d_tdma(Aw, Ae, As, An, Ap, b, phi, m, n, tol, maxit)
+subroutine solver3d_tdma(Aw, Ae, As, An, Ap, b, phi, m, n, tol, maxit)
 
   integer, intent(in) :: m, n, maxit
   real(8), dimension(m,n), intent(in) :: Aw, Ae, As, An, Ap, b
@@ -136,4 +136,4 @@ subroutine solver2d_tdma(Aw, Ae, As, An, Ap, b, phi, m, n, tol, maxit)
 
   return
 
-end subroutine solver2d_tdma
+end subroutine solver3d_tdma

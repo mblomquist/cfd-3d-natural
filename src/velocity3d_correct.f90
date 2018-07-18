@@ -9,7 +9,7 @@
 subroutine velocity3d_correct
 
   ! Include standard variable header
-  include "var2d.dec"
+  include "var3d.dec"
 
   ! Define internal variables
   integer :: i, j, k

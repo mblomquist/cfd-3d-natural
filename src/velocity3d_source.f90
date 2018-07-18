@@ -10,7 +10,7 @@
 subroutine velocity3d_source(direction)
 
   ! Include standard variable header
-  include "var2d.dec"
+  include "var3d.dec"
 
   ! Define input variables
   character :: direction

@@ -6,12 +6,12 @@
 ! This subroutine updates the source terms for the solution of the momentum
 ! equations in the SIMPLER algorithm.
 !
-subroutine velocity_solve2d
+subroutine velocity3d_solve
 
   implicit none
 
   ! Include variable header
-  include "var2d.dec"
+  include "var3d.dec"
 
   ! Define internal variables
   integer :: i, j, k
@@ -111,4 +111,4 @@ subroutine velocity_solve2d
 
   return
 
-end subroutine velocity_solve2d
+end subroutine velocity3d_solve

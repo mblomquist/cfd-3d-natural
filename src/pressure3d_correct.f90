@@ -10,18 +10,21 @@ subroutine pressure3d_correct
 
   implicit none
 
+  ! Include variable header
+  include "var3d.dec"
+  
   ! Define internal variables
   integer :: i, j, k
 
   ! Update coefficients
   do i = 1,m-1
     do j = 1,n-1
-	  do k = 1,l-1
+	    do k = 1,l-1
 
-	    ! Solve mass source term
-		b_p(i,j,k) = (u_star(i,j,k)-u_star(i+1,j,k))*dy*dz+(v_star(i,j,k)-v_star(i,j+1,k))*dz*dx+(w_star(i,j,k)-w_star(i,j,k+1))*dx*dy
+	      ! Solve mass source term
+		    b_p(i,j,k) = (u_star(i,j,k)-u_star(i+1,j,k))*dy*dz+(v_star(i,j,k)-v_star(i,j+1,k))*dz*dx+(w_star(i,j,k)-w_star(i,j,k+1))*dx*dy
 
-	  end do
+	    end do
     end do
   end do
 

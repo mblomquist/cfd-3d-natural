@@ -8,7 +8,7 @@
 subroutine output3d_results
 
   ! Include standard variable header
-  include "var2d.dec"
+  include "var3d.dec"
 
   ! Define internal variables
   integer :: i, j, k
@@ -20,8 +20,8 @@ subroutine output3d_results
   do k = 1, l-1
     do j = 1, n-1
       do i = 1, m-1
-        write (2, '(E12.8, ",", 1x, E12.8, ",", 1x, E12.8, ",", 1x, E12.8, ",", 1x, /)', advance="no"), &
-		      P(i,j,k), T(i,j,k), (u(i,j,k)+u(i+1,j,k))/2, (v(i,j,k)+v(i,j+1,k))/2, (w(i,j,k)+w(i,j,k+1))/2 
+        write (2, '(E15.8, ",", 1x, E15.8, ",", 1x, E15.8, ",", 1x, E15.8, ",", 1x, /)', advance="no"), &
+		      P(i,j,k), T(i,j,k), (u(i,j,k)+u(i+1,j,k))/2, (v(i,j,k)+v(i,j+1,k))/2, (w(i,j,k)+w(i,j,k+1))/2
 	  end do
     end do
   end do
