@@ -1,0 +1,95 @@
+! simpler3d Subroutine for 2D CFD Problems
+!
+! Written by Matt Blomquist
+! Last Update: 2018-07-17 (YYYY-MM-DD)
+!
+! This subroutine runs the SIMPLER algorithm for a 3D CFD problem.
+!
+subroutine simpler3d
+
+  implicit none
+
+  ! Pull in standard variable header
+  include "var3d.dec"
+
+  ! Define Internal Variables
+  integer :: i, j, k
+
+  print *, 'Start SIMPLER Algorithm.'
+
+  ! Solve Temperature for Natural Convection First
+  print *, "Step 0: Solve Temperature Equation"
+  call temperature3d_solve
+  
+  do i = 1,itrmax
+
+    ! Calculate velocity coefficients
+    call velocity_source2d("u")
+    call velocity_source2d("v")
+    call velocity_source2d("w")
+
+    ! Step 2: Calculate Pseudo-Velocities
+    print *, "Step 1: Solve Pseudo-Velocities"
+    call pseudo3d_solve
+    
+    ! Step 3: Solve Pressure Equation
+    print *, "Step 2: Solve Pressure Equation"
+    call pressure3d_solve
+    
+	! Set p_star := P
+	P_star = P
+
+    ! Step 4: Solve Momentum Equations
+    print *, "Step 4: Solve Momentum Equations"
+    call velocity3d_solve
+
+    ! Step 5: Solve Pressure Equation
+    print *, "Step 5: Solve Pressure Correction"
+    call pressure3d_correct
+    
+    ! Step 6: Correct Velocities
+    !print *, "Step 6: Correct Velocities"
+    call velocity3d_correct
+
+    ! Step 7: Solve Temperature Equation
+    print *, "Step 7: Solve Temperature Equation"
+    call temperature3d_solve
+
+    ! Step 8: Check Convergence
+    print *, "Step 8: Check Convergence"
+    call convergence3d(i)
+
+    if (i .eq. 1) then
+      
+	  ! Print Current Information to Terminal
+	  print *, "Iteration:", i
+      print *, "Relative Momentum Error: ", R_e(i)
+      print *, "Relative Energy Error:", R_t(i)
+
+    else
+
+	  ! Print Current Information to Terminal
+	  print *, "Iteration:", i
+      print *, "Relative Momentum Error: ", R_e(i)
+      print *, "Relative Energy Error:", R_t(i)
+
+	  ! Check for Convergence
+	  if ((R_e .le. simpler_tol) .and. (R_t .le. simpler_tol)) then
+
+        print *, "Simpler completed in: ", i
+        exit
+
+      end if
+
+	end if
+
+    ! Reset Initial  Initial Guesses
+    P_star = P
+	u_star = u
+	v_star = v
+
+  end do
+
+  return
+
+end subroutine simpler3d

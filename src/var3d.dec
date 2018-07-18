@@ -1,0 +1,90 @@
+! Variable Declaration file for 3D CFD Problems
+!
+! Written by Matt Blomquist
+! Last Update: 2018-07-16 (YYYY-MM-DD)
+!
+! This file defines the parameter and variable names used throughout
+! the main2d function.
+!
+
+! Mesh parameters :: nodes in x, nodes in y, nodes in z
+  integer :: m, n, l
+  parameter (m=10, n=10, l=10)
+
+! Geometry variables ::
+  real(8) :: length, width, depth, dx, dy, dz
+  common length, width, depth, dx, dy, dz
+
+! Media variables ::
+  real(8) :: Re, Pr, Ra, rho, mu, k_const, Cp, alpha, beta, u0, g, nu
+  common Re, Pr, Ra, rho, mu, k_const, Cp, alpha, beta, u0, g, nu
+
+! Pressure :: P
+  real(8), dimension(1:m-1,1:n-1,1:l-1) :: P, P_star, P_prime, Sp_p, Su_p
+  common P, P_star, P_prime, Sp_p, Su_p
+
+! Pressure :: solution variables
+  real(8), dimension(1:m-1,1:n-1,1:l-1) :: As_p, Aw_p, Ap_p, Ae_p, An_p, b_p
+  common As_p, Aw_p, Ap_p, Ae_p, An_p, b_p
+
+! U-Velocity :: u
+  real(8), dimension(1:m,1:n-1,1:l-1) :: u, u_hat, u_star, Sp_u, Su_u
+  common u, u_hat, u_star, Sp_u, Su_u
+
+! U-Velocity :: solution variables
+  real(8), dimension(1:m,1:n-1,1:l-1) :: As_u, Aw_u, Ap_u, Ae_u, An_u, b_u
+  common As_u, Aw_u, Ap_u, Ae_u, An_u, b_u
+
+! U-Velocity :: boundary conditions
+  real(8) :: u_west, u_east, u_north, u_south, u_bottom, u_top
+  common u_west, u_east, u_north, u_south, u_bottom, u_top
+
+! V-Velocity :: v
+  real(8), dimension(1:m-1,1:n,1:l-1) :: v, v_hat, v_star, Sp_v, Su_v
+  common v, v_hat, v_star, Sp_v, Su_v
+
+! V-Velocity :: solution variables
+  real(8), dimension(1:m-1,1:n,1:l-1) :: As_v, Aw_v, Ap_v, Ae_v, An_v, b_v
+  common As_v, Aw_v, Ap_v, Ae_v, An_v, b_v
+
+! V-Velocity :: boundary conditions
+  real(8) :: v_west, v_east, v_south, v_north, v_bottom, v_top
+  common v_west, v_east, v_south, v_north, v_bottom, v_top
+
+! W-Velocity :: w
+  real(8), dimension(1:m-1,1:n-1,1:l) :: w, w_hat, w_star, Sp_w, Su_w
+  common w, w_hat, w_star, Sp_w, Su_w
+
+! W-Velocity :: solution variables
+  real(8), dimension(1:m-1,1:n,1:l-1) :: As_w, Aw_w, Ap_w, Ae_w, An_w, b_w
+  common As_w, Aw_w, Ap_w, Ae_w, An_w, b_w
+
+! W-Velocity :: boundary conditions
+  real(8) :: w_west, w_east, w_south, w_north, w_bottom, w_top
+  common w_west, w_east, w_south, w_north, w_bottom, w_top
+
+! Temperature :: T
+  real(8), dimension(1:m-1,1:n-1,1:l-1) :: T, Su_T, Sp_T
+  common T, Su_T, Sp_T
+
+! Temperature :: solution variables
+  real(8), dimension(1:m-1,1:n-1,1:l-1) :: As_T, Aw_T, Ap_T, Ae_T, An_T, b_T
+  common As_T, Aw_T, Ap_T, Ae_T, An_T, b_T
+
+! Temperature :: boundary conditions
+  real(8) :: T_west, T_east, T_south, T_north, T_bottom, T_top
+  common T_west, T_east, T_south, T_north, T_bottom, T_top
+
+! Convergence Parameters
+  integer :: itrmax
+  parameter (itrmax=1e6)
+
+! Convergence variables
+  real(8), dimension(itrmax) :: R_e, R_t
+  common R_e, R_t
+
+  real(8) :: solver_tol, simpler_tol, alpha_v, alpha_t
+  common solver_tol, simpler_tol, alpha_v, alpha_t
+
+  integer :: maxit, solver, solved
+  common maxit, solver, solved
