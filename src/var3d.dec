@@ -99,8 +99,8 @@
   real(8), dimension(itrmax) :: R_e, R_t
   common R_e, R_t
 
-  real(8) :: solver_tol, simpler_tol, alpha_v, alpha_t
-  common solver_tol, simpler_tol, alpha_v, alpha_t
+  real(8) :: solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time
+  common solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time
 
   integer :: maxit, solver, solved
   common maxit, solver, solved
