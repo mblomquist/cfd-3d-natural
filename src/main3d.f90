@@ -23,7 +23,7 @@ program main3d
   ! Output Problem Parameters to Terminal
   print *, 'Problem Initialization Complete.'
   print *, ''
-  print *, 'Grid size: ', m, n
+  print *, 'Grid size: ', m, n, l
   print *, 'delta_T:', delta_T
   print *, 'length:', length
   print *, 'u0:', u0

@@ -75,17 +75,6 @@ subroutine pressure3d_solve
         ! Solve mass source term
         b_p(i,j,k) = (u_hat(i,j,k)-u_hat(i+1,j,k))*dy*dz+(v_hat(i,j,k)-v_hat(i,j+1,k))*dz*dx+(w_hat(i,j,k)-w_hat(i,j,k+1))*dx*dy
 
-        print *, ".............................."
-        print *, "i,j,k", i,j, k
-        print *, "Ap_u(i,j,k)", Ap_u(i,j,k)
-        print *, "Ap_u(i+1,j,k)", Ap_u(i+1,j,k)
-        print *, "Ap_v(i,j,k)", Ap_v(i,j,k)
-        print *, "Ap_v(i,j+1,k)", Ap_v(i,j+1,k)
-        print *, "Ap_w(i,j,k)", Ap_w(i,j,k)
-        print *, "Ap_w(i,j,k+1)", Ap_w(i,j,k+1)
-        print *, "Ap_p(i,j,k)", Ap_p(i,j,k)
-        print *, ".............................."
-
       end do
     end do
   end do

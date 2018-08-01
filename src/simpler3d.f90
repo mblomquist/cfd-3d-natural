@@ -18,7 +18,7 @@ subroutine simpler3d
   print *, 'Start SIMPLER Algorithm.'
 
   ! Solve Temperature for Natural Convection First
-  print *, "Step 0: Solve Temperature Equation"
+  !print *, "Step 0: Solve Temperature Equation"
   call temperature3d_solve
 
   do i = 1,itrmax
@@ -29,22 +29,22 @@ subroutine simpler3d
     call velocity3d_source("w")
 
     ! Step 2: Calculate Pseudo-Velocities
-    print *, "Step 1: Solve Pseudo-Velocities"
+    !print *, "Step 1: Solve Pseudo-Velocities"
     call pseudo3d_solve
 
     ! Step 3: Solve Pressure Equation
-    print *, "Step 2: Solve Pressure Equation"
+    !print *, "Step 2: Solve Pressure Equation"
     call pressure3d_solve
 
 	  ! Set p_star := P
 	  P_star = P
 
     ! Step 4: Solve Momentum Equations
-    print *, "Step 4: Solve Momentum Equations"
+    !print *, "Step 4: Solve Momentum Equations"
     call velocity3d_solve
 
     ! Step 5: Solve Pressure Equation
-    print *, "Step 5: Solve Pressure Correction"
+    !print *, "Step 5: Solve Pressure Correction"
     call pressure3d_correct
 
     ! Step 6: Correct Velocities
@@ -52,13 +52,11 @@ subroutine simpler3d
     call velocity3d_correct
 
     ! Step 7: Solve Temperature Equation
-    print *, "Step 7: Solve Temperature Equation"
+    !print *, "Step 7: Solve Temperature Equation"
     call temperature3d_solve
 
-    return
-
     ! Step 8: Check Convergence
-    print *, "Step 8: Check Convergence"
+    print *, "Check Convergence"
     call convergence3d(i)
 
     if (i .eq. 1) then

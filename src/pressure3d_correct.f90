@@ -28,14 +28,6 @@ subroutine pressure3d_correct
     end do
   end do
 
-  do k = 1,l-1
-    do j = 1,n-1
-      do i = 1,m-1
-        print *, i, j, Ap_p(i,j,k), b_p(i,j,k)
-      end do
-    end do
-  end do
-
   ! Set reference pressure node (east-north corner)
   Aw_p(m-1,n-1,l-1) = 0.
   Ae_p(m-1,n-1,l-1) = 0.

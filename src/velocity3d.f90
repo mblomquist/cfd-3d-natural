@@ -59,7 +59,7 @@ subroutine velocity3d
   At_w = 0.
   Ap_w = 1.
   b_w = 0.
-  
+
   ! Initalize source terms :: w
   Sp_w = 0.
   Su_w = 0.
@@ -224,8 +224,8 @@ subroutine velocity3d
 	Su_u(2:m-1,2:n-2,1) = u_bc_bv
   else
     At_u(2:m-1,2:n-2,1) = 1.
-	Sp_u(2:m-1,2:n-2,1) = 0.
-	Su_u(2:m-1,2:n-2,1) = 0.
+	  Sp_u(2:m-1,2:n-2,1) = 0.
+	  Su_u(2:m-1,2:n-2,1) = 0.
   end if
 
   if (v_bc_bc .eq. 0) then
@@ -242,14 +242,14 @@ subroutine velocity3d
 
   if (w_bc_bc .eq. 0) then
     Sp_w(2:m-2,2:n-2,1) = 0.
-	Su_w(2:m-2,2:n-2,1) = 0.
+	  Su_w(2:m-2,2:n-2,1) = 0.
   elseif (w_bc_bc .eq. 1) then
     Sp_w(2:m-2,2:n-2,1) = 0.
-	Su_w(2:m-2,2:n-2,1) = w_bc_bv
+	  Su_w(2:m-2,2:n-2,1) = w_bc_bv
   else
     At_w(2:m-2,2:n-2,1) = 1.
     Sp_w(2:m-2,2:n-2,1) = 0.
-	Su_w(2:m-2,2:n-2,1) = 0.
+	  Su_w(2:m-2,2:n-2,1) = 0.
   end if
 
   ! Set boundary conditions :: Top Plane
@@ -266,27 +266,27 @@ subroutine velocity3d
   end if
 
   if (v_bc_tc .eq. 0) then
-    Sp_v(2:m-2,2:n-1,l) = 2.*dx*dy/dz/Ra**(0.5)
-	Su_v(2:m-2,2:n-1,l) = 0.
+    Sp_v(2:m-2,2:n-1,l-1) = 2.*dx*dy/dz/Ra**(0.5)
+	  Su_v(2:m-2,2:n-1,l-1) = 0.
   elseif (v_bc_tc .eq. 1) then
-    Sp_v(2:m-2,2:n-1,l) = 0.
-	Su_v(2:m-2,2:n-1,l) = v_bc_tv
+    Sp_v(2:m-2,2:n-1,l-1) = 0.
+	  Su_v(2:m-2,2:n-1,l-1) = v_bc_tv
   else
-    Ab_v(2:m-2,2:n-1,l) = 1.
-    Sp_v(2:m-2,2:n-1,l) = 0.
-	Su_v(2:m-2,2:n-1,l) = 0.
+    Ab_v(2:m-2,2:n-1,l-1) = 1.
+    Sp_v(2:m-2,2:n-1,l-1) = 0.
+	  Su_v(2:m-2,2:n-1,l-1) = 0.
   end if
 
   if (w_bc_tc .eq. 0) then
-    Sp_w(2:m-2,2:n-2,l-1) = 0.
-	Su_w(2:m-2,2:n-2,l-1) = 0.
+    Sp_w(2:m-2,2:n-2,l) = 0.
+	  Su_w(2:m-2,2:n-2,l) = 0.
   elseif (w_bc_tc .eq. 1) then
-    Sp_w(2:m-2,2:n-2,l-1) = 0.
-	Su_w(2:m-2,2:n-2,l-1) = w_bc_tv
+    Sp_w(2:m-2,2:n-2,l) = 0.
+	  Su_w(2:m-2,2:n-2,l) = w_bc_tv
   else
-    Ab_w(2:m-2,2:n-2,l-1) = 1.
-    Sp_w(2:m-2,2:n-2,l-1) = 0.
-	Su_w(2:m-2,2:n-2,l-1) = 0.
+    Ab_w(2:m-2,2:n-2,l) = 1.
+    Sp_w(2:m-2,2:n-2,l) = 0.
+	  Su_w(2:m-2,2:n-2,l) = 0.
   end if
 
   ! ====================================== !
@@ -300,154 +300,154 @@ subroutine velocity3d
   Ae_v(1,1,2:l-2) = 1.
   An_v(1,1,2:l-2) = 1.
   Ap_v(1,1,2:l-2) = 2.
-  
+
   Ae_w(1,1,2:l-1) = 1.
   An_w(1,1,2:l-1) = 1.
   Ap_w(1,1,2:l-1) = 2.
-  
+
   ! Set boundary conditions :: West-North Line
   As_u(1,n-1,2:l-2) = 1.
   Ae_u(1,n-1,2:l-2) = 1.
   Ap_u(1,n-1,2:l-2) = 2.
-  
+
   As_v(1,n,2:l-2) = 1.
   Ae_v(1,n,2:l-2) = 1.
   Ap_v(1,n,2:l-2) = 2.
-  
+
   As_w(1,n-1,2:l-1) = 1.
   Ae_w(1,n-1,2:l-1) = 1.
   Ap_w(1,n-1,2:l-1) = 2.
-  
+
   ! Set boundary conditions :: West-Bottom Line
   Ae_u(1,2:n-2,1) = 1.
   At_u(1,2:n-2,1) = 1.
   Ap_u(1,2:n-2,1) = 2.
-  
+
   Ae_v(1,2:n-1,1) = 1.
   At_v(1,2:n-1,1) = 1.
   Ap_v(1,2:n-1,1) = 2.
-  
+
   Ae_w(1,2:n-2,1) = 1.
   At_w(1,2:n-2,1) = 1.
   Ap_w(1,2:n-2,1) = 2.
-  
+
   ! Set boundary conditions :: West-Top Line
   Ab_u(1,2:n-2,l-1) = 1.
   Ae_u(1,2:n-2,l-1) = 1.
   Ap_u(1,2:n-2,l-1) = 2.
-  
+
   Ab_v(1,2:n-1,l-1) = 1.
   Ae_v(1,2:n-1,l-1) = 1.
   Ap_v(1,2:n-1,l-1) = 2.
-  
+
   Ab_w(1,2:n-2,l) = 1.
   Ae_w(1,2:n-2,l) = 1.
   Ap_w(1,2:n-2,l) = 2.
-  
+
   ! Set boundary conditions :: East-South Line
   Aw_u(m,1,2:l-2) = 1.
   An_u(m,1,2:l-2) = 1.
   Ap_u(m,1,2:l-2) = 2.
-  
+
   Aw_v(m-1,1,2:l-2) = 1.
   An_v(m-1,1,2:l-2) = 1.
   Ap_v(m-1,1,2:l-2) = 2.
-  
+
   Aw_w(m-1,1,2:l-1) = 1.
   An_w(m-1,1,2:l-1) = 1.
   Ap_w(m-1,1,2:l-1) = 2.
-  
+
   ! Set boundary conditions :: East-North Line
   As_u(m,n-1,2:l-2) = 1.
   Aw_u(m,n-1,2:l-2) = 1.
   Ap_u(m,n-1,2:l-2) = 2.
-  
+
   As_v(m-1,n,2:l-2) = 1.
   Aw_v(m-1,n,2:l-2) = 1.
   Ap_v(m-1,n,2:l-2) = 2.
-  
+
   As_w(m-1,n-1,2:l-1) = 1.
   Aw_w(m-1,n-1,2:l-1) = 1.
   Ap_w(m-1,n-1,2:l-1) = 2.
-  
+
   ! Set boundary conditions :: East-Bottom Line
   Aw_u(m,2:n-2,1) = 1.
   At_u(m,2:n-2,1) = 1.
   Ap_u(m,2:n-2,1) = 2.
-  
+
   Aw_v(m-1,2:n-1,1) = 1.
   At_v(m-1,2:n-1,1) = 1.
   Ap_v(m-1,2:n-1,1) = 2.
-  
+
   Aw_w(m-1,2:n-2,1) = 1.
   At_w(m-1,2:n-2,1) = 1.
   Ap_w(m-1,2:n-2,1) = 2.
-  
+
   ! Set boundary conditions :: East-Top Line
   Ab_u(m,2:n-2,l-1) = 1.
   Aw_u(m,2:n-2,l-1) = 1.
   Ap_u(m,2:n-2,l-1) = 2.
-  
+
   Ab_v(m-1,2:n-1,l-1) = 1.
   Aw_v(m-1,2:n-1,l-1) = 1.
   Ap_v(m-1,2:n-1,l-1) = 2.
-  
+
   Ab_w(m-1,2:n-2,l) = 1.
   Aw_w(m-1,2:n-2,l) = 1.
   Ap_w(m-1,2:n-2,l) = 2.
-  
+
   ! Set boundary conditions :: South-Bottom Line
   An_u(2:m-1,1,1) = 1.
   At_u(2:m-1,1,1) = 1.
   Ap_u(2:m-1,1,1) = 2.
-  
+
   An_v(2:m-2,1,1) = 1.
   At_v(2:m-2,1,1) = 1.
   Ap_v(2:m-2,1,1) = 2.
-  
+
   An_w(2:m-2,1,1) = 1.
   At_w(2:m-2,1,1) = 1.
   Ap_w(2:m-2,1,1) = 2.
-  
+
   ! Set boundary conditions :: South-Top Line
   Ab_u(2:m-1,1,l-1) = 1.
   An_u(2:m-1,1,l-1) = 1.
   Ap_u(2:m-1,1,l-1) = 2.
-  
+
   Ab_v(2:m-2,1,l-1) = 1.
   An_v(2:m-2,1,l-1) = 1.
   Ap_v(2:m-2,1,l-1) = 2.
-  
+
   Ab_w(2:m-2,1,l) = 1.
   An_w(2:m-2,1,l) = 1.
   Ap_w(2:m-2,1,l) = 2.
-  
+
   ! Set boundary conditions :: North-Bottom Line
   As_u(2:m-1,n-1,1) = 1.
   At_u(2:m-1,n-1,1) = 1.
   Ap_u(2:m-1,n-1,1) = 2.
-  
+
   As_v(2:m-2,n,1) = 1.
   At_v(2:m-2,n,1) = 1.
   Ap_v(2:m-2,n,1) = 2.
-  
+
   As_w(2:m-2,n-1,1) = 1.
   At_w(2:m-2,n-1,1) = 1.
   Ap_w(2:m-2,n-1,1) = 2.
-  
+
   ! Set boundary conditions :: North-Top Line
   Ab_u(2:m-1,n-1,l-1) = 1.
   As_u(2:m-1,n-1,l-1) = 1.
   Ap_u(2:m-1,n-1,l-1) = 2.
-  
+
   Ab_v(2:m-2,n,l-1) = 1.
   As_v(2:m-2,n,l-1) = 1.
   Ap_v(2:m-2,n,l-1) = 2.
-  
+
   Ab_w(2:m-2,n-1,l) = 1.
   As_w(2:m-2,n-1,l) = 1.
   Ap_w(2:m-2,n-1,l) = 2.
-  
+
   ! ====================================== !
 
   ! ====================================== !
@@ -456,129 +456,129 @@ subroutine velocity3d
   An_u(1,1,1) = 1.
   At_u(1,1,1) = 1.
   Ap_u(1,1,1) = 3.
-  
+
   Ae_v(1,1,1) = 1.
   An_v(1,1,1) = 1.
   At_v(1,1,1) = 1.
   Ap_v(1,1,1) = 3.
-  
+
   Ae_w(1,1,1) = 1.
   An_w(1,1,1) = 1.
   At_w(1,1,1) = 1.
   Ap_w(1,1,1) = 3.
-  
+
   ! Set boundary conditions :: West-North-Bottom Corner
   As_u(1,n-1,1) = 1.
   Ae_u(1,n-1,1) = 1.
   At_u(1,n-1,1) = 1.
   Ap_u(1,n-1,1) = 3.
-  
+
   As_v(1,n,1) = 1.
   Ae_v(1,n,1) = 1.
   At_v(1,n,1) = 1.
   Ap_v(1,n,1) = 3.
-  
+
   As_w(1,n-1,1) = 1.
   Ae_w(1,n-1,1) = 1.
   At_w(1,n-1,1) = 1.
   Ap_w(1,n-1,1) = 3.
-  
+
   ! Set boundary conditions :: East-South-Bottom Corner
   Aw_u(m,1,1) = 1.
   An_u(m,1,1) = 1.
   At_u(m,1,1) = 1.
   Ap_u(m,1,1) = 3.
-  
+
   Aw_v(m-1,1,1) = 1.
   An_v(m-1,1,1) = 1.
   At_v(m-1,1,1) = 1.
   Ap_v(m-1,1,1) = 3.
-  
+
   Aw_w(m-1,1,1) = 1.
   An_w(m-1,1,1) = 1.
   At_w(m-1,1,1) = 1.
   Ap_w(m-1,1,1) = 3.
-  
+
   ! Set boundary conditions :: East-North-Bottom Corner
   As_u(m,n-1,1) = 1.
   Aw_u(m,n-1,1) = 1.
   At_u(m,n-1,1) = 1.
   Ap_u(m,n-1,1) = 3.
-  
+
   As_v(m-1,n,1) = 1.
   Aw_v(m-1,n,1) = 1.
   At_v(m-1,n,1) = 1.
   Ap_v(m-1,n,1) = 3.
-  
+
   As_w(m-1,n-1,1) = 1.
   Aw_w(m-1,n-1,1) = 1.
   At_w(m-1,n-1,1) = 1.
   Ap_w(m-1,n-1,1) = 3.
-  
+
   ! Set boundary conditions :: West-South-Top Corner
   Ab_u(1,1,l-1) = 1.
   Ae_u(1,1,l-1) = 1.
   An_u(1,1,l-1) = 1.
   Ap_u(1,1,l-1) = 3.
-  
+
   Ab_v(1,1,l-1) = 1.
   Ae_v(1,1,l-1) = 1.
   An_v(1,1,l-1) = 1.
   Ap_v(1,1,l-1) = 3.
-  
+
   Ab_w(1,1,l) = 1.
   Ae_w(1,1,l) = 1.
   An_w(1,1,l) = 1.
   Ap_w(1,1,l) = 3.
-  
+
   ! Set boundary conditions :: West-North-Top Corner
   Ab_u(1,n-1,l-1) = 1.
   As_u(1,n-1,l-1) = 1.
   Ae_u(1,n-1,l-1) = 1.
   Ap_u(1,n-1,l-1) = 3.
-  
+
   Ab_v(1,n,l-1) = 1.
   As_v(1,n,l-1) = 1.
   Ae_v(1,n,l-1) = 1.
   Ap_v(1,n,l-1) = 3.
-  
+
   Ab_w(1,n-1,l) = 1.
   As_w(1,n-1,l) = 1.
   Ae_w(1,n-1,l) = 1.
   Ap_w(1,n-1,l) = 3.
-  
+
   ! Set boundary conditions :: East-South-Top Corner
   Ab_u(m,1,l-1) = 1.
   Aw_u(m,1,l-1) = 1.
   An_u(m,1,l-1) = 1.
   Ap_u(m,1,l-1) = 3.
-  
+
   Ab_v(m-1,1,l-1) = 1.
   Aw_v(m-1,1,l-1) = 1.
   An_v(m-1,1,l-1) = 1.
   Ap_v(m-1,1,l-1) = 3.
-  
+
   Ab_w(m-1,1,l) = 1.
   Aw_w(m-1,1,l) = 1.
   An_w(m-1,1,l) = 1.
   Ap_w(m-1,1,l) = 3.
-  
+
   ! Set boundary conditions :: East-North-Top Corner
   Ab_u(m,n-1,l-1) = 1.
   As_u(m,n-1,l-1) = 1.
   Aw_u(m,n-1,l-1) = 1.
   Ap_u(m,n-1,l-1) = 3.
-  
+
   Ab_v(m-1,n,l-1) = 1.
   As_v(m-1,n,l-1) = 1.
   Aw_v(m-1,n,l-1) = 1.
   Ap_v(m-1,n,l-1) = 3.
-  
+
   Ab_w(m-1,n-1,l) = 1.
   As_w(m-1,n-1,l) = 1.
   Aw_w(m-1,n-1,l) = 1.
   Ap_w(m-1,n-1,l) = 3.
-  
+
   ! ====================================== !
 
   return

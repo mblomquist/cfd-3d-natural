@@ -117,9 +117,9 @@ subroutine solver3d_bicg(Ab, As, Aw, Ap, Ae, An, At, b, phi, m, n, l, tol, maxit
 
 	  if (r_norm .le. tol) then
 
-      print *, 'BiCG Algorithm successfully converged!'
-      print *, 'Number of Iterations: ', itr
-      print *, 'Relative residual: ', r_norm
+      !print *, 'BiCG Algorithm successfully converged!'
+      !print *, 'Number of Iterations: ', itr
+      !print *, 'Relative residual: ', r_norm
 
       ! Update phi with the solution
       do k = 1,l
@@ -133,9 +133,9 @@ subroutine solver3d_bicg(Ab, As, Aw, Ap, Ae, An, At, b, phi, m, n, l, tol, maxit
 	    return
 
     elseif (itr .eq. maxit) then
-      print *, 'BiCG Algorithm did not converge!'
-      print *, 'Number of Iterations: ', itr
-      print *, 'Relative residual: ', r_norm
+      !print *, 'BiCG Algorithm did not converge!'
+      !print *, 'Number of Iterations: ', itr
+      !print *, 'Relative residual: ', r_norm
 	  end if
 
 	  call mkl_ddiagemv('T', m*n*l, A_values, m*n*l, A_distance, 7, ut, Atut)

@@ -9,7 +9,7 @@
 
 ! Mesh parameters :: nodes in x, nodes in y, nodes in z
   integer :: m, n, l
-  parameter (m=4, n=4, l=4)
+  parameter (m=21, n=21, l=11)
 
 ! Geometry variables ::
   real(8) :: length, width, depth, dx, dy, dz
@@ -64,7 +64,7 @@
   common w, w_hat, w_star, Sp_w, Su_w
 
 ! W-Velocity :: solution variables
-  real(8), dimension(1:m-1,1:n,1:l-1) :: As_w, Aw_w, Ap_w, Ae_w, An_w, Ab_w, At_w, b_w
+  real(8), dimension(1:m-1,1:n-1,1:l) :: As_w, Aw_w, Ap_w, Ae_w, An_w, Ab_w, At_w, b_w
   common As_w, Aw_w, Ap_w, Ae_w, An_w, Ab_w, At_w, b_w
 
 ! W-Velocity :: boundary conditions
@@ -93,7 +93,7 @@
 
 ! Convergence Parameters
   integer :: itrmax
-  parameter (itrmax=1e2)
+  parameter (itrmax=100)
 
 ! Convergence variables
   real(8), dimension(itrmax) :: R_e, R_t

@@ -46,10 +46,10 @@ subroutine initialize3d
   delta_T = T_h - T_c
 
   ! Calculate Characteristic Velocity
-  u0 = (g*beta*delta_T*L)**(0.5)
+  u0 = (g*beta*delta_T*depth)**(0.5)
 
   ! Calculate dimensionless numbers
-  Ra = g*beta*delta_T*length**3.0/alpha/nu
+  Ra = g*beta*delta_T*depth**3.0/alpha/nu
   Pr = nu/alpha
 
   ! Calculate geometry properties.
