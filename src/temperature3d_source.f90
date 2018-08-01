@@ -19,31 +19,31 @@ subroutine temperature3d_source
   ! Solve for source coefficients
   do i = 2,m-2
     do j = 2,n-2
-	  do k = 2,l-2
+      do k = 2,l-2
 
         ! Update convective terms
         Fw = dy*dz*u(i,j,k)
         Fe = dy*dz*u(i+1,j,k)
         Fs = dz*dx*v(i,j,k)
         Fn = dz*dx*v(i,j+1,k)
-		Fb = dx*dy*w(i,j,k)
-		Ft = dx*dy*w(i,j,k+1)
+        Fb = dx*dy*w(i,j,k)
+        Ft = dx*dy*w(i,j,k+1)
 
         ! Update diffusion terms
         Dw = dy*dz/dx/(Ra/Pr)**(0.5)
         De = dy*dz/dx/(Ra/Pr)**(0.5)
         Ds = dz*dx/dy/(Ra/Pr)**(0.5)
         Dn = dz*dx/dy/(Ra/Pr)**(0.5)
-		Db = dx*dy/dz/(Ra/Pr)**(0.5)
-		Dt = dx*dy/dz/(Ra/Pr)**(0.5)
+        Db = dx*dy/dz/(Ra/Pr)**(0.5)
+        Dt = dx*dy/dz/(Ra/Pr)**(0.5)
 
-	    ! Compute Coefficients - Power Law Differening Scheme
-	    Aw_T(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
-	    Ae_T(i,j,k) = De*max(0.0,(1-0.1*abs(Fe/De))**5)+max(-Fe,0.0)
-	    As_T(i,j,k) = Ds*max(0.0,(1-0.1*abs(Fs/Ds))**5)+max(Fs,0.0)
-	    An_T(i,j,k) = Dn*max(0.0,(1-0.1*abs(Fn/Dn))**5)+max(-Fn,0.0)
-	    Ab_T(i,j,k) = Db*max(0.0,(1-0.1*abs(Fb/Db))**5)+max(Fb,0.0)
-	    At_T(i,j,k) = Dt*max(0.0,(1-0.1*abs(Ft/Dt))**5)+max(-Ft,0.0)
+        ! Compute Coefficients - Power Law Differening Scheme
+        Aw_T(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
+        Ae_T(i,j,k) = De*max(0.0,(1-0.1*abs(Fe/De))**5)+max(-Fe,0.0)
+        As_T(i,j,k) = Ds*max(0.0,(1-0.1*abs(Fs/Ds))**5)+max(Fs,0.0)
+        An_T(i,j,k) = Dn*max(0.0,(1-0.1*abs(Fn/Dn))**5)+max(-Fn,0.0)
+        Ab_T(i,j,k) = Db*max(0.0,(1-0.1*abs(Fb/Db))**5)+max(Fb,0.0)
+        At_T(i,j,k) = Dt*max(0.0,(1-0.1*abs(Ft/Dt))**5)+max(-Ft,0.0)
 
   	    ! Update Ap coefficient
   	    Ap_T(i,j,k) = Aw_T(i,j,k)+Ae_T(i,j,k)+As_T(i,j,k)+An_T(i,j,k)+Ab_T(i,j,k)+At_T(i,j,k)-Sp_T(i,j,k)*dx*dy*dz
@@ -52,7 +52,7 @@ subroutine temperature3d_source
 
 		  print *, "False Diffusion (temperature)@:", i, j, k
           Ap_T(i,j,k) = 1.0
-          
+
         end if
 
   	    ! Update b values
@@ -61,8 +61,6 @@ subroutine temperature3d_source
 	  end do
     end do
   end do
-
-  call temperature3d_boundary
 
   return
 

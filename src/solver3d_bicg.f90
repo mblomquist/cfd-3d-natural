@@ -112,8 +112,8 @@ subroutine solver3d_bicg(Ab, As, Aw, Ap, Ae, An, At, b, phi, m, n, l, tol, maxit
 
 	  r_norm = dnrm2(m*n*l, r, 1)
 
-    print *, 'Iteration: ', itr
-    print *, 'Relative residual: ', r_norm
+    !print *, 'Iteration: ', itr
+    !print *, 'Relative residual: ', r_norm
 
 	  if (r_norm .le. tol) then
 

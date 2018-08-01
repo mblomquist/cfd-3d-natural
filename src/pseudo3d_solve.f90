@@ -21,7 +21,7 @@ subroutine pseudo3d_solve
 
   do i = 1, m
     do j = 1, n-1
-	  do k = 1, l-1
+      do k = 1, l-1
 
 	    if (i .eq. 1) then
 		  if (j .eq. 1) then

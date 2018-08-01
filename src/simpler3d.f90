@@ -55,6 +55,8 @@ subroutine simpler3d
     print *, "Step 7: Solve Temperature Equation"
     call temperature3d_solve
 
+    return
+
     ! Step 8: Check Convergence
     print *, "Step 8: Check Convergence"
     call convergence3d(i)

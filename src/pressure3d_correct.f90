@@ -12,9 +12,9 @@ subroutine pressure3d_correct
 
   ! Include variable header
   include "var3d.dec"
-  
+
   ! Define internal variables
-  integer :: i, j, k
+  integer :: i, j, k, fault
 
   ! Update coefficients
   do i = 1,m-1
@@ -28,6 +28,14 @@ subroutine pressure3d_correct
     end do
   end do
 
+  do k = 1,l-1
+    do j = 1,n-1
+      do i = 1,m-1
+        print *, i, j, Ap_p(i,j,k), b_p(i,j,k)
+      end do
+    end do
+  end do
+
   ! Set reference pressure node (east-north corner)
   Aw_p(m-1,n-1,l-1) = 0.
   Ae_p(m-1,n-1,l-1) = 0.
@@ -38,17 +46,25 @@ subroutine pressure3d_correct
   Ap_p(m-1,n-1,l-1) = 1.
   b_p(m-1,n-1,l-1) = 0.
 
+  ! Initialize P_prime
+  P_prime = 0.
+
   ! Solve pressure equation
   if (solver .eq. 0) then
-    call solver3d_bicgstab(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, w_star, m-1, n-1, l-1, solver_tol, maxit)
+    call solver3d_bicgstab(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, P_prime, m-1, n-1, l-1, solver_tol, maxit)
   elseif (solver .eq. 1) then
-    call solver3d_bicgstab2(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, w_star, m-1, n-1, l-1, solver_tol, maxit)
+    call solver3d_bicgstab2(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, P_prime, m-1, n-1, l-1, solver_tol, maxit)
   elseif (solver .eq. 2) then
-    call solver3d_gmres(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, w_star, m-1, n-1, l-1, solver_tol, maxit)
+    fault = 0
+    do i = 3, maxit
+      if (fault .eq. 0) then
+        call solver3d_gmres(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, P_prime, m-1, n-1, l-1, solver_tol, maxit, fault)
+      end if
+    end do
   elseif (solver .eq. 3) then
-    call solver3d_paradiso(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, w_star, m-1, n-1, l-1, solver_tol, maxit)
+    call solver3d_bicg(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, P_prime, m-1, n-1, l-1, solver_tol, maxit)
   else
-    call solver3d_tdma(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, w_star, m-1, n-1, l-1, solver_tol, maxit)
+    call solver3d_tdma(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, P_prime, m-1, n-1, l-1, solver_tol, maxit)
   end if
 
   return

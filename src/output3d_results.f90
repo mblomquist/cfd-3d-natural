@@ -18,11 +18,11 @@ subroutine output3d_results
 
   write(2, *), 'TITLE = "3D CFD - Natural Convection - Field Scalar Data"'
   write(2, *), 'VARIABLES = "X", "Y", "Z", "Pressure", "U-Velocity", "V-Velocity", "W-Velocity", "Temperature"'
-  write(2, *), 'ZONE I=10, J=10, K=10, DATAPACKING=POINT'
+  write(2, *), 'ZONE I=3, J=3, K=3, DATAPACKING=POINT'
 
-  do k = 1,l
-    do j = 1,n
-      do i = 1,m
+  do k = 1,l-1
+    do j = 1,n-1
+      do i = 1,m-1
 
         write(2, *), length*i*dx, length*j*dy, length*k*dz, P(i,j,k), (u(i,j,k)+u(i+1,j,k))/2, (v(i,j,k)+v(i,j+1,k))/2, (w(i,j,k)+w(i,j,k+1))/2, T(i,j,k)
 
@@ -38,10 +38,10 @@ subroutine output3d_results
   write (5, '("Prandtl Number: ", E15.4, /)', advance="no"), Pr
   write (5, '("delta_T: ", E15.4, /)', advance="no"), delta_T
   write (5, '("SIMPLER Algorithm Duration:", E15.4, /)', advance="no"), end_time-start_time
-
-  write (5, *), "res_vec(R_e), res_vec(R_t)"
-  do i = 1, 100000
-    write (5,*), res_vec(i,1), res_vec(i,2)
+  write (5, *), "Solver #:", solver
+  write (5, *), "R_e, R_t"
+  do i = 1, itrmax
+    write (5,*), R_e(i), R_t(i)
   end do
 
   close(5)

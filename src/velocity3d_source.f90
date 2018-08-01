@@ -41,8 +41,8 @@ subroutine velocity3d_source(direction)
           De = dy*dz/dx*Pr*(Pr/Ra)**(0.5)
           Ds = dz*dx/dy*Pr*(Pr/Ra)**(0.5)
           Dn = dz*dx/dy*Pr*(Pr/Ra)**(0.5)
-		  Db = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
-		  Dt = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
+          Db = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
+          Dt = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
 
 		  ! Compute Coefficients - Power Law Differening Scheme
 		  Aw_u(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
@@ -67,9 +67,6 @@ subroutine velocity3d_source(direction)
 	    end do
       end do
     end do
-
-	! Update boundary conditions
-	call velocity3d_boundary("u")
 
   end if
 
@@ -122,8 +119,6 @@ subroutine velocity3d_source(direction)
       end do
     end do
 
-	! Update boundary conditions
-	call velocity3d_boundary("v")
 
   end if
 
@@ -132,9 +127,9 @@ subroutine velocity3d_source(direction)
   if (direction .eq. "w") then
 
     ! Calculate interior coefficients
-    do i = 2,m-1
+    do i = 2,m-2
       do j = 2,n-2
-	    do k = 2,l-2
+        do k = 2,l-1
 
           ! Update convection terms
 		  Fw = dy*dz*(u_star(i,j,k-1)+u_star(i,j,k))/2
@@ -170,14 +165,12 @@ subroutine velocity3d_source(direction)
 		  end if
 
 		  ! Update b values
-		  b_w(i,j,k) = Su_w(i,j,k)*dx*dy*dz
+		  b_w(i,j,k) = Su_w(i,j,k)*dx*dy*dz-(Pr/2.0)*dx*dy*dz+Pr*(((T(i,j,k)+T(i,j,k+1))/2.0))*dx*dy*dz
 
 	    end do
       end do
     end do
 
-	! Update boundary conditions
-	call velocity3d_boundary("w")
 
   end if
 

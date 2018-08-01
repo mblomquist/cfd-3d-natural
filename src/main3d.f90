@@ -10,9 +10,6 @@ program main3d
 
   implicit none
 
-  ! Define time variables
-  real(8) :: start_time, end_time
-
   ! Include standard variable header
   !   Standard variable header establishes parameters and global values
   !   subroutines will call these modify these values.
