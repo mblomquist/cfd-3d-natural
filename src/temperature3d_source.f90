@@ -30,12 +30,12 @@ subroutine temperature3d_source
         Ft = dx*dy*w(i,j,k+1)
 
         ! Update diffusion terms
-        Dw = dy*dz/dx/(Ra/Pr)**(0.5)
-        De = dy*dz/dx/(Ra/Pr)**(0.5)
-        Ds = dz*dx/dy/(Ra/Pr)**(0.5)
-        Dn = dz*dx/dy/(Ra/Pr)**(0.5)
-        Db = dx*dy/dz/(Ra/Pr)**(0.5)
-        Dt = dx*dy/dz/(Ra/Pr)**(0.5)
+        Dw = dy*dz/dx/(Ra/Pr)**(0.5)*100
+        De = dy*dz/dx/(Ra/Pr)**(0.5)*100
+        Ds = dz*dx/dy/(Ra/Pr)**(0.5)*100
+        Dn = dz*dx/dy/(Ra/Pr)**(0.5)*100
+        Db = dx*dy/dz/(Ra/Pr)**(0.5)*100
+        Dt = dx*dy/dz/(Ra/Pr)**(0.5)*100
 
         ! Compute Coefficients - Power Law Differening Scheme
         Aw_T(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
@@ -46,11 +46,11 @@ subroutine temperature3d_source
         At_T(i,j,k) = Dt*max(0.0,(1-0.1*abs(Ft/Dt))**5)+max(-Ft,0.0)
 
   	    ! Update Ap coefficient
-  	    Ap_T(i,j,k) = Aw_T(i,j,k)+Ae_T(i,j,k)+As_T(i,j,k)+An_T(i,j,k)+Ab_T(i,j,k)+At_T(i,j,k)-Sp_T(i,j,k)*dx*dy*dz
+  	    Ap_T(i,j,k) = Aw_T(i,j,k)+Ae_T(i,j,k)+As_T(i,j,k)+An_T(i,j,k)+Ab_T(i,j,k)+At_T(i,j,k)
 
         if (Ap_T(i,j,k) .eq. 0.) then
 
-		  print *, "False Diffusion (temperature)@:", i, j, k
+          print *, "False Diffusion (temperature)@:", i, j, k
           Ap_T(i,j,k) = 1.0
 
         end if
@@ -58,9 +58,11 @@ subroutine temperature3d_source
   	    ! Update b values
   	    b_T(i,j,k) = Su_T(i,j,k)*dx*dy*dz
 
-	  end do
+	     end do
     end do
   end do
+
+  call temperature3d_boundary
 
   return
 

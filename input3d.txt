@@ -16,8 +16,8 @@
 ! w-velocity bc type :: west, east, north, south, bottom, top
 2, 2, 2, 2, 0, 0
 ! Temperature bc :: T_west, T_east, T_north, T_south, T_bottom, T_top
-273.0, 273.0, 273.0, 273.0, 273.0005, 273.0
+273.0, 273.0, 273.0, 273.0, 273.00797, 273.0
 ! Temperature bc type :: west, east, north, south, bottom, top
 2, 2, 2, 2, 1, 1
 ! solution parameters :: maxit, solver_tol, simpler_tol, alpha_v, alpha_t, solver
-1e4, 1.0e-4, 1.0e-6, 0.95, 0.95, 3
+1e4, 1.0e-6, 1.0e-6, 0.9, 0.9, 1

@@ -21,7 +21,7 @@ subroutine temperature3d_solve
     do j = 1, n-1
       do k = 1, l-1
         Ap_T(i,j,k) = Ap_T(i,j,k)/alpha_t
-        b_T(i,j,k) = b_T(i,j,k)+Su_T(i,j,k)+(1.0-alpha_t)*Ap_T(i,j,k)*T(i,j,k)
+        b_T(i,j,k) = Su_T(i,j,k)+(1.0-alpha_t)*Ap_T(i,j,k)*T(i,j,k)
       end do
     end do
   end do
@@ -43,6 +43,8 @@ subroutine temperature3d_solve
   else
     call solver3d_tdma(Ab_T, As_T, Aw_T, Ap_T, Ae_T, An_T, At_T, b_T, T, m-1, n-1, l-1, solver_tol, maxit)
   end if
+
+  !print *, "T:", T
 
   return
 

@@ -65,6 +65,25 @@ subroutine velocity3d
   Su_w = 0.
 
   ! ====================================== !
+  call velocity3d_boundary
+
+  return
+
+end subroutine velocity3d
+
+subroutine velocity3d_boundary
+
+  ! Pull in standard variable header
+  include "var3d.dec"
+
+  ! Set Ap terms to 1.
+  b_u = 0.
+  b_v = 0.
+  b_w = 0.
+  
+  Ap_u = 1.
+  Ap_v = 1.
+  Ap_w = 1.
 
   ! ====================================== !
   ! Set boundary conditions :: West Plane
@@ -583,4 +602,4 @@ subroutine velocity3d
 
   return
 
-end subroutine velocity3d
+end subroutine velocity3d_boundary

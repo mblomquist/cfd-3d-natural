@@ -23,18 +23,21 @@ subroutine velocity3d_source(direction)
   ! u-velocity update loop
   if (direction .eq. "u") then
 
+    ! Reset velocity b values
+    !b_u = 0.
+
     ! Calculate interior coefficients
     do i = 2,m-1
       do j = 2,n-2
-	    do k = 2,l-2
+        do k = 2,l-2
 
           ! Update convection terms
-		  Fw = dy*dz*(u_star(i-1,j,k)+u_star(i,j,k))/2
-		  Fe = dy*dz*(u_star(i,j,k)+u_star(i+1,j,k))/2
-		  Fs = dz*dx*(v_star(i-1,j,k)+v_star(i,j,k))/2
-		  Fn = dz*dx*(v_star(i-1,j+1,k)+v_star(i,j+1,k))/2
-		  Fb = dx*dy*(w_star(i-1,j,k)+w_star(i,j,k))/2
-		  Ft = dx*dy*(w_star(i-1,j,k+1)+w_star(i,j,k+1))/2
+          Fw = dy*dz*(u_star(i-1,j,k)+u_star(i,j,k))/2
+		      Fe = dy*dz*(u_star(i,j,k)+u_star(i+1,j,k))/2
+		      Fs = dz*dx*(v_star(i-1,j,k)+v_star(i,j,k))/2
+		      Fn = dz*dx*(v_star(i-1,j+1,k)+v_star(i,j+1,k))/2
+		      Fb = dx*dy*(w_star(i-1,j,k)+w_star(i,j,k))/2
+		      Ft = dx*dy*(w_star(i-1,j,k+1)+w_star(i,j,k+1))/2
 
           ! Update diffusion terms
           Dw = dy*dz/dx*Pr*(Pr/Ra)**(0.5)
@@ -44,27 +47,27 @@ subroutine velocity3d_source(direction)
           Db = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
           Dt = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
 
-		  ! Compute Coefficients - Power Law Differening Scheme
-		  Aw_u(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
-		  Ae_u(i,j,k) = De*max(0.0,(1-0.1*abs(Fe/De))**5)+max(-Fe,0.0)
-		  As_u(i,j,k) = Ds*max(0.0,(1-0.1*abs(Fs/Ds))**5)+max(Fs,0.0)
-		  An_u(i,j,k) = Dn*max(0.0,(1-0.1*abs(Fn/Dn))**5)+max(-Fn,0.0)
-		  Ab_u(i,j,k) = Db*max(0.0,(1-0.1*abs(Fb/Db))**5)+max(Fb,0.0)
-		  At_u(i,j,k) = Dt*max(0.0,(1-0.1*abs(Ft/Dt))**5)+max(-Ft,0.0)
+		      ! Compute Coefficients - Power Law Differening Scheme
+		      Aw_u(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
+		      Ae_u(i,j,k) = De*max(0.0,(1-0.1*abs(Fe/De))**5)+max(-Fe,0.0)
+		      As_u(i,j,k) = Ds*max(0.0,(1-0.1*abs(Fs/Ds))**5)+max(Fs,0.0)
+		      An_u(i,j,k) = Dn*max(0.0,(1-0.1*abs(Fn/Dn))**5)+max(-Fn,0.0)
+		      Ab_u(i,j,k) = Db*max(0.0,(1-0.1*abs(Fb/Db))**5)+max(Fb,0.0)
+		      At_u(i,j,k) = Dt*max(0.0,(1-0.1*abs(Ft/Dt))**5)+max(-Ft,0.0)
 
-		  ! Update Ap coefficient
-		  Ap_u(i,j,k) = Aw_u(i,j,k)+Ae_u(i,j,k)+As_u(i,j,k)+An_u(i,j,k)+Ab_u(i,j,k)+At_u(i,j,k)+Sp_u(i,j,k)*dx*dy*dz
+		      ! Update Ap coefficient
+		      Ap_u(i,j,k) = Aw_u(i,j,k)+Ae_u(i,j,k)+As_u(i,j,k)+An_u(i,j,k)+Ab_u(i,j,k)+At_u(i,j,k)+Sp_u(i,j,k)*dx*dy*dz
 
-		  ! Check False Diffusion
-		  if (Ap_u(i,j,k) .eq. 0.) then
-		    print *, "False Diffusion @:", i, j, k
-			Ap_u(i,j,k) = 1.
-		  end if
+		      ! Check False Diffusion
+		      if (Ap_u(i,j,k) .eq. 0.) then
+            print *, "False Diffusion @:", i, j, k
+            Ap_u(i,j,k) = 1.
+          end if
 
-		  ! Update b values
-		  b_u(i,j,k) = Su_u(i,j,k)*dx*dy*dz
+		      ! Update b values
+		      b_u(i,j,k) = Su_u(i,j,k)*dx*dy*dz
 
-	    end do
+	     end do
       end do
     end do
 
@@ -73,6 +76,9 @@ subroutine velocity3d_source(direction)
   ! ====================== V-Velocity ====================== !
   ! v-velocity update loop
   if (direction .eq. "v") then
+
+    ! Reset velocity b values
+    !b_v = 0.
 
     ! Calculate interior coefficients
     do i = 2,m-2
@@ -126,6 +132,9 @@ subroutine velocity3d_source(direction)
   ! w-velocity update loop
   if (direction .eq. "w") then
 
+    ! Reset velocity b values
+    !b_w = 0.
+
     ! Calculate interior coefficients
     do i = 2,m-2
       do j = 2,n-2
@@ -165,7 +174,7 @@ subroutine velocity3d_source(direction)
 		  end if
 
 		  ! Update b values
-		  b_w(i,j,k) = Su_w(i,j,k)*dx*dy*dz-(Pr/2.0)*dx*dy*dz+Pr*(((T(i,j,k)+T(i,j,k+1))/2.0))*dx*dy*dz
+		  b_w(i,j,k) = Su_w(i,j,k)*dx*dy*dz+Pr*(((T(i,j,k)+T(i,j,k+1))/2.0))*dx*dy*dz-(Pr/3.0)*dx*dy*dz
 
 	    end do
       end do

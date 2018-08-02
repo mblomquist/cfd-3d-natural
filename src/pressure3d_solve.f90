@@ -89,26 +89,38 @@ subroutine pressure3d_solve
   Ap_p(m-1,n-1,l-1) = 1.
   b_p(m-1,n-1,l-1) = 0.
 
-  ! Initialize P_star
-  P_star = 0.
+  ! Initialize P
+  P = 0.
 
   ! Solve pressure equation
   if (solver .eq. 0) then
-    call solver3d_bicgstab(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, P_star, m-1, n-1, l-1, solver_tol, maxit)
+    call solver3d_bicgstab(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, P, m-1, n-1, l-1, solver_tol, maxit)
   elseif (solver .eq. 1) then
-    call solver3d_bicgstab2(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, P_star, m-1, n-1, l-1, solver_tol, maxit)
+    call solver3d_bicgstab2(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, P, m-1, n-1, l-1, solver_tol, maxit)
   elseif (solver .eq. 2) then
     fault = 0
     do i = 3, maxit
       if (fault .eq. 0) then
-        call solver3d_gmres(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, P_star, m-1, n-1, l-1, solver_tol, maxit, fault)
+        call solver3d_gmres(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, P, m-1, n-1, l-1, solver_tol, maxit, fault)
       end if
     end do
   elseif (solver .eq. 3) then
-    call solver3d_bicg(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, P_star, m-1, n-1, l-1, solver_tol, maxit)
+    call solver3d_bicg(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, P, m-1, n-1, l-1, solver_tol, maxit)
   else
-    call solver3d_tdma(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, P_star, m-1, n-1, l-1, solver_tol, maxit)
+    call solver3d_tdma(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, P, m-1, n-1, l-1, solver_tol, maxit)
   end if
+
+  !print *, ".............."
+  !print *, "Ab_p", Ab_p
+  !print *, "As_p", As_p
+  !print *, "Aw_p", Aw_p
+  !print *, "Ap_p", Ap_p
+  !print *, "Ae_p", Ae_p
+  !print *, "An_p", An_p
+  !print *, "At_p", At_p
+  !print *, "b_p", b_p
+  !print *, "P", P
+  !print *, ".............."
 
   return
 

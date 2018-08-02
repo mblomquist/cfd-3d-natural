@@ -9,7 +9,7 @@
 
 ! Mesh parameters :: nodes in x, nodes in y, nodes in z
   integer :: m, n, l
-  parameter (m=21, n=21, l=11)
+  parameter (m=4, n=4, l=4)
 
 ! Geometry variables ::
   real(8) :: length, width, depth, dx, dy, dz
@@ -93,7 +93,7 @@
 
 ! Convergence Parameters
   integer :: itrmax
-  parameter (itrmax=100)
+  parameter (itrmax=10)
 
 ! Convergence variables
   real(8), dimension(itrmax) :: R_e, R_t

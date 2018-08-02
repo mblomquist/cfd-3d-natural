@@ -29,7 +29,7 @@ subroutine velocity3d_solve
           b_u(i,j,k) = b_u(i,j,k)+Su_u(i,j,k)+dy*dz*(P_star(i-1,j,k)-P_star(i,j,k))+(1.0-alpha_v)*Ap_u(i,j,k)*u_hat(i,j,k)
         end if
 
-	  end do
+	     end do
     end do
   end do
 
