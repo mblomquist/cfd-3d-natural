@@ -34,10 +34,10 @@ subroutine simpler3d
 
     ! Step 2: Calculate Pseudo-Velocities
     !print *, "Step 1: Solve Pseudo-Velocities"
-    !call pseudo3d_solve
-    u_hat = u
-    v_hat = v
-    w_hat = w
+    call pseudo3d_solve
+    !u_hat = u
+    !v_hat = v
+    !w_hat = w
 
     !print *, "................"
     !print *, "u_hat:", u_hat
@@ -64,6 +64,8 @@ subroutine simpler3d
     !print *, "v_star:", v_star
     !print *, "w_star:", w_star
     !print *, "................"
+
+    !print *, "b_w:", b_w
 
     ! Step 5: Solve Pressure Equation
     !print *, "Step 5: Solve Pressure Correction"

@@ -30,12 +30,12 @@ subroutine temperature3d_source
         Ft = dx*dy*w(i,j,k+1)
 
         ! Update diffusion terms
-        Dw = dy*dz/dx/(Ra/Pr)**(0.5)*100
-        De = dy*dz/dx/(Ra/Pr)**(0.5)*100
-        Ds = dz*dx/dy/(Ra/Pr)**(0.5)*100
-        Dn = dz*dx/dy/(Ra/Pr)**(0.5)*100
-        Db = dx*dy/dz/(Ra/Pr)**(0.5)*100
-        Dt = dx*dy/dz/(Ra/Pr)**(0.5)*100
+        Dw = dy*dz/dx/(Ra/Pr)**(0.5)
+        De = dy*dz/dx/(Ra/Pr)**(0.5)
+        Ds = dz*dx/dy/(Ra/Pr)**(0.5)
+        Dn = dz*dx/dy/(Ra/Pr)**(0.5)
+        Db = dx*dy/dz/(Ra/Pr)**(0.5)
+        Dt = dx*dy/dz/(Ra/Pr)**(0.5)
 
         ! Compute Coefficients - Power Law Differening Scheme
         Aw_T(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
