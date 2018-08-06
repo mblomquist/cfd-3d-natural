@@ -18,9 +18,9 @@ subroutine velocity3d_solve
 
   ! ====================== U-Velocity ====================== !
   ! Update source terms :: u
-  do i = 1,m
-    do j = 1,n-1
-      do k = 1,l-1
+  do i = 2,m-1
+    do j = 2,n-2
+      do k = 2,l-2
         Ap_u(i,j,k) = Ap_u(i,j,k)/alpha_v
 
         if (i .eq. 1) then
@@ -53,9 +53,9 @@ subroutine velocity3d_solve
 
   ! ====================== V-Velocity ====================== !
   ! Update source terms :: v
-  do i = 1, m-1
-    do j = 1, n
-      do k = 1,l-1
+  do i = 2, m-2
+    do j = 2, n-1
+      do k = 2,l-2
         Ap_v(i,j,k) = Ap_v(i,j,k)/alpha_v
 
         if (j .eq. 1) then
@@ -88,9 +88,9 @@ subroutine velocity3d_solve
 
   ! ====================== W-Velocity ====================== !
   ! Update source terms :: w
-  do i = 1, m-1
-    do j = 1, n-1
-      do k = 1,l
+  do i = 2, m-2
+    do j = 2, n-2
+      do k = 2,l-1
 
         Ap_w(i,j,k) = Ap_w(i,j,k)/alpha_v
 

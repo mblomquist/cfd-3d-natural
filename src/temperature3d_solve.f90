@@ -5,26 +5,43 @@
 !
 ! This subroutine solves the temperature equation of the SIMPLER algorithm
 !
-subroutine temperature3d_solve
+subroutine temperature3d_solve(start)
 
   ! Include variable header
   include "var3d.dec"
 
   ! Define internal variables
-  integer :: i, j, k, fault
+  integer :: i, j, k, fault, start
 
   ! Update source terms
   call temperature3d_source
+
+  if (start .eq. 0) then
+    alpha_temp = 1.0
+  else
+    alpha_temp = alpha_t
+  end if
 
   ! Update source terms
   do i = 1, m-1
     do j = 1, n-1
       do k = 1, l-1
-        Ap_T(i,j,k) = Ap_T(i,j,k)/alpha_t
-        b_T(i,j,k) = Su_T(i,j,k)+(1.0-alpha_t)*Ap_T(i,j,k)*T(i,j,k)
+        Ap_T(i,j,k) = Ap_T(i,j,k)/alpha_temp
+        b_T(i,j,k) = Su_T(i,j,k)+(1.0-alpha_temp)*Ap_T(i,j,k)*T(i,j,k)
       end do
     end do
   end do
+
+  print *, "............."
+  print *, "Ab_T:", Ab_T
+  print *, "As_T:", As_T
+  print *, "Aw_T:", Aw_T
+  print *, "Ap_T:", Ap_T
+  print *, "Ae_T:", Ae_T
+  print *, "An_T:", An_T
+  print *, "At_T:", At_T
+  print *, "b_T:", b_T
+  print *, "............."
 
   ! Solve velocity Equations
   if (solver .eq. 0) then

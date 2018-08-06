@@ -196,15 +196,15 @@ subroutine solver3d_tdma(Ab, As, Aw, Ap, Ae, An, At, b, phi, m, n, l, tol, maxit
 	end do
 
   r_sum = r_sum**(0.5)
-  
+
 	if (r_sum .le. tol) then
-	  print *, "TDMA Compelete."
-    print *, "r_sum:", r_sum
-    print *, "itrs:", itr
+	  !print *, "TDMA Compelete."
+    !print *, "r_sum:", r_sum
+    !print *, "itrs:", itr
       return
   else
-    print *, "r_sum:", r_sum
-    print *, "itrs:", itr
+    !print *, "r_sum:", r_sum
+    !print *, "itrs:", itr
 	end if
 
   end do

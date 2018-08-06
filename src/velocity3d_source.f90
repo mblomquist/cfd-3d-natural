@@ -40,12 +40,12 @@ subroutine velocity3d_source(direction)
 		      Ft = dx*dy*(w_star(i-1,j,k+1)+w_star(i,j,k+1))/2
 
           ! Update diffusion terms
-          Dw = dy*dz/dx*Pr*(Pr/Ra)**(0.5)
-          De = dy*dz/dx*Pr*(Pr/Ra)**(0.5)
-          Ds = dz*dx/dy*Pr*(Pr/Ra)**(0.5)
-          Dn = dz*dx/dy*Pr*(Pr/Ra)**(0.5)
-          Db = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
-          Dt = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
+          Dw = dy*dz/dx*(Pr/Ra)**(0.5)
+          De = dy*dz/dx*(Pr/Ra)**(0.5)
+          Ds = dz*dx/dy*(Pr/Ra)**(0.5)
+          Dn = dz*dx/dy*(Pr/Ra)**(0.5)
+          Db = dx*dy/dz*(Pr/Ra)**(0.5)
+          Dt = dx*dy/dz*(Pr/Ra)**(0.5)
 
 		      ! Compute Coefficients - Power Law Differening Scheme
 		      Aw_u(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
@@ -94,12 +94,12 @@ subroutine velocity3d_source(direction)
 		      Ft = dx*dy*(w_star(i,j,k+1)+w_star(i,j+1,k+1))/2
 
           ! Update diffusion terms
-          Dw = dy*dz/dx*Pr*(Pr/Ra)**(0.5)
-          De = dy*dz/dx*Pr*(Pr/Ra)**(0.5)
-          Ds = dz*dx/dy*Pr*(Pr/Ra)**(0.5)
-          Dn = dz*dx/dy*Pr*(Pr/Ra)**(0.5)
-		      Db = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
-		      Dt = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
+          Dw = dy*dz/dx*(Pr/Ra)**(0.5)
+          De = dy*dz/dx*(Pr/Ra)**(0.5)
+          Ds = dz*dx/dy*(Pr/Ra)**(0.5)
+          Dn = dz*dx/dy*(Pr/Ra)**(0.5)
+		      Db = dx*dy/dz*(Pr/Ra)**(0.5)
+		      Dt = dx*dy/dz*(Pr/Ra)**(0.5)
 
 		      ! Compute Coefficients - Power Law Differening Scheme
 		      Aw_v(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
@@ -149,12 +149,12 @@ subroutine velocity3d_source(direction)
 		      Ft = dx*dy*(w_star(i,j,k)+w_star(i,j,k+1))/2
 
           ! Update diffusion terms
-          Dw = dy*dz/dx*Pr*(Pr/Ra)**(0.5)
-          De = dy*dz/dx*Pr*(Pr/Ra)**(0.5)
-          Ds = dz*dx/dy*Pr*(Pr/Ra)**(0.5)
-          Dn = dz*dx/dy*Pr*(Pr/Ra)**(0.5)
-		      Db = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
-		      Dt = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
+          Dw = dy*dz/dx*(Pr/Ra)**(0.5)
+          De = dy*dz/dx*(Pr/Ra)**(0.5)
+          Ds = dz*dx/dy*(Pr/Ra)**(0.5)
+          Dn = dz*dx/dy*(Pr/Ra)**(0.5)
+		      Db = dx*dy/dz*(Pr/Ra)**(0.5)
+		      Dt = dx*dy/dz*(Pr/Ra)**(0.5)
 
 		      ! Compute Coefficients - Power Law Differening Scheme
 		      Aw_w(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
@@ -174,7 +174,7 @@ subroutine velocity3d_source(direction)
           end if
 
 		      ! Update b values
-		      b_w(i,j,k) = Su_w(i,j,k)*dx*dy*dz+Pr*(((T(i,j,k)+T(i,j,k-1))/2.0))*dx*dy*dz-(Pr/2.0)*dx*dy*dz
+		      b_w(i,j,k) = Su_w(i,j,k)*dx*dy*dz+((((T(i,j,k)+T(i,j,k-1))/2.0)-0.5)*dx*dy*dz)
 
         end do
       end do

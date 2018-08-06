@@ -13,13 +13,13 @@ subroutine simpler3d
   include "var3d.dec"
 
   ! Define Internal Variables
-  integer :: i, j, k
+  integer :: i, j, k, ii, jj, kk
 
   print *, 'Start SIMPLER Algorithm.'
 
   ! Solve Temperature for Natural Convection First
   !print *, "Step 0: Solve Temperature Equation"
-  call temperature3d_solve
+  call temperature3d_solve(0)
   !print *, "................"
   !print *, "T:", T
   !print *, "................"
@@ -35,9 +35,6 @@ subroutine simpler3d
     ! Step 2: Calculate Pseudo-Velocities
     !print *, "Step 1: Solve Pseudo-Velocities"
     call pseudo3d_solve
-    !u_hat = u
-    !v_hat = v
-    !w_hat = w
 
     !print *, "................"
     !print *, "u_hat:", u_hat
@@ -65,11 +62,27 @@ subroutine simpler3d
     !print *, "w_star:", w_star
     !print *, "................"
 
-    !print *, "b_w:", b_w
+    !print *, "Solve"
+    !do kk = 1, l
+    !  do jj = 1, n-1
+    !    do ii = 1, m-1
+
+    !      if (b_w(ii,jj,kk) .ne. 0.0) then
+    !        print *, ii, jj, kk
+    !        print *, Ap_w(ii,jj,kk), b_w(ii,jj,kk), b_w(ii,jj,kk)/Ap_w(ii,jj,kk)
+    !      end if
+
+    !    end do
+    !  end do
+    !end do
 
     ! Step 5: Solve Pressure Equation
     !print *, "Step 5: Solve Pressure Correction"
     call pressure3d_correct
+
+    !print *, "................"
+    !print *, "P_prime:", P_Prime
+    !print *, "................"
 
     ! Step 6: Correct Velocities
     !print *, "Step 6: Correct Velocities"
@@ -83,7 +96,7 @@ subroutine simpler3d
 
     ! Step 7: Solve Temperature Equation
     !print *, "Step 7: Solve Temperature Equation"
-    call temperature3d_solve
+    call temperature3d_solve(1)
 
     !print *, "................"
     !print *, "T:", T

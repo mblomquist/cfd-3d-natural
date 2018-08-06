@@ -9,7 +9,7 @@
 
 ! Mesh parameters :: nodes in x, nodes in y, nodes in z
   integer :: m, n, l
-  parameter (m=15, n=15, l=15)
+  parameter (m=5, n=5, l=5)
 
 ! Geometry variables ::
   real(8) :: length, width, depth, dx, dy, dz
@@ -92,15 +92,15 @@
   common T_bc_wv, T_bc_ev, T_bc_sv, T_bc_nv, T_bc_bv, T_bc_tv
 
 ! Convergence Parameters
-  integer :: itrmax
-  parameter (itrmax=1e4)
+  !integer :: itrmax
+  !parameter (itrmax=250)
 
 ! Convergence variables
-  real(8), dimension(itrmax) :: R_e, R_t
+  real(8), dimension(10000) :: R_e, R_t
   common R_e, R_t
 
   real(8) :: solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time
   common solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time
 
-  integer :: maxit, solver, solved
-  common maxit, solver, solved
+  integer :: maxit, solver, solved, itrmax
+  common maxit, solver, solved, itrmax
