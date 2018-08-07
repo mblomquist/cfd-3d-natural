@@ -37,14 +37,6 @@ subroutine temperature3d_source
         Db = dx*dy/dz/(Ra*Pr)**(0.5)
         Dt = dx*dy/dz/(Ra*Pr)**(0.5)
 
-        print *, "i,j,j", i, j, k
-        print *, "Fb, Db:", Fb, Db
-        print *, "w, Fb/Db:", w(i,j,k), Fb/Db
-        print *, "Ft, Dt:", Ft, Dt
-        print *, "w, Ft/Dt:", w(i,j,k+1), Ft/Dt
-        print *, "uw, vs", u(i,j,k), u(i,j,k)
-        print *, "ue, vn", u(i+1,j,k), v(i,j+1,k)
-
         ! Compute Coefficients - Power Law Differening Scheme
         Aw_T(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
         Ae_T(i,j,k) = De*max(0.0,(1-0.1*abs(Fe/De))**5)+max(-Fe,0.0)

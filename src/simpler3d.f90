@@ -13,7 +13,7 @@ subroutine simpler3d
   include "var3d.dec"
 
   ! Define Internal Variables
-  integer :: i, j, k, ii, jj, kk
+  integer :: i, j, k
 
   print *, 'Start SIMPLER Algorithm.'
 
@@ -62,20 +62,6 @@ subroutine simpler3d
     !print *, "w_star:", w_star
     !print *, "................"
 
-    !print *, "Solve"
-    !do kk = 1, l
-    !  do jj = 1, n-1
-    !    do ii = 1, m-1
-
-    !      if (b_w(ii,jj,kk) .ne. 0.0) then
-    !        print *, ii, jj, kk
-    !        print *, Ap_w(ii,jj,kk), b_w(ii,jj,kk), b_w(ii,jj,kk)/Ap_w(ii,jj,kk)
-    !      end if
-
-    !    end do
-    !  end do
-    !end do
-
     ! Step 5: Solve Pressure Equation
     !print *, "Step 5: Solve Pressure Correction"
     call pressure3d_correct
@@ -108,27 +94,26 @@ subroutine simpler3d
 
     if (i .eq. 1) then
 
-	  ! Print Current Information to Terminal
-	  print *, "Iteration:", i
+      ! Print Current Information to Terminal
+      print *, "Iteration:", i
       print *, "Relative Momentum Error: ", R_e(i)
       print *, "Relative Energy Error:", R_t(i)
 
     else
 
-	  ! Print Current Information to Terminal
-	  print *, "Iteration:", i
+	    !  Print Current Information to Terminal
+	    print *, "Iteration:", i
       print *, "Relative Momentum Error: ", R_e(i)
       print *, "Relative Energy Error:", R_t(i)
 
-	  ! Check for Convergence
-	  if ((R_e(i) .le. simpler_tol) .and. (R_t(i) .le. simpler_tol)) then
+      ! Check for Convergence
+      if ((R_e(i) .le. simpler_tol) .and. (R_t(i) .le. simpler_tol)) then
 
         print *, "Simpler completed in: ", i
         exit
 
       end if
-
-	end if
+    end if
 
     ! Reset Initial  Initial Guesses
     P_star = P

@@ -32,17 +32,6 @@ subroutine temperature3d_solve(start)
     end do
   end do
 
-  print *, "............."
-  print *, "Ab_T:", Ab_T
-  print *, "As_T:", As_T
-  print *, "Aw_T:", Aw_T
-  print *, "Ap_T:", Ap_T
-  print *, "Ae_T:", Ae_T
-  print *, "An_T:", An_T
-  print *, "At_T:", At_T
-  print *, "b_T:", b_T
-  print *, "............."
-
   ! Solve velocity Equations
   if (solver .eq. 0) then
     call solver3d_bicgstab(Ab_T, As_T, Aw_T, Ap_T, Ae_T, An_T, At_T, b_T, T, m-1, n-1, l-1, solver_tol, maxit)
@@ -60,8 +49,6 @@ subroutine temperature3d_solve(start)
   else
     call solver3d_tdma(Ab_T, As_T, Aw_T, Ap_T, Ae_T, An_T, At_T, b_T, T, m-1, n-1, l-1, solver_tol, maxit)
   end if
-
-  !print *, "T:", T
 
   return
 
