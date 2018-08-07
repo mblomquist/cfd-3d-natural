@@ -27,7 +27,6 @@ subroutine simpler3d
   do i = 1,itrmax
 
     ! Calculate velocity coefficients
-    call velocity3d_boundary
     call velocity3d_source("u")
     call velocity3d_source("v")
     call velocity3d_source("w")
@@ -45,6 +44,34 @@ subroutine simpler3d
     ! Step 3: Solve Pressure Equation
     !print *, "Step 2: Solve Pressure Equation"
     call pressure3d_solve
+
+    ! Step 8: Check Convergence
+    print *, "Check Convergence"
+    call convergence3d(i)
+
+    if (i .eq. 1) then
+
+      ! Print Current Information to Terminal
+      print *, "Iteration:", i
+      print *, "Relative Momentum Error: ", R_e(i)
+      print *, "Relative Energy Error:", R_t(i)
+
+    else
+
+	    !  Print Current Information to Terminal
+	    print *, "Iteration:", i
+      print *, "Relative Momentum Error: ", R_e(i)
+      print *, "Relative Energy Error:", R_t(i)
+
+      ! Check for Convergence
+      if ((R_e(i) .le. simpler_tol) .and. (R_t(i) .le. simpler_tol)) then
+
+        call temperature3d_solve(1)
+        print *, "Simpler completed in: ", i
+        exit
+
+      end if
+    end if
 
 	  ! Set p_star := P
 	  P_star = P
@@ -87,33 +114,6 @@ subroutine simpler3d
     !print *, "................"
     !print *, "T:", T
     !print *, "................"
-
-    ! Step 8: Check Convergence
-    print *, "Check Convergence"
-    call convergence3d(i)
-
-    if (i .eq. 1) then
-
-      ! Print Current Information to Terminal
-      print *, "Iteration:", i
-      print *, "Relative Momentum Error: ", R_e(i)
-      print *, "Relative Energy Error:", R_t(i)
-
-    else
-
-	    !  Print Current Information to Terminal
-	    print *, "Iteration:", i
-      print *, "Relative Momentum Error: ", R_e(i)
-      print *, "Relative Energy Error:", R_t(i)
-
-      ! Check for Convergence
-      if ((R_e(i) .le. simpler_tol) .and. (R_t(i) .le. simpler_tol)) then
-
-        print *, "Simpler completed in: ", i
-        exit
-
-      end if
-    end if
 
     ! Reset Initial  Initial Guesses
     P_star = P

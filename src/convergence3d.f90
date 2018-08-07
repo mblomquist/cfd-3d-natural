@@ -25,7 +25,7 @@ subroutine convergence3d(itr)
   do i = 2,m-2
     do j = 2,n-2
 	  do k = 2,l-2
-	    
+
 		if (P_res .le. abs(b_p(i,j,k))) then
 		  P_res = abs(b_p(i,j,k))
 		end if

@@ -23,9 +23,9 @@ subroutine temperature3d_solve(start)
   end if
 
   ! Update source terms
-  do i = 1, m-1
-    do j = 1, n-1
-      do k = 1, l-1
+  do i = 2, m-2
+    do j = 2, n-2
+      do k = 2, l-2
         Ap_T(i,j,k) = Ap_T(i,j,k)/alpha_temp
         b_T(i,j,k) = Su_T(i,j,k)+(1.0-alpha_temp)*Ap_T(i,j,k)*T(i,j,k)
       end do

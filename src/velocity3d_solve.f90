@@ -18,16 +18,12 @@ subroutine velocity3d_solve
 
   ! ====================== U-Velocity ====================== !
   ! Update source terms :: u
-  do i = 1,m
-    do j = 1,n-1
-      do k = 1,l-1
-        Ap_u(i,j,k) = Ap_u(i,j,k)/alpha_v
+  do i = 2,m-1
+    do j = 2,n-2
+      do k = 2,l-2
 
-        if (i .eq. 1) then
-          b_u(i,j,k) = b_u(i,j,k)+Su_u(i,j,k)+(1.0-alpha_v)*Ap_u(i,j,k)*u_hat(i,j,k)
-        else
-          b_u(i,j,k) = b_u(i,j,k)+Su_u(i,j,k)+dy*dz*(P_star(i-1,j,k)-P_star(i,j,k))+(1.0-alpha_v)*Ap_u(i,j,k)*u_hat(i,j,k)
-        end if
+        Ap_u(i,j,k) = Ap_u(i,j,k)/alpha_v
+        b_u(i,j,k) = b_u(i,j,k)+Su_u(i,j,k)+dy*dz*(P_star(i-1,j,k)-P_star(i,j,k))+(1.0-alpha_v)*Ap_u(i,j,k)*u_hat(i,j,k)
 
 	     end do
     end do
@@ -53,16 +49,12 @@ subroutine velocity3d_solve
 
   ! ====================== V-Velocity ====================== !
   ! Update source terms :: v
-  do i = 1, m-1
-    do j = 1, n
-      do k = 1,l-1
-        Ap_v(i,j,k) = Ap_v(i,j,k)/alpha_v
+  do i = 2, m-2
+    do j = 2, n-1
+      do k = 2,l-2
 
-        if (j .eq. 1) then
-          b_v(i,j,k) = b_v(i,j,k)+Su_v(i,j,k)+(1.0-alpha_v)*Ap_v(i,j,k)*v_hat(i,j,k)
-        else
-          b_v(i,j,k) = b_v(i,j,k)+Su_v(i,j,k)+dz*dx*(P_star(i,j-1,k)-P_star(i,j,k))+(1.0-alpha_v)*Ap_v(i,j,k)*v_hat(i,j,k)
-        end if
+        Ap_v(i,j,k) = Ap_v(i,j,k)/alpha_v
+        b_v(i,j,k) = b_v(i,j,k)+Su_v(i,j,k)+dz*dx*(P_star(i,j-1,k)-P_star(i,j,k))+(1.0-alpha_v)*Ap_v(i,j,k)*v_hat(i,j,k)
 
       end do
     end do
@@ -93,12 +85,7 @@ subroutine velocity3d_solve
       do k = 1,l
 
         Ap_w(i,j,k) = Ap_w(i,j,k)/alpha_v
-
-        if (k .eq. 1) then
-          b_w(i,j,k) = b_w(i,j,k)+Su_w(i,j,k)+(1.0-alpha_v)*Ap_w(i,j,k)*w_hat(i,j,k)
-        else
-          b_w(i,j,k) = b_w(i,j,k)+Su_w(i,j,k)+dx*dy*(P_star(i,j,k-1)-P_star(i,j,k))+(1.0-alpha_v)*Ap_w(i,j,k)*w_hat(i,j,k)
-        end if
+        b_w(i,j,k) = b_w(i,j,k)+Su_w(i,j,k)+dx*dy*(P_star(i,j,k-1)-P_star(i,j,k))+(1.0-alpha_v)*Ap_w(i,j,k)*w_hat(i,j,k)
 
       end do
     end do
