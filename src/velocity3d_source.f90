@@ -37,12 +37,12 @@ subroutine velocity3d_source(direction)
 		      Ft = dx*dy*(w_star(i-1,j,k+1)+w_star(i,j,k+1))/2
 
           ! Update diffusion terms
-          Dw = dy*dz/dx*Pr
-          De = dy*dz/dx*Pr
-          Ds = dz*dx/dy*Pr
-          Dn = dz*dx/dy*Pr
-          Db = dx*dy/dz*Pr
-          Dt = dx*dy/dz*Pr
+          Dw = dy*dz/dx*(Pr/Ra)**(0.5)
+          De = dy*dz/dx*(Pr/Ra)**(0.5)
+          Ds = dz*dx/dy*(Pr/Ra)**(0.5)
+          Dn = dz*dx/dy*(Pr/Ra)**(0.5)
+          Db = dx*dy/dz*(Pr/Ra)**(0.5)
+          Dt = dx*dy/dz*(Pr/Ra)**(0.5)
 
 		      ! Compute Coefficients - Power Law Differening Scheme
 		      Aw_u(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
@@ -54,13 +54,13 @@ subroutine velocity3d_source(direction)
 
           ! Check bottom / top
           if (k .eq. 1) then
-            As_u(i,j,k) = 0.
+            Ab_u(i,j,k) = 0.
           elseif (k .eq. l-1) then
-            An_u(i,j,k) = 0.
+            At_u(i,j,k) = 0.
           end if
 
 		      ! Update Ap coefficient
-		      Ap_u(i,j,k) = Aw_u(i,j,k)+Ae_u(i,j,k)+As_u(i,j,k)+An_u(i,j,k)+Ab_u(i,j,k)+At_u(i,j,k)+Sp_u(i,j,k)*dx*dy*dz
+		      Ap_u(i,j,k) = Aw_u(i,j,k)+Ae_u(i,j,k)+As_u(i,j,k)+An_u(i,j,k)+Ab_u(i,j,k)+At_u(i,j,k)+Sp_u(i,j,k)
 
 		      ! Check False Diffusion
 		      if (Ap_u(i,j,k) .eq. 0.) then
@@ -74,6 +74,28 @@ subroutine velocity3d_source(direction)
 	     end do
       end do
     end do
+
+    ! West
+    Aw_u(1,:,:) = 0.
+    Ae_u(1,:,:) = 1.
+    As_u(1,:,:) = 0.
+    An_u(1,:,:) = 0.
+    Ab_u(1,:,:) = 0.
+    At_u(1,:,:) = 0.
+
+    Ap_u(1,:,:) = 1.
+    b_u(1,:,:) = 0.
+
+    ! East
+    Aw_u(m,:,:) = 1.
+    Ae_u(m,:,:) = 0.
+    As_u(m,:,:) = 0.
+    An_u(m,:,:) = 0.
+    Ab_u(m,:,:) = 0.
+    At_u(m,:,:) = 0.
+
+    Ap_u(m,:,:) = 1.
+    b_u(m,:,:) = 0.
 
     ! South
     Aw_u(:,1,:) = 0.
@@ -141,28 +163,6 @@ subroutine velocity3d_source(direction)
     Ap_u(m,n-1,:) = 2.
     b_u(m,n-1,:) = 0.
 
-    ! West
-    Aw_u(1,:,:) = 0.
-    Ae_u(1,:,:) = 0.
-    As_u(1,:,:) = 0.
-    An_u(1,:,:) = 0.
-    Ab_u(1,:,:) = 0.
-    At_u(1,:,:) = 0.
-
-    Ap_u(1,:,:) = 1.
-    b_u(1,:,:) = 0.
-
-    ! East
-    Aw_u(m,:,:) = 0.
-    Ae_u(m,:,:) = 0.
-    As_u(m,:,:) = 0.
-    An_u(m,:,:) = 0.
-    Ab_u(m,:,:) = 0.
-    At_u(m,:,:) = 0.
-
-    Ap_u(m,:,:) = 1.
-    b_u(m,:,:) = 0.
-
   end if
 
   ! ====================== V-Velocity ====================== !
@@ -183,12 +183,12 @@ subroutine velocity3d_source(direction)
 		      Ft = dx*dy*(w_star(i,j-1,k+1)+w_star(i,j,k+1))/2
 
           ! Update diffusion terms
-          Dw = dy*dz/dx*Pr
-          De = dy*dz/dx*Pr
-          Ds = dz*dx/dy*Pr
-          Dn = dz*dx/dy*Pr
-		      Db = dx*dy/dz*Pr
-		      Dt = dx*dy/dz*Pr
+          Dw = dy*dz/dx*(Pr/Ra)**(0.5)
+          De = dy*dz/dx*(Pr/Ra)**(0.5)
+          Ds = dz*dx/dy*(Pr/Ra)**(0.5)
+          Dn = dz*dx/dy*(Pr/Ra)**(0.5)
+		      Db = dx*dy/dz*(Pr/Ra)**(0.5)
+		      Dt = dx*dy/dz*(Pr/Ra)**(0.5)
 
 		      ! Compute Coefficients - Power Law Differening Scheme
 		      Aw_v(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
@@ -200,13 +200,13 @@ subroutine velocity3d_source(direction)
 
           ! Check bottom / top
           if (k .eq. 1) then
-            As_v(i,j,k) = 0.
+            Ab_v(i,j,k) = 0.
           elseif (k .eq. l-1) then
-            An_v(i,j,k) = 0.
+            At_v(i,j,k) = 0.
           end if
 
 		      ! Update Ap coefficient
-		      Ap_v(i,j,k) = Aw_v(i,j,k)+Ae_v(i,j,k)+As_v(i,j,k)+An_v(i,j,k)+Ab_v(i,j,k)+At_v(i,j,k)+Sp_v(i,j,k)*dx*dy*dz
+		      Ap_v(i,j,k) = Aw_v(i,j,k)+Ae_v(i,j,k)+As_v(i,j,k)+An_v(i,j,k)+Ab_v(i,j,k)+At_v(i,j,k)+Sp_v(i,j,k)
 
 		      ! Check False Diffusion
 		      if (Ap_v(i,j,k) .eq. 0.) then
@@ -242,6 +242,28 @@ subroutine velocity3d_source(direction)
 
     Ap_v(m-1,:,:) = 1.
     b_v(m-1,:,:) = 0.
+
+    ! South
+    Aw_v(:,1,:) = 0.
+    Ae_v(:,1,:) = 0.
+    As_v(:,1,:) = 0.
+    An_v(:,1,:) = 1.
+    Ab_v(:,1,:) = 0.
+    At_v(:,1,:) = 0.
+
+    Ap_v(:,1,:) = 1.
+    b_v(:,1,:) = 0.
+
+    ! North
+    Aw_v(:,n,:) = 0.
+    Ae_v(:,n,:) = 0.
+    As_v(:,n,:) = 1.
+    An_v(:,n,:) = 0.
+    Ab_v(:,n,:) = 0.
+    At_v(:,n,:) = 0.
+
+    Ap_v(:,n,:) = 1.
+    b_v(:,n,:) = 0.
 
     ! West-South
     Aw_v(1,1,:) = 0.
@@ -287,28 +309,6 @@ subroutine velocity3d_source(direction)
     Ap_v(m-1,n,:) = 2.
     b_v(m-1,n,:) = 0.
 
-    ! South
-    Aw_v(:,1,:) = 0.
-    Ae_v(:,1,:) = 0.
-    As_v(:,1,:) = 0.
-    An_v(:,1,:) = 0.
-    Ab_v(:,1,:) = 0.
-    At_v(:,1,:) = 0.
-
-    Ap_v(:,1,:) = 1.
-    b_v(:,1,:) = 0.
-
-    ! North
-    Aw_v(:,n,:) = 0.
-    Ae_v(:,n,:) = 0.
-    As_v(:,n,:) = 0.
-    An_v(:,n,:) = 0.
-    Ab_v(:,n,:) = 0.
-    At_v(:,n,:) = 0.
-
-    Ap_v(:,n,:) = 1.
-    b_v(:,n,:) = 0.
-
   end if
 
   ! ====================== W-Velocity ====================== !
@@ -329,12 +329,12 @@ subroutine velocity3d_source(direction)
 		      Ft = dx*dy*(w_star(i,j,k)+w_star(i,j,k+1))/2
 
           ! Update diffusion terms
-          Dw = dy*dz/dx*Pr
-          De = dy*dz/dx*Pr
-          Ds = dz*dx/dy*Pr
-          Dn = dz*dx/dy*Pr
-		      Db = dx*dy/dz*Pr
-		      Dt = dx*dy/dz*Pr
+          Dw = dy*dz/dx*(Pr/Ra)**(0.5)
+          De = dy*dz/dx*(Pr/Ra)**(0.5)
+          Ds = dz*dx/dy*(Pr/Ra)**(0.5)
+          Dn = dz*dx/dy*(Pr/Ra)**(0.5)
+		      Db = dx*dy/dz*(Pr/Ra)**(0.5)
+		      Dt = dx*dy/dz*(Pr/Ra)**(0.5)
 
 		      ! Compute Coefficients - Power Law Differening Scheme
 		      Aw_w(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
@@ -345,7 +345,7 @@ subroutine velocity3d_source(direction)
 		      At_w(i,j,k) = Dt*max(0.0,(1-0.1*abs(Ft/Dt))**5)+max(-Ft,0.0)
 
 		      ! Update Ap coefficient
-		      Ap_w(i,j,k) = Aw_w(i,j,k)+Ae_w(i,j,k)+As_w(i,j,k)+An_w(i,j,k)+Ab_w(i,j,k)+At_w(i,j,k)+Sp_w(i,j,k)*dx*dy*dz
+		      Ap_w(i,j,k) = Aw_w(i,j,k)+Ae_w(i,j,k)+As_w(i,j,k)+An_w(i,j,k)+Ab_w(i,j,k)+At_w(i,j,k)+Sp_w(i,j,k)
 
 		      ! Check False Diffusion
 		      if (Ap_w(i,j,k) .eq. 0.) then
@@ -354,7 +354,7 @@ subroutine velocity3d_source(direction)
           end if
 
 		      ! Update b values
-		      b_w(i,j,k) = Su_w(i,j,k)*dx*dy*dz+Ra*Pr*(((T(i,j,k)+T(i,j,k-1))/2.0)-0.5)*dx*dy*dz
+		      b_w(i,j,k) = Su_w(i,j,k)*dx*dy*dz+(((T(i,j,k)+T(i,j,k-1))/2.0)-0.5)*dx*dy*dz
 
         end do
       end do
@@ -440,8 +440,8 @@ subroutine velocity3d_source(direction)
     ! East-North
     Aw_w(m-1,n-1,:) = 1.
     Ae_w(m-1,n-1,:) = 0.
-    As_w(m-1,n-1,:) = 0.
-    An_w(m-1,n-1,:) = 1.
+    As_w(m-1,n-1,:) = 1.
+    An_w(m-1,n-1,:) = 0.
     Ab_w(m-1,n-1,:) = 0.
     At_w(m-1,n-1,:) = 0.
 

@@ -30,20 +30,20 @@ subroutine temperature3d_source
         Ft = dx*dy*w(i,j,k+1)
 
         ! Update diffusion terms
-        Dw = dy*dz/dx
-        De = dy*dz/dx
-        Dn = dz*dx/dy
-        Ds = dz*dx/dy
-        Db = dx*dy/dz
-        Dt = dx*dy/dz
+        Dw = dy*dz/dx/(Ra*Pr)**(0.5)
+        De = dy*dz/dx/(Ra*Pr)**(0.5)
+        Dn = dz*dx/dy/(Ra*Pr)**(0.5)
+        Ds = dz*dx/dy/(Ra*Pr)**(0.5)
+        Db = dx*dy/dz/(Ra*Pr)**(0.5)
+        Dt = dx*dy/dz/(Ra*Pr)**(0.5)
 
         ! Compute Coefficients - Power Law Differening Scheme
-        Aw_T(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
-        Ae_T(i,j,k) = De*max(0.0,(1-0.1*abs(Fe/De))**5)+max(-Fe,0.0)
-        As_T(i,j,k) = Ds*max(0.0,(1-0.1*abs(Fs/Ds))**5)+max(Fs,0.0)
-        An_T(i,j,k) = Dn*max(0.0,(1-0.1*abs(Fn/Dn))**5)+max(-Fn,0.0)
-        Ab_T(i,j,k) = Db*max(0.0,(1-0.1*abs(Fb/Db))**5)+max(Fb,0.0)
-        At_T(i,j,k) = Dt*max(0.0,(1-0.1*abs(Ft/Dt))**5)+max(-Ft,0.0)
+        Aw_T(i,j,k) = mod_w*Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
+        Ae_T(i,j,k) = mod_e*De*max(0.0,(1-0.1*abs(Fe/De))**5)+max(-Fe,0.0)
+        As_T(i,j,k) = mod_s*Ds*max(0.0,(1-0.1*abs(Fs/Ds))**5)+max(Fs,0.0)
+        An_T(i,j,k) = mod_n*Dn*max(0.0,(1-0.1*abs(Fn/Dn))**5)+max(-Fn,0.0)
+        Ab_T(i,j,k) = mod_b*Db*max(0.0,(1-0.1*abs(Fb/Db))**5)+max(Fb,0.0)
+        At_T(i,j,k) = mod_t*Dt*max(0.0,(1-0.1*abs(Ft/Dt))**5)+max(-Ft,0.0)
 
   	    ! Update Ap coefficient
   	    Ap_T(i,j,k) = Aw_T(i,j,k)+Ae_T(i,j,k)+As_T(i,j,k)+An_T(i,j,k)+Ab_T(i,j,k)+At_T(i,j,k)
@@ -143,8 +143,8 @@ subroutine temperature3d_source
   ! East-North
   Aw_T(m-1,n-1,:) = 1.
   Ae_T(m-1,n-1,:) = 0.
-  As_T(m-1,n-1,:) = 0.
-  An_T(m-1,n-1,:) = 1.
+  As_T(m-1,n-1,:) = 1.
+  An_T(m-1,n-1,:) = 0.
   Ab_T(m-1,n-1,:) = 0.
   At_T(m-1,n-1,:) = 0.
 

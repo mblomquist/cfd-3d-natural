@@ -19,597 +19,106 @@ subroutine pseudo3d_solve
 
   ! ========================== u_hat ========================== !
 
-  do i = 1, m
-    do j = 1, n-1
+  do i = 2, m-1
+    do j = 2, n-2
       do k = 1, l-1
 
-        if (i .eq. 1) then
-          if (j .eq. 1) then
-            if (k .eq. 1) then
-              u_hat(i,j,k) = (Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					                    An_u(i,j,k)*u_star(i,j+1,k)+ &
-                              At_u(i,j,k)*u_star(i,j,k+1)+ &
-                              b_u(i,j,k))/Ap_u(i,j,k)
-			else if (k .eq. l-1) then
-			  u_hat(i,j,k) = (Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					   An_u(i,j,k)*u_star(i,j+1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			else
-			  u_hat(i,j,k) = (Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					   An_u(i,j,k)*u_star(i,j+1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   At_u(i,j,k)*u_star(i,j,k+1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			end if
-		  elseif (j .eq. n-1) then
-		    if (k .eq. 1) then
-			  u_hat(i,j,k) = (Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					   As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   At_u(i,j,k)*u_star(i,j,k+1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			else if (k .eq. l-1) then
-			  u_hat(i,j,k) = (Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					   As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			else
-			  u_hat(i,j,k) = (Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					   As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   At_u(i,j,k)*u_star(i,j,k+1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			end if
-		  else
-		    if (k .eq. 1) then
-			  u_hat(i,j,k) = (Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					   As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   An_u(i,j,k)*u_star(i,j+1,k)+ &
-					   At_u(i,j,k)*u_star(i,j,k+1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			else if (k .eq. l-1) then
-			  u_hat(i,j,k) = (Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					   As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   An_u(i,j,k)*u_star(i,j+1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			else
-			  u_hat(i,j,k) = (Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					   As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   An_u(i,j,k)*u_star(i,j+1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   At_u(i,j,k)*u_star(i,j,k+1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			end if
-		  end if
-		elseif (i .eq. m) then
-		  if (j .eq. 1) then
-		    if (k .eq. 1) then
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           An_u(i,j,k)*u_star(i,j+1,k)+ &
-					   At_u(i,j,k)*u_star(i,j,k+1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			else if (k .eq. l-1) then
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           An_u(i,j,k)*u_star(i,j+1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			else
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           An_u(i,j,k)*u_star(i,j+1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   At_u(i,j,k)*u_star(i,j,k+1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			end if
-		  elseif (j .eq. n-1) then
-		    if (k .eq. 1) then
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   At_u(i,j,k)*u_star(i,j,k+1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			else if (k .eq. l-1) then
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			else
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   At_u(i,j,k)*u_star(i,j,k+1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			end if
-		  else
-		    if (k .eq. 1) then
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   An_u(i,j,k)*u_star(i,j+1,k)+ &
-					   At_u(i,j,k)*u_star(i,j,k+1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			else if (k .eq. l-1) then
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   An_u(i,j,k)*u_star(i,j+1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			else
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   An_u(i,j,k)*u_star(i,j+1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   At_u(i,j,k)*u_star(i,j,k+1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			end if
-		  end if
-		else
-		  if (j .eq. 1) then
-		    if (k .eq. 1) then
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					   An_u(i,j,k)*u_star(i,j+1,k)+ &
-					   At_u(i,j,k)*u_star(i,j,k+1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			else if (k .eq. l-1) then
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					   An_u(i,j,k)*u_star(i,j+1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			else
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					   An_u(i,j,k)*u_star(i,j+1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   At_u(i,j,k)*u_star(i,j,k+1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			end if
-		  elseif (j .eq. n-1) then
-		    if (k .eq. 1) then
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					   As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   At_u(i,j,k)*u_star(i,j,k+1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			else if (k .eq. l-1) then
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					   As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			else
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					   As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   At_u(i,j,k)*u_star(i,j,k+1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			end if
-		  else
-		    if (k .eq. 1) then
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					   As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   An_u(i,j,k)*u_star(i,j+1,k)+ &
-					   At_u(i,j,k)*u_star(i,j,k+1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			else if (k .eq. l-1) then
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					   As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   An_u(i,j,k)*u_star(i,j+1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			else
-			  u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
-			           Ae_u(i,j,k)*u_star(i+1,j,k)+ &
-					   As_u(i,j,k)*u_star(i,j-1,k)+ &
-					   An_u(i,j,k)*u_star(i,j+1,k)+ &
-					   Ab_u(i,j,k)*u_star(i,j,k-1)+ &
-					   At_u(i,j,k)*u_star(i,j,k+1)+ &
-					   b_u(i,j,k))/Ap_u(i,j,k)
-			end if
-		  end if
-		end if
+        if (k .eq. 1) then
+          u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
+                        Ae_u(i,j,k)*u_star(i+1,j,k)+ &
+                        As_u(i,j,k)*u_star(i,j-1,k)+ &
+                        An_u(i,j,k)*u_star(i,j+1,k)+ &
+                        At_u(i,j,k)*u_star(i,j,k+1)+ &
+                        b_u(i,j,k))/Ap_u(i,j,k)
+        elseif (k .eq. l-1) then
+          u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
+                        Ae_u(i,j,k)*u_star(i+1,j,k)+ &
+                        As_u(i,j,k)*u_star(i,j-1,k)+ &
+                        An_u(i,j,k)*u_star(i,j+1,k)+ &
+                        Ab_u(i,j,k)*u_star(i,j,k-1)+ &
+                        b_u(i,j,k))/Ap_u(i,j,k)
+        else
+          u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
+                        Ae_u(i,j,k)*u_star(i+1,j,k)+ &
+                        As_u(i,j,k)*u_star(i,j-1,k)+ &
+                        An_u(i,j,k)*u_star(i,j+1,k)+ &
+                        Ab_u(i,j,k)*u_star(i,j,k-1)+ &
+                        At_u(i,j,k)*u_star(i,j,k+1)+ &
+                        b_u(i,j,k))/Ap_u(i,j,k)
+        end if
 
-	  end do
-	end do
+      end do
+    end do
   end do
+
+  u_hat(1,:,:) = u_hat(2,:,:)
+  u_hat(m,:,:) = u_hat(m-1,:,:)
+  u_hat(:,1,:) = u_hat(:,2,:)
+  u_hat(:,n-1,:) = u_hat(:,n-2,:)
 
   ! ========================== v_hat ========================== !
 
-  do i = 1, m-1
-    do j = 1, n
-	  do k = 1, l-1
+  do i = 2, m-2
+    do j = 2, n-1
+      do k = 1, l-1
 
-	    if (i .eq. 1) then
-		  if (j .eq. 1) then
-		    if (k .eq. 1) then
-			  v_hat(i,j,k) = (Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else if (k .eq. l-1) then
-			  v_hat(i,j,k) = (Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else
-			  v_hat(i,j,k) = (Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			end if
-		  elseif (j .eq. n) then
-		    if (k .eq. 1) then
-			  v_hat(i,j,k) = (Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else if (k .eq. l-1) then
-			  v_hat(i,j,k) = (Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else
-			  v_hat(i,j,k) = (Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			end if
-		  else
-		    if (k .eq. 1) then
-			  v_hat(i,j,k) = (Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else if (k .eq. l-1) then
-			  v_hat(i,j,k) = (Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else
-			  v_hat(i,j,k) = (Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			end if
-		  end if
-		elseif (i .eq. m-1) then
-		  if (j .eq. 1) then
-		    if (k .eq. 1) then
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else if (k .eq. l-1) then
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			end if
-		  elseif (j .eq. n) then
-		    if (k .eq. 1) then
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else if (k .eq. l-1) then
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			end if
-		  else
-		    if (k .eq. 1) then
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else if (k .eq. l-1) then
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			end if
-		  end if
-		else
-		  if (j .eq. 1) then
-		    if (k .eq. 1) then
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else if (k .eq. l-1) then
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			end if
-		  elseif (j .eq. n) then
-		    if (k .eq. 1) then
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else if (k .eq. l-1) then
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			end if
-		  else
-		    if (k .eq. 1) then
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else if (k .eq. l-1) then
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			else
-			  v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
-			           Ae_v(i,j,k)*v_star(i+1,j,k)+ &
-					   As_v(i,j,k)*v_star(i,j-1,k)+ &
-					   An_v(i,j,k)*v_star(i,j+1,k)+ &
-					   Ab_v(i,j,k)*v_star(i,j,k-1)+ &
-					   At_v(i,j,k)*v_star(i,j,k+1)+ &
-					   b_v(i,j,k))/Ap_v(i,j,k)
-			end if
-		  end if
-		end if
+        if (k .eq. 1) then
+          v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
+                          Ae_v(i,j,k)*v_star(i+1,j,k)+ &
+                          As_v(i,j,k)*v_star(i,j-1,k)+ &
+                          An_v(i,j,k)*v_star(i,j+1,k)+ &
+                          At_v(i,j,k)*v_star(i,j,k+1)+ &
+                          b_v(i,j,k))/Ap_v(i,j,k)
+        elseif (k .eq. l-1) then
+          v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
+                          Ae_v(i,j,k)*v_star(i+1,j,k)+ &
+                          As_v(i,j,k)*v_star(i,j-1,k)+ &
+                          An_v(i,j,k)*v_star(i,j+1,k)+ &
+                          Ab_v(i,j,k)*v_star(i,j,k-1)+ &
+                          b_v(i,j,k))/Ap_v(i,j,k)
+        else
+          v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
+                          Ae_v(i,j,k)*v_star(i+1,j,k)+ &
+                          As_v(i,j,k)*v_star(i,j-1,k)+ &
+                          An_v(i,j,k)*v_star(i,j+1,k)+ &
+                          Ab_v(i,j,k)*v_star(i,j,k-1)+ &
+                          At_v(i,j,k)*v_star(i,j,k+1)+ &
+                          b_v(i,j,k))/Ap_v(i,j,k)
+        end if
 
-	  end do
-	end do
+        v_hat(1,:,:) = v_hat(2,:,:)
+        v_hat(m-1,:,:) = v_hat(m-2,:,:)
+        v_hat(:,1,:) = v_hat(:,2,:)
+        v_hat(:,n,:) = v_hat(:,n-1,:)
+
+      end do
+    end do
   end do
 
   ! ========================== w_hat ========================== !
 
-  do i = 1, m-1
-    do j = 1, n-1
-	  do k = 1, l
+  do i = 2, m-2
+    do j = 2, n-2
+      do k = 2, l-1
 
-	    if (i .eq. 1) then
-		  if (j .eq. 1) then
-		    if (k .eq. 1) then
-			  w_hat(i,j,k) = (Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else if (k .eq. l) then
-			  w_hat(i,j,k) = (Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else
-			  w_hat(i,j,k) = (Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			end if
-		  elseif (j .eq. n-1) then
-		    if (k .eq. 1) then
-			  w_hat(i,j,k) = (Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else if (k .eq. l) then
-			  w_hat(i,j,k) = (Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else
-			  w_hat(i,j,k) = (Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			end if
-		  else
-		    if (k .eq. 1) then
-			  w_hat(i,j,k) = (Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else if (k .eq. l) then
-			  w_hat(i,j,k) = (Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else
-			  w_hat(i,j,k) = (Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			end if
-		  end if
-		elseif (i .eq. m-1) then
-		  if (j .eq. 1) then
-		    if (k .eq. 1) then
 			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else if (k .eq. l) then
-			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else
-			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			end if
-		  elseif (j .eq. n-1) then
-		    if (k .eq. 1) then
-			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else if (k .eq. l) then
-			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else
-			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			end if
-		  else
-		    if (k .eq. 1) then
-			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else if (k .eq. l) then
-			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else
-			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			end if
-		  end if
-		else
-		  if (j .eq. 1) then
-		    if (k .eq. 1) then
-			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else if (k .eq. l) then
-			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else
-			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			end if
-		  elseif (j .eq. n-1) then
-		    if (k .eq. 1) then
-			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else if (k .eq. l) then
-			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else
-			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			end if
-		  else
-		    if (k .eq. 1) then
-			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else if (k .eq. l) then
-			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			else
-			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
-			           Ae_w(i,j,k)*w_star(i+1,j,k)+ &
-					   As_w(i,j,k)*w_star(i,j-1,k)+ &
-					   An_w(i,j,k)*w_star(i,j+1,k)+ &
-					   Ab_w(i,j,k)*w_star(i,j,k-1)+ &
-					   At_w(i,j,k)*w_star(i,j,k+1)+ &
-					   b_w(i,j,k))/Ap_w(i,j,k)
-			end if
-		  end if
-		end if
+                        Ae_w(i,j,k)*w_star(i+1,j,k)+ &
+                        As_w(i,j,k)*w_star(i,j-1,k)+ &
+                        An_w(i,j,k)*w_star(i,j+1,k)+ &
+                        Ab_w(i,j,k)*w_star(i,j,k-1)+ &
+                        At_w(i,j,k)*w_star(i,j,k+1)+ &
+                        b_w(i,j,k))/Ap_w(i,j,k)
 
-	  end do
-	end do
+	    end do
+    end do
   end do
+
+  w_hat(1,:,:) = w_hat(2,:,:)
+  w_hat(m-1,:,:) = w_hat(m-2,:,:)
+  w_hat(:,1,:) = w_hat(:,2,:)
+  w_hat(:,n-1,:) = w_hat(:,n-2,:)
+  w_hat(:,:,1) = 0.
+  w_hat(:,:,l) = 0.
 
   return
 

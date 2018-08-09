@@ -14,13 +14,31 @@ subroutine velocity3d_correct
   ! Define internal variables
   integer :: i, j, k
 
+
+    ! ====================== W-Velocity ====================== !
+    ! Correct velocity values
+    do i = 2,m-2
+      do j = 2,n-2
+        do k = 2,l-1
+          w(i,j,k) = w_star(i,j,k)+dx*dy/Ap_w(i,j,k)*(P_prime(i,j,k-1)-P_prime(i,j,k))*alpha_v
+        end do
+      end do
+    end do
+
+    w(1,:,:) = w(2,:,:)
+    w(m-1,:,:) = w(m-2,:,:)
+    w(:,1,:) = w(:,2,:)
+    w(:,n-1,:) = w(:,n-2,:)
+    w(:,:,1) = 0.
+    w(:,:,l) = 0.
+    
   ! ====================== U-Velocity ====================== !
   ! Correct velocity values
   do i = 2,m-1
     do j = 2,n-2
       do k = 1,l-1
 
-        u(i,j,k) = u_star(i,j,k)+dy/Ap_u(i,j,k)*(P_prime(i-1,j,k)-P_prime(i,j,k))*alpha_v
+        u(i,j,k) = u_star(i,j,k)+dy*dz/Ap_u(i,j,k)*(P_prime(i-1,j,k)-P_prime(i,j,k))*alpha_v
 
       end do
     end do
@@ -36,7 +54,7 @@ subroutine velocity3d_correct
   do i = 2,m-2
     do j = 2,n-1
       do k = 1,l-1
-        v(i,j,k) = v_star(i,j,k)+dx/Ap_v(i,j,k)*(P_prime(i,j-1,k)-P_prime(i,j,k))*alpha_v
+        v(i,j,k) = v_star(i,j,k)+dx*dz/Ap_v(i,j,k)*(P_prime(i,j-1,k)-P_prime(i,j,k))*alpha_v
       end do
     end do
   end do
@@ -46,22 +64,6 @@ subroutine velocity3d_correct
   v(:,1,:) = v(:,2,:)
   v(:,n,:) = v(:,n-1,:)
 
-  ! ====================== W-Velocity ====================== !
-  ! Correct velocity values
-  do i = 2,m-2
-    do j = 2,n-2
-      do k = 2,l-1
-        w(i,j,k) = w_star(i,j,k)+dx/Ap_w(i,j,k)*(P_prime(i,j,k-1)-P_prime(i,j,k))*alpha_v
-      end do
-    end do
-  end do
-
-  w(1,:,:) = w(2,:,:)
-  w(m-1,:,:) = w(m-2,:,:)
-  w(:,1,:) = w(:,2,:)
-  w(:,n-1,:) = w(:,n-2,:)
-  w(:,:,1) = 0.
-  w(:,:,l) = 0.
 
   return
 

@@ -116,7 +116,6 @@ subroutine simpler3d
     !print *, "................"
 
     ! Reset Initial  Initial Guesses
-    P_star = P
 	  u_star = u
 	  v_star = v
     w_star = w

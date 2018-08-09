@@ -178,9 +178,9 @@ subroutine solver3d_gmres(Ab, As, Aw, Ap, Ae, An, At, b, phi, m, n, l, tol, maxi
         end do
       end do
 
-      print *, 'GMRES Algorithm successfully converged!'
-      print *, 'Number of Iterations: ', k
-      print *, 'Relative residual: ', err
+      !print *, 'GMRES Algorithm successfully converged!'
+      !print *, 'Number of Iterations: ', k
+      !print *, 'Relative residual: ', err
       fault = 1
 
       return
@@ -211,9 +211,9 @@ subroutine solver3d_gmres(Ab, As, Aw, Ap, Ae, An, At, b, phi, m, n, l, tol, maxi
         end do
       end do
 
-      print *, 'GMRES Algorithm did not converge!'
-      print *, 'Number of Iterations: ', k
-      print *, 'Relative residual: ', err
+      !print *, 'GMRES Algorithm did not converge!'
+      !print *, 'Number of Iterations: ', k
+      !print *, 'Relative residual: ', err
       fault = 0
 
       return
