@@ -36,8 +36,8 @@ subroutine velocity3d
   Sp_u = 0.
   Su_u = 0.
 
-  Sp_u(:,:,1) = 2.*dy*dz/dx*Pr*(Pr/Ra)**(0.5)
-  Sp_u(:,:,l-1) = 2.*dy*dz/dx*Pr*(Pr/Ra)**(0.5)
+  Sp_u(:,:,1) = 2.*dy*dz/dx*(Pr/Ra)**(0.5)
+  Sp_u(:,:,l-1) = 2.*dy*dz/dx*(Pr/Ra)**(0.5)
 
   ! Initialize coefficients :: v
   Ab_v = 0.
@@ -53,8 +53,8 @@ subroutine velocity3d
   Sp_v = 0.
   Su_v = 0.
 
-  Sp_u(:,:,1) = 2.*dz*dx/dy*Pr*(Pr/Ra)**(0.5)
-  Sp_u(:,:,l-1) = 2.*dz*dx/dy*Pr*(Pr/Ra)**(0.5)
+  Sp_v(:,:,1) = 2.*dz*dx/dy*(Pr/Ra)**(0.5)
+  Sp_v(:,:,l-1) = 2.*dz*dx/dy*(Pr/Ra)**(0.5)
 
   ! Initialize coefficients :: w
   Ab_w = 0.

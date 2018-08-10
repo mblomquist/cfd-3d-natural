@@ -29,9 +29,10 @@ subroutine velocity3d_correct
     w(m-1,:,:) = w(m-2,:,:)
     w(:,1,:) = w(:,2,:)
     w(:,n-1,:) = w(:,n-2,:)
+
     w(:,:,1) = 0.
     w(:,:,l) = 0.
-    
+
   ! ====================== U-Velocity ====================== !
   ! Correct velocity values
   do i = 2,m-1
@@ -52,18 +53,17 @@ subroutine velocity3d_correct
   ! ====================== V-Velocity ====================== !
   ! Correct velocity values
   do i = 2,m-2
-    do j = 2,n-1
+    do j = 2,n-2
       do k = 1,l-1
         v(i,j,k) = v_star(i,j,k)+dx*dz/Ap_v(i,j,k)*(P_prime(i,j-1,k)-P_prime(i,j,k))*alpha_v
       end do
     end do
   end do
 
-  v(1,:,:) = v(2,:,:)
+  v(1,:,:) = v(1,:,:)
   v(m-1,:,:) = v(m-2,:,:)
   v(:,1,:) = v(:,2,:)
   v(:,n,:) = v(:,n-1,:)
-
 
   return
 

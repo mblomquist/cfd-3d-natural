@@ -49,6 +49,15 @@ program main3d
   print *, 'Writing results to file.'
   call output3d_results
   print *, 'Program complete.'
+  print *, ''
+  print *, 'Grid size: ', m, n, l
+  print *, 'dx, dy, dz', dx, dy, dz
+  print *, 'delta_T:', delta_T
+  print *, 'length:', length
+  print *, 'u0:', u0
+  print *, 'Rayleigh Number: ', Ra
+  print *, 'Prandtl Number: ', Pr
+  print *, ''
 
 ! End program
 end program main3d

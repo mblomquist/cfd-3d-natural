@@ -69,7 +69,7 @@ subroutine velocity3d_source(direction)
           end if
 
 		      ! Update b values
-		      b_u(i,j,k) = Su_u(i,j,k)*dx*dy*dz
+		      b_u(i,j,k) = 0.
 
 	     end do
       end do
@@ -215,7 +215,7 @@ subroutine velocity3d_source(direction)
           end if
 
           ! Update b values
-          b_v(i,j,k) = Su_v(i,j,k)*dx*dy*dz
+          b_v(i,j,k) = 0.
 
         end do
       end do
@@ -354,7 +354,7 @@ subroutine velocity3d_source(direction)
           end if
 
 		      ! Update b values
-		      b_w(i,j,k) = Su_w(i,j,k)*dx*dy*dz+(((T(i,j,k)+T(i,j,k-1))/2.0)-0.5)*dx*dy*dz
+		      b_w(i,j,k) = (((T(i,j,k)+T(i,j,k-1))/2.0)-0.5)/Pr*dx*dy*dz*mod_t
 
         end do
       end do
