@@ -9,7 +9,7 @@
 
 ! Mesh parameters :: nodes in x, nodes in y, nodes in z
   integer :: m, n, l
-  parameter (m=17, n=17, l=9)
+  parameter (m=4, n=4, l=4)
 
 ! Geometry variables ::
   real(8) :: length, width, depth, dx, dy, dz
@@ -36,8 +36,8 @@
   common As_u, Aw_u, Ap_u, Ae_u, An_u, Ab_u, At_u, b_u
 
 ! U-Velocity :: boundary conditions
-    integer :: u_bc_wc, u_bc_ec, u_bc_nc, u_bc_sc, u_bc_bc, u_bc_tc
-    common u_bc_wc, u_bc_ec, u_bc_nc, u_bc_sc, u_bc_bc, u_bc_tc
+  integer :: u_bc_wc, u_bc_ec, u_bc_nc, u_bc_sc, u_bc_bc, u_bc_tc
+  common u_bc_wc, u_bc_ec, u_bc_nc, u_bc_sc, u_bc_bc, u_bc_tc
 
 ! U-Velocity :: boundary values
   real(8) :: u_bc_wv, u_bc_ev, u_bc_nv, u_bc_sv, u_bc_bv, u_bc_tv
@@ -91,20 +91,16 @@
   real(8) :: T_bc_wv, T_bc_ev, T_bc_sv, T_bc_nv, T_bc_bv, T_bc_tv
   common T_bc_wv, T_bc_ev, T_bc_sv, T_bc_nv, T_bc_bv, T_bc_tv
 
-! Temperature :: mod
-  real(8) :: mod_w, mod_e, mod_s, mod_n, mod_b, mod_t
-  common mod_w, mod_e, mod_s, mod_n, mod_b, mod_t
-
 ! Convergence Parameters
   !integer :: itrmax
   !parameter (itrmax=250)
 
 ! Convergence variables
-  real(8), dimension(100000) :: R_e, R_t
-  common R_e, R_t
+  real(8), dimension(100000) :: R_e, R_t, t_1, t_2, t_3, t_4, t_5, t_6, t_7
+  common R_e, R_t, t_1, t_2, t_3, t_4, t_5, t_6, t_7
 
-  real(8) :: solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time
-  common solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time
+  real(8) :: solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time, t_start, t_end
+  common solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time, t_start, t_end
 
   integer :: maxit, solver, solved, itrmax
   common maxit, solver, solved, itrmax

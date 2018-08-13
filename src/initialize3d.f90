@@ -34,8 +34,6 @@ subroutine initialize3d
   read(2,*) T_bc_wc, T_bc_ec, T_bc_nc, T_bc_sc, T_bc_bc, T_bc_tc
   read(2,*)
   read(2,*) itrmax, maxit, solver_tol, simpler_tol, alpha_v, alpha_t, solver
-  read(2,*)
-  read(2,*) mod_w, mod_e, mod_s, mod_n, mod_b, mod_t
   close(2)
 
   ! Determine T_h and T_c
@@ -58,13 +56,13 @@ subroutine initialize3d
   call geometry3d
 
   ! Calculate pressure source terms and initialize grid
-  call pressure3d
+  call pressure3d_init
 
   ! Calculate velocity source terms and initialize grid
-  call velocity3d
+  call velocity3d_init
 
   ! Calculate temperature source terms and initialize grid
-  call temperature3d
+  call temperature3d_init
 
   return
 
