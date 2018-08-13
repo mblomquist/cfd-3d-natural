@@ -24,6 +24,8 @@ subroutine simpler3d
   !print *, "T:", T
   !print *, "................"
 
+  return
+  
   do i = 1,itrmax
 
     ! Calculate velocity coefficients

@@ -1,19 +1,20 @@
-! velocity3d Subroutine for 3D CFD Problems
-!
-! Written by Matt Blomquist
-! Last Update: 2018-07-16 (YYYY-MM-DD)
-!
-! This subroutine calculates the boundary source terms, sets interior source
-! terms, sets boundary values, and initializes the velocity grids.
-!
-! Boundary Conditions ::
-!   0 - Wall Type Condition
-!   1 - Fixed Value Type Condition
-!   2 - Symmetry Type Condition
+! velocity3d subroutines for 3d cfd problems
 
 subroutine velocity3d_init
-
+  ! velocity3d_init Subroutine for 3D CFD Problems
+  !
+  ! Written by Matt Blomquist
+  ! Last Update: 2018-07-16 (YYYY-MM-DD)
+  !
+  ! This subroutine calculates the boundary source terms, sets interior source
+  ! terms, sets boundary values, and initializes the velocity grids.
+  !
+  ! Boundary Conditions ::
+  !   0 - Wall Type Condition
+  !   1 - Fixed Value Type Condition
+  !   2 - Symmetry Type Condition
   ! Pull in standard variable header
+
   include "var3d.dec"
 
   ! Initalize Velocity Fields
@@ -36,8 +37,32 @@ subroutine velocity3d_init
   Sp_u = 0.
   Su_u = 0.
 
-  Sp_u(:,:,1) = 2.*dy*dz/dx*(Pr/Ra)**(0.5)
-  Sp_u(:,:,l-1) = 2.*dy*dz/dx*(Pr/Ra)**(0.5)
+  ! Define source update bounds
+  if (u_bc_sc .eq. 0) then
+    jstart_u = 1
+  else
+    jstart_u = 2
+  end if
+
+  if (u_bc_nc .eq. 0) then
+    jend_u = n-1
+  else
+    jend_u = n-2
+  end if
+
+  if (u_bc_bc .eq. 0) then
+    kstart_u = 1
+  else
+    kstart_u = 2
+  end if
+
+  if (u_bc_tc .eq. 0) then
+    kend_u = l-1
+  else
+    kend_u = l-2
+  end if
+
+  ! ====================================== !
 
   ! Initialize coefficients :: v
   Ab_v = 0.
@@ -53,8 +78,32 @@ subroutine velocity3d_init
   Sp_v = 0.
   Su_v = 0.
 
-  Sp_v(:,:,1) = 2.*dz*dx/dy*(Pr/Ra)**(0.5)
-  Sp_v(:,:,l-1) = 2.*dz*dx/dy*(Pr/Ra)**(0.5)
+  ! Define source update bounds
+  if (v_bc_wc .eq. 0) then
+    istart_v = 1
+  else
+    istart_v = 2
+  end if
+
+  if (v_bc_ec .eq. 0) then
+    iend_v = m-1
+  else
+    iend_v = m-2
+  end if
+
+  if (v_bc_bc .eq. 0) then
+    kstart_v = 1
+  else
+    kstart_v = 2
+  end if
+
+  if (v_bc_tc .eq. 0) then
+    kend_v = l-1
+  else
+    kend_v = l-2
+  end if
+
+  ! ====================================== !
 
   ! Initialize coefficients :: w
   Ab_w = 0.
@@ -70,6 +119,31 @@ subroutine velocity3d_init
   Sp_w = 0.
   Su_w = 0.
 
+  ! Define source update bounds
+  if (w_bc_wc .eq. 0) then
+    istart_w = 1
+  else
+    istart_w = 2
+  end if
+
+  if (w_bc_tc .eq. 0) then
+    iend_w = m-1
+  else
+    iend_w = m-2
+  end if
+
+  if (w_bc_sc .eq. 0) then
+    jstart_w = 1
+  else
+    jstart_w = 2
+  end if
+
+  if (w_bc_nc .eq. 0) then
+    jend_w = n-1
+  else
+    jend_w = n-2
+  end if
+
   ! ====================================== !
 
   return
@@ -78,6 +152,19 @@ end subroutine velocity3d_init
 
 subroutine velocity3d_boundary(direction)
 
+  ! Boundary Conditions ::
+  !   0 - Wall Type Condition
+  !   1 - Fixed Value Type Condition
+  !   2 - Symmetry Type Condition
+  !
+  ! Note:
+  ! 1. For wall conditions the principle direction (i.e. west/east for u-velocity),
+  !    the velocity value is set to zero. Non-principle walls are set to no slip.
+  ! 2. For symmetry conditions, the source loop needs to be adjusted not to overwrite
+  !    the assignment. This is the same for fixed value conditions.
+
+
+
   ! Include standard variable header
   include "var3d.dec"
 
@@ -85,296 +172,879 @@ subroutine velocity3d_boundary(direction)
   character :: direction
 
   if (direction .eq. "u") then
-    ! West
-    Aw_u(1,:,:) = 0.
-    Ae_u(1,:,:) = 1.
-    As_u(1,:,:) = 0.
-    An_u(1,:,:) = 0.
-    Ab_u(1,:,:) = 0.
-    At_u(1,:,:) = 0.
 
-    Ap_u(1,:,:) = 1.
-    b_u(1,:,:) = 0.
+    ! West
+    if (u_bc_wc .eq. 1) then
+      Ap_u(1,2:n-2,2:l-2) = 1.
+      b_u(1,2:n-2,2:l-2) = u_bc_wv
+    elseif (u_bc_wc .eq. 2) then
+      Ap_u(1,2:n-2,2:l-2) = 1.
+      Ae_u(1,2:n-2,2:l-2) = 1.
+    else
+      Ap_u(1,2:n-2,2:l-2) = 1.
+      b_u(1,2:n-2,2:l-2) = 0.
+    end if
 
     ! East
-    Aw_u(m,:,:) = 1.
-    Ae_u(m,:,:) = 0.
-    As_u(m,:,:) = 0.
-    An_u(m,:,:) = 0.
-    Ab_u(m,:,:) = 0.
-    At_u(m,:,:) = 0.
-
-    Ap_u(m,:,:) = 1.
-    b_u(m,:,:) = 0.
+    if (u_bc_ec .eq. 1) then
+      Ap_u(m,2:n-2,2:l-2) = 1.
+      b_u(m,2:n-2,2:l-2) = u_bc_ev
+    elseif (u_bc_ec .eq. 2) then
+      Ap_u(m,2:n-2,2:l-2) = 1.
+      Aw_u(m,2:n-2,2:l-2) = 1.
+    else
+      Ap_u(m,2:n-2,2:l-2) = 1.
+      b_u(m,2:n-2,2:l-2) = 0.
+    end if
 
     ! South
-    Aw_u(:,1,:) = 0.
-    Ae_u(:,1,:) = 0.
-    As_u(:,1,:) = 0.
-    An_u(:,1,:) = 1.
-    Ab_u(:,1,:) = 0.
-    At_u(:,1,:) = 0.
-
-    Ap_u(:,1,:) = 1.
-    b_u(:,1,:) = 0.
+    if (u_bc_sc .eq. 1) then
+      Ap_u(2:m-1,1,2:l-2) = 1.
+      b_u(2:m-1,1,2:l-2) = u_bc_sv
+    elseif (u_bc_sc .eq. 2) then
+      Ap_u(2:m-1,1,2:l-2) = 1.
+      An_u(2:m-1,1,2:l-2) = 1.
+    else
+      Sp_u(2:m-1,1,2:l-2) = -2.0*dx*dz/dy*(Pr/Ra)**(0.5)
+    end if
 
     ! North
-    Aw_u(:,n-1,:) = 0.
-    Ae_u(:,n-1,:) = 0.
-    As_u(:,n-1,:) = 1.
-    An_u(:,n-1,:) = 0.
-    Ab_u(:,n-1,:) = 0.
-    At_u(:,n-1,:) = 0.
+    if (u_bc_nc .eq. 1) then
+      Ap_u(2:m-1,n-1,2:l-2) = 1.
+      b_u(2:m-1,n-1,2:l-2) = u_bc_nv
+    elseif (u_bc_nc .eq. 2) then
+      Ap_u(2:m-1,n-1,2:l-2) = 1.
+      As_u(2:m-1,n-1,2:l-2) = 1.
+    else
+      Sp_u(2:m-1,n-1,2:l-2) = -2.0*dx*dz/dy*(Pr/Ra)**(0.5)
+    end if
 
-    Ap_u(:,n-1,:) = 1.
-    b_u(:,n-1,:) = 0.
+    ! Bottom
+    if (u_bc_bc .eq. 1) then
+      Ap_u(2:m-1,2:n-2,1) = 1.
+      b_u(2:m-1,2:n-2,1) = u_bc_bv
+    elseif (u_bc_bc .eq. 2) then
+      Ap_u(2:m-1,2:n-2,1) = 1.
+      At_u(2:m-1,2:n-2,1) = 1.
+    else
+      Sp_u(2:m-1,2:n-2,1) = -2.0*dx*dy/dz*(Pr/Ra)**(0.5)
+    end if
+
+    ! Top
+    if (u_bc_tc .eq. 1) then
+      Ap_u(2:m-1,2:n-2,l-1) = 1.
+      b_u(2:m-1,2:n-2,l-1) = u_bc_tv
+    elseif (u_bc_tc .eq. 2) then
+      Ap_u(2:m-1,2:n-2,l-1) = 1.
+      Ab_u(2:m-1,2:n-2,l-1) = 1.
+    else
+      Sp_u(2:m-1,2:n-2,l-1) = -2.0*dx*dy/dz*(Pr/Ra)**(0.5)
+    end if
 
     ! West-South
-    Aw_u(1,1,:) = 0.
-    Ae_u(1,1,:) = 1.
-    As_u(1,1,:) = 0.
-    An_u(1,1,:) = 1.
-    Ab_u(1,1,:) = 0.
-    At_u(1,1,:) = 0.
+    Aw_u(1,1,2:l-2) = 0.
+    Ae_u(1,1,2:l-2) = 1.
+    As_u(1,1,2:l-2) = 0.
+    An_u(1,1,2:l-2) = 1.
+    Ab_u(1,1,2:l-2) = 0.
+    At_u(1,1,2:l-2) = 0.
 
-    Ap_u(1,1,:) = 2.
-    b_u(1,1,:) = 0.
+    Ap_u(1,1,2:l-2) = 2.
+    b_u(1,1,2:l-2) = 0.
 
     ! West-North
-    Aw_u(1,n-1,:) = 0.
-    Ae_u(1,n-1,:) = 1.
-    As_u(1,n-1,:) = 1.
-    An_u(1,n-1,:) = 0.
-    Ab_u(1,n-1,:) = 0.
-    At_u(1,n-1,:) = 0.
+    Aw_u(1,1,2:l-2) = 0.
+    Ae_u(1,1,2:l-2) = 1.
+    As_u(1,1,2:l-2) = 1.
+    An_u(1,1,2:l-2) = 0.
+    Ab_u(1,1,2:l-2) = 0.
+    At_u(1,1,2:l-2) = 0.
 
-    Ap_u(1,n-1,:) = 2.
-    b_u(1,n-1,:) = 0.
+    Ap_u(1,1,2:l-2) = 2.
+    b_u(1,1,2:l-2) = 0.
+
+    ! West-Bottom
+    Aw_u(1,2:n-2,1) = 0.
+    Ae_u(1,2:n-2,1) = 1.
+    As_u(1,2:n-2,1) = 0.
+    An_u(1,2:n-2,1) = 0.
+    Ab_u(1,2:n-2,1) = 0.
+    At_u(1,2:n-2,1) = 1.
+
+    Ap_u(1,2:n-2,1) = 2.
+    b_u(1,2:n-2,1) = 0.
+
+    ! West-Top
+    Aw_u(1,2:n-2,l-1) = 0.
+    Ae_u(1,2:n-2,l-1) = 1.
+    As_u(1,2:n-2,l-1) = 0.
+    An_u(1,2:n-2,l-1) = 0.
+    Ab_u(1,2:n-2,l-1) = 1.
+    At_u(1,2:n-2,l-1) = 0.
+
+    Ap_u(1,2:n-2,l-1) = 2.
+    b_u(1,2:n-2,l-1) = 0.
 
     ! East-South
-    Aw_u(m,1,:) = 1.
-    Ae_u(m,1,:) = 0.
-    As_u(m,1,:) = 0.
-    An_u(m,1,:) = 1.
-    Ab_u(m,1,:) = 0.
-    At_u(m,1,:) = 0.
+    Aw_u(m,1,2:l-2) = 1.
+    Ae_u(m,1,2:l-2) = 0.
+    As_u(m,1,2:l-2) = 0.
+    An_u(m,1,2:l-2) = 1.
+    Ab_u(m,1,2:l-2) = 0.
+    At_u(m,1,2:l-2) = 0.
 
-    Ap_u(m,1,:) = 2.
-    b_u(m,1,:) = 0.
+    Ap_u(m,1,2:l-2) = 2.
+    b_u(m,1,2:l-2) = 0.
 
     ! East-North
-    Aw_u(m,n-1,:) = 1.
-    Ae_u(m,n-1,:) = 0.
-    As_u(m,n-1,:) = 1.
-    An_u(m,n-1,:) = 0.
-    Ab_u(m,n-1,:) = 0.
-    At_u(m,n-1,:) = 0.
+    Aw_u(m,n-1,2:l-2) = 1.
+    Ae_u(m,n-1,2:l-2) = 0.
+    As_u(m,n-1,2:l-2) = 1.
+    An_u(m,n-1,2:l-2) = 0.
+    Ab_u(m,n-1,2:l-2) = 0.
+    At_u(m,n-1,2:l-2) = 0.
 
-    Ap_u(m,n-1,:) = 2.
-    b_u(m,n-1,:) = 0.
+    Ap_u(m,n-1,2:l-2) = 2.
+    b_u(m,n-1,2:l-2) = 0.
+
+    ! East Bottom
+    Aw_u(m,2:n-2,1) = 1.
+    Ae_u(m,2:n-2,1) = 0.
+    As_u(m,2:n-2,1) = 0.
+    An_u(m,2:n-2,1) = 0.
+    Ab_u(m,2:n-2,1) = 0.
+    At_u(m,2:n-2,1) = 1.
+
+    Ap_u(m,2:n-2,1) = 2.
+    b_u(m,2:n-2,1) = 0.
+
+    ! East Top
+    Aw_u(m,2:n-2,l-1) = 1.
+    Ae_u(m,2:n-2,l-1) = 0.
+    As_u(m,2:n-2,l-1) = 0.
+    An_u(m,2:n-2,l-1) = 0.
+    Ab_u(m,2:n-2,l-1) = 1.
+    At_u(m,2:n-2,l-1) = 0.
+
+    Ap_u(m,2:n-2,l-1) = 2.
+    b_u(m,2:n-2,l-1) = 0.
+
+    ! South-Bottom
+    Aw_u(2:m-1,1,1) = 0.
+    Ae_u(2:m-1,1,1) = 0.
+    As_u(2:m-1,1,1) = 0.
+    An_u(2:m-1,1,1) = 1.
+    Ab_u(2:m-1,1,1) = 0.
+    At_u(2:m-1,1,1) = 1.
+
+    Ap_u(2:m-1,1,1) = 2.
+    b_u(2:m-1,1,1) = 0.
+
+    ! South-Top
+    Aw_u(2:m-1,1,l-1) = 0.
+    Ae_u(2:m-1,1,l-1) = 0.
+    As_u(2:m-1,1,l-1) = 0.
+    An_u(2:m-1,1,l-1) = 1.
+    Ab_u(2:m-1,1,l-1) = 1.
+    At_u(2:m-1,1,l-1) = 0.
+
+    Ap_u(2:m-1,1,l-1) = 2.
+    b_u(2:m-1,1,l-1) = 0.
+
+    ! North-Bottom
+    Aw_u(2:m-1,n-1,1) = 0.
+    Ae_u(2:m-1,n-1,1) = 0.
+    As_u(2:m-1,n-1,1) = 1.
+    An_u(2:m-1,n-1,1) = 0.
+    Ab_u(2:m-1,n-1,1) = 0.
+    At_u(2:m-1,n-1,1) = 1.
+
+    Ap_u(2:m-1,n-1,1) = 2.
+    b_u(2:m-1,n-1,1) = 0.
+
+    ! North-Top
+    Aw_u(2:m-1,n-1,l-1) = 0.
+    Ae_u(2:m-1,n-1,l-1) = 0.
+    As_u(2:m-1,n-1,l-1) = 1.
+    An_u(2:m-1,n-1,l-1) = 0.
+    Ab_u(2:m-1,n-1,l-1) = 1.
+    At_u(2:m-1,n-1,l-1) = 0.
+
+    Ap_u(2:m-1,n-1,l-1) = 2.
+    b_u(2:m-1,n-1,l-1) = 0.
+
+    ! West-South-Bottom
+    Aw_u(1,1,1) = 0.
+    Ae_u(1,1,1) = 1.
+    As_u(1,1,1) = 0.
+    An_u(1,1,1) = 1.
+    Ab_u(1,1,1) = 0.
+    At_u(1,1,1) = 1.
+
+    Ap_u(1,1,1) = 3.
+    b_u(1,1,1) = 0.
+
+    ! West-North-Bottom
+    Aw_u(1,n-1,1) = 0.
+    Ae_u(1,n-1,1) = 1.
+    As_u(1,n-1,1) = 1.
+    An_u(1,n-1,1) = 0.
+    Ab_u(1,n-1,1) = 0.
+    At_u(1,n-1,1) = 1.
+
+    Ap_u(1,n-1,1) = 3.
+    b_u(1,n-1,1) = 0.
+
+    ! West-South-Top
+    Aw_u(1,1,l-1) = 0.
+    Ae_u(1,1,l-1) = 1.
+    As_u(1,1,l-1) = 0.
+    An_u(1,1,l-1) = 1.
+    Ab_u(1,1,l-1) = 1.
+    At_u(1,1,l-1) = 0.
+
+    Ap_u(1,1,l-1) = 3.
+    b_u(1,1,l-1) = 0.
+
+    ! West-North-Top
+    Aw_u(1,n-1,l-1) = 0.
+    Ae_u(1,n-1,l-1) = 1.
+    As_u(1,n-1,l-1) = 1.
+    An_u(1,n-1,l-1) = 0.
+    Ab_u(1,n-1,l-1) = 1.
+    At_u(1,n-1,l-1) = 0.
+
+    Ap_u(1,n-1,l-1) = 3.
+    b_u(1,n-1,l-1) = 0.
+
+    ! East-South-Bottom
+    Aw_u(m,1,1) = 1.
+    Ae_u(m,1,1) = 0.
+    As_u(m,1,1) = 0.
+    An_u(m,1,1) = 1.
+    Ab_u(m,1,1) = 0.
+    At_u(m,1,1) = 1.
+
+    Ap_u(m,1,1) = 3.
+    b_u(m,1,1) = 0.
+
+    ! East-North-Bottom
+    Aw_u(m,n-1,1) = 1.
+    Ae_u(m,n-1,1) = 0.
+    As_u(m,n-1,1) = 1.
+    An_u(m,n-1,1) = 0.
+    Ab_u(m,n-1,1) = 0.
+    At_u(m,n-1,1) = 1.
+
+    Ap_u(m,n-1,1) = 3.
+    b_u(m,n-1,1) = 0.
+
+    ! East-South-Top
+    Aw_u(m,1,l-1) = 1.
+    Ae_u(m,1,l-1) = 0.
+    As_u(m,1,l-1) = 0.
+    An_u(m,1,l-1) = 1.
+    Ab_u(m,1,l-1) = 1.
+    At_u(m,1,l-1) = 0.
+
+    Ap_u(m,1,l-1) = 3.
+    b_u(m,1,l-1) = 0.
+
+    ! East-North-Top
+    Aw_u(m,n-1,l-1) = 1.
+    Ae_u(m,n-1,l-1) = 0.
+    As_u(m,n-1,l-1) = 1.
+    An_u(m,n-1,l-1) = 0.
+    Ab_u(m,n-1,l-1) = 1.
+    At_u(m,n-1,l-1) = 0.
+
+    Ap_u(m,n-1,l-1) = 3.
+    b_u(m,n-1,l-1) = 0.
+
   end if
 
   if (direction .eq. "v") then
-    ! West
-    Aw_v(1,:,:) = 0.
-    Ae_v(1,:,:) = 1.
-    As_v(1,:,:) = 0.
-    An_v(1,:,:) = 0.
-    Ab_v(1,:,:) = 0.
-    At_v(1,:,:) = 0.
 
-    Ap_v(1,:,:) = 1.
-    b_v(1,:,:) = 0.
+    ! West
+    if (v_bc_wc .eq. 1) then
+      Ap_v(1,2:n-1,2:l-2) = 1.
+      b_v(1,2:n-1,2:l-2) = v_bc_wv
+    elseif (v_bc_wc .eq. 2) then
+      Ap_v(1,2:n-1,2:l-2) = 1.
+      Ae_v(1,2:n-1,2:l-2) = 1.
+    else
+      Sp_v(1,2:n-1,2:l-2) = -2.0*dy*dz/dx*(Pr/Ra)**(0.5)
+    end if
 
     ! East
-    Aw_v(m-1,:,:) = 1.
-    Ae_v(m-1,:,:) = 0.
-    As_v(m-1,:,:) = 0.
-    An_v(m-1,:,:) = 0.
-    Ab_v(m-1,:,:) = 0.
-    At_v(m-1,:,:) = 0.
-
-    Ap_v(m-1,:,:) = 1.
-    b_v(m-1,:,:) = 0.
+    if (v_bc_ec .eq. 1) then
+      Ap_v(m-1,2:n-1,2:l-2) = 1.
+      b_v(m-1,2:n-1,2:l-2) = v_bc_ev
+    elseif (v_bc_ec .eq. 2) then
+      Ap_v(m-1,2:n-1,2:l-2) = 1.
+      Aw_v(m-1,2:n-1,2:l-2) = 1.
+    else
+      Sp_v(m-1,2:n-1,2:l-2) = -2.0*dy*dz/dx*(Pr/Ra)**(0.5)
+    end if
 
     ! South
-    Aw_v(:,1,:) = 0.
-    Ae_v(:,1,:) = 0.
-    As_v(:,1,:) = 0.
-    An_v(:,1,:) = 1.
-    Ab_v(:,1,:) = 0.
-    At_v(:,1,:) = 0.
-
-    Ap_v(:,1,:) = 1.
-    b_v(:,1,:) = 0.
+    if (v_bc_sc .eq. 1) then
+      Ap_v(2:m-2,1,2:l-2) = 1.
+      b_v(2:m-2,1,2:l-2) = v_bc_sv
+    elseif (v_bc_sc .eq. 2) then
+      Ap_v(2:m-2,1,2:l-2) = 1.
+      An_v(2:m-2,1,2:l-2) = 1.
+    else
+      Ap_v(2:m-2,1,2:l-2) = 1.
+      b_v(2:m-2,1,2:l-2) = 0.
+    end if
 
     ! North
-    Aw_v(:,n,:) = 0.
-    Ae_v(:,n,:) = 0.
-    As_v(:,n,:) = 1.
-    An_v(:,n,:) = 0.
-    Ab_v(:,n,:) = 0.
-    At_v(:,n,:) = 0.
+    if (v_bc_nc .eq. 1) then
+      Ap_v(2:m-2,n,2:l-2) = 1.
+      b_v(2:m-2,n,2:l-2) = v_bc_nv
+    elseif (v_bc_nc .eq. 2) then
+      Ap_v(2:m-2,n,2:l-2) = 1.
+      As_v(2:m-2,n,2:l-2) = 1.
+    else
+      Ap_v(2:m-2,n,2:l-2) = 1.
+      b_v(2:m-2,n,2:l-2) = 0.
+    end if
 
-    Ap_v(:,n,:) = 1.
-    b_v(:,n,:) = 0.
+    ! Bottom
+    if (v_bc_bc .eq. 1) then
+      Ap_v(2:m-2,2:n-1,1) = 1.
+      b_v(2:m-2,2:n-1,1) = v_bc_bv
+    elseif (v_bc_bc .eq. 2) then
+      Ap_v(2:m-2,2:n-1,1) = 1.
+      At_v(2:m-2,2:n-1,1) = 1.
+    else
+      Sp_v(2:m-2,2:n-1,1) = -2.0*dx*dy/dz*(Pr/Ra)**(0.5)
+    end if
+
+    ! Top
+    if (v_bc_tc .eq. 1) then
+      Ap_v(2:m-2,2:n-1,l-1) = 1.
+      b_v(2:m-2,2:n-1,l-1) = v_bc_tv
+    elseif (v_bc_tc .eq. 2) then
+      Ap_v(2:m-2,2:n-1,l-1) = 1.
+      Ab_v(2:m-2,2:n-1,l-1) = 1.
+    else
+      Sp_v(2:m-2,2:n-1,l-1) = -2.0*dx*dy/dz*(Pr/Ra)**(0.5)
+    end if
 
     ! West-South
-    Aw_v(1,1,:) = 0.
-    Ae_v(1,1,:) = 1.
-    As_v(1,1,:) = 0.
-    An_v(1,1,:) = 1.
-    Ab_v(1,1,:) = 0.
-    At_v(1,1,:) = 0.
+    Aw_v(1,1,2:l-2) = 0.
+    Ae_v(1,1,2:l-2) = 1.
+    As_v(1,1,2:l-2) = 0.
+    An_v(1,1,2:l-2) = 1.
+    Ab_v(1,1,2:l-2) = 0.
+    At_v(1,1,2:l-2) = 0.
 
-    Ap_v(1,1,:) = 2.
-    b_v(1,1,:) = 0.
+    Ap_v(1,1,2:l-2) = 2.
+    b_v(1,1,2:l-2) = 0.
 
     ! West-North
-    Aw_v(1,n,:) = 0.
-    Ae_v(1,n,:) = 1.
-    As_v(1,n,:) = 1.
-    An_v(1,n,:) = 0.
-    Ab_v(1,n,:) = 0.
-    At_v(1,n,:) = 0.
+    Aw_v(1,1,2:l-2) = 0.
+    Ae_v(1,1,2:l-2) = 1.
+    As_v(1,1,2:l-2) = 1.
+    An_v(1,1,2:l-2) = 0.
+    Ab_v(1,1,2:l-2) = 0.
+    At_v(1,1,2:l-2) = 0.
 
-    Ap_v(1,n,:) = 2.
-    b_v(1,n,:) = 0.
+    Ap_v(1,1,2:l-2) = 2.
+    b_v(1,1,2:l-2) = 0.
+
+    ! West-Bottom
+    Aw_v(1,2:n-1,1) = 0.
+    Ae_v(1,2:n-1,1) = 1.
+    As_v(1,2:n-1,1) = 0.
+    An_v(1,2:n-1,1) = 0.
+    Ab_v(1,2:n-1,1) = 0.
+    At_v(1,2:n-1,1) = 1.
+
+    Ap_v(1,2:n-1,1) = 2.
+    b_v(1,2:n-1,1) = 0.
+
+    ! West-Top
+    Aw_v(1,2:n-1,l-1) = 0.
+    Ae_v(1,2:n-1,l-1) = 1.
+    As_v(1,2:n-1,l-1) = 0.
+    An_v(1,2:n-1,l-1) = 0.
+    Ab_v(1,2:n-1,l-1) = 1.
+    At_v(1,2:n-1,l-1) = 0.
+
+    Ap_v(1,2:n-1,l-1) = 2.
+    b_v(1,2:n-1,l-1) = 0.
 
     ! East-South
-    Aw_v(1,n,:) = 1.
-    Ae_v(1,n,:) = 0.
-    As_v(1,n,:) = 0.
-    An_v(1,n,:) = 1.
-    Ab_v(1,n,:) = 0.
-    At_v(1,n,:) = 0.
+    Aw_v(m-1,1,2:l-2) = 1.
+    Ae_v(m-1,1,2:l-2) = 0.
+    As_v(m-1,1,2:l-2) = 0.
+    An_v(m-1,1,2:l-2) = 1.
+    Ab_v(m-1,1,2:l-2) = 0.
+    At_v(m-1,1,2:l-2) = 0.
 
-    Ap_v(1,n,:) = 2.
-    b_v(1,n,:) = 0.
+    Ap_v(m-1,1,2:l-2) = 2.
+    b_v(m-1,1,2:l-2) = 0.
 
     ! East-North
-    Aw_v(m-1,n,:) = 1.
-    Ae_v(m-1,n,:) = 0.
-    As_v(m-1,n,:) = 1.
-    An_v(m-1,n,:) = 0.
-    Ab_v(m-1,n,:) = 0.
-    At_v(m-1,n,:) = 0.
+    Aw_v(m-1,n,2:l-2) = 1.
+    Ae_v(m-1,n,2:l-2) = 0.
+    As_v(m-1,n,2:l-2) = 1.
+    An_v(m-1,n,2:l-2) = 0.
+    Ab_v(m-1,n,2:l-2) = 0.
+    At_v(m-1,n,2:l-2) = 0.
 
-    Ap_v(m-1,n,:) = 2.
-    b_v(m-1,n,:) = 0.
+    Ap_v(m-1,n,2:l-2) = 2.
+    b_v(m-1,n,2:l-2) = 0.
+
+    ! East Bottom
+    Aw_v(m-1,2:n-1,1) = 1.
+    Ae_v(m-1,2:n-1,1) = 0.
+    As_v(m-1,2:n-1,1) = 0.
+    An_v(m-1,2:n-1,1) = 0.
+    Ab_v(m-1,2:n-1,1) = 0.
+    At_v(m-1,2:n-1,1) = 1.
+
+    Ap_v(m-1,2:n-1,1) = 2.
+    b_v(m-1,2:n-1,1) = 0.
+
+    ! East Top
+    Aw_v(m-1,2:n-1,l-1) = 1.
+    Ae_v(m-1,2:n-1,l-1) = 0.
+    As_v(m-1,2:n-1,l-1) = 0.
+    An_v(m-1,2:n-1,l-1) = 0.
+    Ab_v(m-1,2:n-1,l-1) = 1.
+    At_v(m-1,2:n-1,l-1) = 0.
+
+    Ap_v(m-1,2:n-1,l-1) = 2.
+    b_v(m-1,2:n-1,l-1) = 0.
+
+    ! South-Bottom
+    Aw_v(2:m-2,1,1) = 0.
+    Ae_v(2:m-2,1,1) = 0.
+    As_v(2:m-2,1,1) = 0.
+    An_v(2:m-2,1,1) = 1.
+    Ab_v(2:m-2,1,1) = 0.
+    At_v(2:m-2,1,1) = 1.
+
+    Ap_v(2:m-2,1,1) = 2.
+    b_v(2:m-2,1,1) = 0.
+
+    ! South-Top
+    Aw_v(2:m-2,1,l-1) = 0.
+    Ae_v(2:m-2,1,l-1) = 0.
+    As_v(2:m-2,1,l-1) = 0.
+    An_v(2:m-2,1,l-1) = 1.
+    Ab_v(2:m-2,1,l-1) = 1.
+    At_v(2:m-2,1,l-1) = 0.
+
+    Ap_v(2:m-2,1,l-1) = 2.
+    b_v(2:m-2,1,l-1) = 0.
+
+    ! North-Bottom
+    Aw_v(2:m-2,n,1) = 0.
+    Ae_v(2:m-2,n,1) = 0.
+    As_v(2:m-2,n,1) = 1.
+    An_v(2:m-2,n,1) = 0.
+    Ab_v(2:m-2,n,1) = 0.
+    At_v(2:m-2,n,1) = 1.
+
+    Ap_v(2:m-2,n,1) = 2.
+    b_v(2:m-2,n,1) = 0.
+
+    ! North-Top
+    Aw_v(2:m-2,n,l-1) = 0.
+    Ae_v(2:m-2,n,l-1) = 0.
+    As_v(2:m-2,n,l-1) = 1.
+    An_v(2:m-2,n,l-1) = 0.
+    Ab_v(2:m-2,n,l-1) = 1.
+    At_v(2:m-2,n,l-1) = 0.
+
+    Ap_v(2:m-2,n,l-1) = 2.
+    b_v(2:m-2,n,l-1) = 0.
+
+    ! West-South-Bottom
+    Aw_v(1,1,1) = 0.
+    Ae_v(1,1,1) = 1.
+    As_v(1,1,1) = 0.
+    An_v(1,1,1) = 1.
+    Ab_v(1,1,1) = 0.
+    At_v(1,1,1) = 1.
+
+    Ap_v(1,1,1) = 3.
+    b_v(1,1,1) = 0.
+
+    ! West-North-Bottom
+    Aw_v(1,n,1) = 0.
+    Ae_v(1,n,1) = 1.
+    As_v(1,n,1) = 1.
+    An_v(1,n,1) = 0.
+    Ab_v(1,n,1) = 0.
+    At_v(1,n,1) = 1.
+
+    Ap_v(1,n,1) = 3.
+    b_v(1,n,1) = 0.
+
+    ! West-South-Top
+    Aw_v(1,1,l-1) = 0.
+    Ae_v(1,1,l-1) = 1.
+    As_v(1,1,l-1) = 0.
+    An_v(1,1,l-1) = 1.
+    Ab_v(1,1,l-1) = 1.
+    At_v(1,1,l-1) = 0.
+
+    Ap_v(1,1,l-1) = 3.
+    b_v(1,1,l-1) = 0.
+
+    ! West-North-Top
+    Aw_v(1,n,l-1) = 0.
+    Ae_v(1,n,l-1) = 1.
+    As_v(1,n,l-1) = 1.
+    An_v(1,n,l-1) = 0.
+    Ab_v(1,n,l-1) = 1.
+    At_v(1,n,l-1) = 0.
+
+    Ap_v(1,n,l-1) = 3.
+    b_v(1,n,l-1) = 0.
+
+    ! East-South-Bottom
+    Aw_v(m-1,1,1) = 1.
+    Ae_v(m-1,1,1) = 0.
+    As_v(m-1,1,1) = 0.
+    An_v(m-1,1,1) = 1.
+    Ab_v(m-1,1,1) = 0.
+    At_v(m-1,1,1) = 1.
+
+    Ap_v(m-1,1,1) = 3.
+    b_v(m-1,1,1) = 0.
+
+    ! East-North-Bottom
+    Aw_v(m-1,n,1) = 1.
+    Ae_v(m-1,n,1) = 0.
+    As_v(m-1,n,1) = 1.
+    An_v(m-1,n,1) = 0.
+    Ab_v(m-1,n,1) = 0.
+    At_v(m-1,n,1) = 1.
+
+    Ap_v(m-1,n,1) = 3.
+    b_v(m-1,n,1) = 0.
+
+    ! East-South-Top
+    Aw_v(m-1,1,l-1) = 1.
+    Ae_v(m-1,1,l-1) = 0.
+    As_v(m-1,1,l-1) = 0.
+    An_v(m-1,1,l-1) = 1.
+    Ab_v(m-1,1,l-1) = 1.
+    At_v(m-1,1,l-1) = 0.
+
+    Ap_v(m-1,1,l-1) = 3.
+    b_v(m-1,1,l-1) = 0.
+
+    ! East-North-Top
+    Aw_v(m-1,n,l-1) = 1.
+    Ae_v(m-1,n,l-1) = 0.
+    As_v(m-1,n,l-1) = 1.
+    An_v(m-1,n,l-1) = 0.
+    Ab_v(m-1,n,l-1) = 1.
+    At_v(m-1,n,l-1) = 0.
+
+    Ap_v(m-1,n,l-1) = 3.
+    b_v(m-1,n,l-1) = 0.
 
   end if
 
   if (direction .eq. "w") then
-    ! West
-    Aw_w(1,:,:) = 0.
-    Ae_w(1,:,:) = 1.
-    As_w(1,:,:) = 0.
-    An_w(1,:,:) = 0.
-    Ab_w(1,:,:) = 0.
-    At_w(1,:,:) = 0.
 
-    Ap_w(1,:,:) = 1.
-    b_w(1,:,:) = 0.
+    ! West
+    if (w_bc_wc .eq. 1) then
+      Ap_w(1,2:n-2,2:l-1) = 1.
+      b_w(1,2:n-2,2:l-1) = w_bc_wv
+    elseif (w_bc_wc .eq. 2) then
+      Ap_w(1,2:n-2,2:l-1) = 1.
+      Ae_w(1,2:n-2,2:l-1) = 1.
+    else
+      Sp_w(1,2:n-2,2:l-1) = -2.0*dy*dz/dx*(Pr/Ra)**(0.5)
+    end if
 
     ! East
-    Aw_w(m-1,:,:) = 1.
-    Ae_w(m-1,:,:) = 0.
-    As_w(m-1,:,:) = 0.
-    An_w(m-1,:,:) = 0.
-    Ab_w(m-1,:,:) = 0.
-    At_w(m-1,:,:) = 0.
-
-    Ap_w(m-1,:,:) = 1.
-    b_w(m-1,:,:) = 0.
+    if (w_bc_ec .eq. 1) then
+      Ap_w(m-1,2:n-2,2:l-1) = 1.
+      b_w(m-1,2:n-2,2:l-1) = w_bc_ev
+    elseif (w_bc_ec .eq. 2) then
+      Ap_w(m-1,2:n-2,2:l-1) = 1.
+      Aw_w(m-1,2:n-2,2:l-1) = 1.
+    else
+      Sp_w(m-1,2:n-2,2:l-1) = -2.0*dy*dz/dx*(Pr/Ra)**(0.5)
+    end if
 
     ! South
-    Aw_w(:,1,:) = 0.
-    Ae_w(:,1,:) = 0.
-    As_w(:,1,:) = 0.
-    An_w(:,1,:) = 1.
-    Ab_w(:,1,:) = 0.
-    At_w(:,1,:) = 0.
-
-    Ap_w(:,1,:) = 1.
-    b_w(:,1,:) = 0.
+    if (w_bc_sc .eq. 1) then
+      Ap_w(2:m-2,1,2:l-1) = 1.
+      b_w(2:m-2,1,2:l-1) = w_bc_sv
+    elseif (w_bc_sc .eq. 2) then
+      Ap_w(2:m-2,1,2:l-1) = 1.
+      An_w(2:m-2,1,2:l-1) = 1.
+    else
+      Sp_w(2:m-2,1,2:l-1) = -2.0*dx*dz/dy*(Pr/Ra)**(0.5)
+    end if
 
     ! North
-    Aw_w(:,n-1,:) = 0.
-    Ae_w(:,n-1,:) = 0.
-    As_w(:,n-1,:) = 1.
-    An_w(:,n-1,:) = 0.
-    Ab_w(:,n-1,:) = 0.
-    At_w(:,n-1,:) = 0.
-
-    Ap_w(:,n-1,:) = 1.
-    b_w(:,n-1,:) = 0.
-
-    ! West-South
-    Aw_w(1,1,:) = 0.
-    Ae_w(1,1,:) = 1.
-    As_w(1,1,:) = 0.
-    An_w(1,1,:) = 1.
-    Ab_w(1,1,:) = 0.
-    At_w(1,1,:) = 0.
-
-    Ap_w(1,1,:) = 2.
-    b_w(1,1,:) = 0.
-
-    ! West-North
-    Aw_w(1,n-1,:) = 0.
-    Ae_w(1,n-1,:) = 1.
-    As_w(1,n-1,:) = 1.
-    An_w(1,n-1,:) = 0.
-    Ab_w(1,n-1,:) = 0.
-    At_w(1,n-1,:) = 0.
-
-    Ap_w(1,n-1,:) = 2.
-    b_w(1,n-1,:) = 0.
-
-    ! East-South
-    Aw_w(m-1,1,:) = 1.
-    Ae_w(m-1,1,:) = 0.
-    As_w(m-1,1,:) = 0.
-    An_w(m-1,1,:) = 1.
-    Ab_w(m-1,1,:) = 0.
-    At_w(m-1,1,:) = 0.
-
-    Ap_w(m-1,1,:) = 2.
-    b_w(m-1,1,:) = 0.
-
-    ! East-North
-    Aw_w(m-1,n-1,:) = 1.
-    Ae_w(m-1,n-1,:) = 0.
-    As_w(m-1,n-1,:) = 1.
-    An_w(m-1,n-1,:) = 0.
-    Ab_w(m-1,n-1,:) = 0.
-    At_w(m-1,n-1,:) = 0.
-
-    Ap_w(m-1,n-1,:) = 2.
-    b_w(m-1,n-1,:) = 0.
+    if (w_bc_nc .eq. 1) then
+      Ap_w(2:m-2,n-1,2:l-1) = 1.
+      b_w(2:m-2,n-1,2:l-1) = w_bc_nv
+    elseif (w_bc_nc .eq. 2) then
+      Ap_w(2:m-2,n-1,2:l-1) = 1.
+      As_w(2:m-2,n-1,2:l-1) = 1.
+    else
+      Sp_w(2:m-2,n-1,2:l-1) = -2.0*dx*dz/dy*(Pr/Ra)**(0.5)
+    end if
 
     ! Bottom
-    Aw_w(:,:,1) = 0.
-    Ae_w(:,:,1) = 0.
-    As_w(:,:,1) = 0.
-    An_w(:,:,1) = 0.
-    Ab_w(:,:,1) = 0.
-    At_w(:,:,1) = 0.
-
-    Ap_w(:,:,1) = 1.
-    b_w(:,:,1) = 0.
+    if (w_bc_bc .eq. 1) then
+      Ap_w(2:m-2,2:n-2,1) = 1.
+      b_w(2:m-2,2:n-2,1) = w_bc_bv
+    elseif (w_bc_bc .eq. 2) then
+      Ap_w(2:m-2,2:n-2,1) = 1.
+      At_w(2:m-2,2:n-2,1) = 1.
+    else
+      Ap_w(2:m-2,2:n-2,1) = 1.
+      b_w(2:m-2,2:n-2,1) = 0.
+    end if
 
     ! Top
-    Aw_w(:,:,l) = 0.
-    Ae_w(:,:,l) = 0.
-    As_w(:,:,l) = 0.
-    An_w(:,:,l) = 0.
-    Ab_w(:,:,l) = 0.
-    At_w(:,:,l) = 0.
+    if (w_bc_tc .eq. 1) then
+      Ap_w(2:m-2,2:n-2,l) = 1.
+      b_w(2:m-2,2:n-2,l) = w_bc_tv
+    elseif (w_bc_tc .eq. 2) then
+      Ap_w(2:m-2,2:n-2,l) = 1.
+      Ab_w(2:m-2,2:n-2,l) = 1.
+    else
+      Ap_w(2:m-2,2:n-2,l) = 1.
+      b_w(2:m-2,2:n-2,l) = 0.
+    end if
 
-    Ap_w(:,:,l) = 1.
-    b_w(:,:,l) = 0.
+    ! West-South
+    Aw_w(1,1,2:l-1) = 0.
+    Ae_w(1,1,2:l-1) = 1.
+    As_w(1,1,2:l-1) = 0.
+    An_w(1,1,2:l-1) = 1.
+    Ab_w(1,1,2:l-1) = 0.
+    At_w(1,1,2:l-1) = 0.
+
+    Ap_w(1,1,2:l-1) = 2.
+    b_w(1,1,2:l-1) = 0.
+
+    ! West-North
+    Aw_w(1,1,2:l-1) = 0.
+    Ae_w(1,1,2:l-1) = 1.
+    As_w(1,1,2:l-1) = 1.
+    An_w(1,1,2:l-1) = 0.
+    Ab_w(1,1,2:l-1) = 0.
+    At_w(1,1,2:l-1) = 0.
+
+    Ap_w(1,1,2:l-1) = 2.
+    b_w(1,1,2:l-1) = 0.
+
+    ! West-Bottom
+    Aw_w(1,2:n-2,1) = 0.
+    Ae_w(1,2:n-2,1) = 1.
+    As_w(1,2:n-2,1) = 0.
+    An_w(1,2:n-2,1) = 0.
+    Ab_w(1,2:n-2,1) = 0.
+    At_w(1,2:n-2,1) = 1.
+
+    Ap_w(1,2:n-2,1) = 2.
+    b_w(1,2:n-2,1) = 0.
+
+    ! West-Top
+    Aw_w(1,2:n-2,l) = 0.
+    Ae_w(1,2:n-2,l) = 1.
+    As_w(1,2:n-2,l) = 0.
+    An_w(1,2:n-2,l) = 0.
+    Ab_w(1,2:n-2,l) = 1.
+    At_w(1,2:n-2,l) = 0.
+
+    Ap_w(1,2:n-2,l) = 2.
+    b_w(1,2:n-2,l) = 0.
+
+    ! East-South
+    Aw_w(m-1,1,2:l-1) = 1.
+    Ae_w(m-1,1,2:l-1) = 0.
+    As_w(m-1,1,2:l-1) = 0.
+    An_w(m-1,1,2:l-1) = 1.
+    Ab_w(m-1,1,2:l-1) = 0.
+    At_w(m-1,1,2:l-1) = 0.
+
+    Ap_w(m-1,1,2:l-1) = 2.
+    b_w(m-1,1,2:l-1) = 0.
+
+    ! East-North
+    Aw_w(m-1,n-1,2:l-1) = 1.
+    Ae_w(m-1,n-1,2:l-1) = 0.
+    As_w(m-1,n-1,2:l-1) = 1.
+    An_w(m-1,n-1,2:l-1) = 0.
+    Ab_w(m-1,n-1,2:l-1) = 0.
+    At_w(m-1,n-1,2:l-1) = 0.
+
+    Ap_w(m-1,n-1,2:l-1) = 2.
+    b_w(m-1,n-1,2:l-1) = 0.
+
+    ! East Bottom
+    Aw_w(m-1,2:n-2,1) = 1.
+    Ae_w(m-1,2:n-2,1) = 0.
+    As_w(m-1,2:n-2,1) = 0.
+    An_w(m-1,2:n-2,1) = 0.
+    Ab_w(m-1,2:n-2,1) = 0.
+    At_w(m-1,2:n-2,1) = 1.
+
+    Ap_w(m-1,2:n-2,1) = 2.
+    b_w(m-1,2:n-2,1) = 0.
+
+    ! East Top
+    Aw_w(m-1,2:n-2,l) = 1.
+    Ae_w(m-1,2:n-2,l) = 0.
+    As_w(m-1,2:n-2,l) = 0.
+    An_w(m-1,2:n-2,l) = 0.
+    Ab_w(m-1,2:n-2,l) = 1.
+    At_w(m-1,2:n-2,l) = 0.
+
+    Ap_w(m-1,2:n-2,l) = 2.
+    b_w(m-1,2:n-2,l) = 0.
+
+    ! South-Bottom
+    Aw_w(2:m-2,1,1) = 0.
+    Ae_w(2:m-2,1,1) = 0.
+    As_w(2:m-2,1,1) = 0.
+    An_w(2:m-2,1,1) = 1.
+    Ab_w(2:m-2,1,1) = 0.
+    At_w(2:m-2,1,1) = 1.
+
+    Ap_w(2:m-2,1,1) = 2.
+    b_w(2:m-2,1,1) = 0.
+
+    ! South-Top
+    Aw_w(2:m-2,1,l) = 0.
+    Ae_w(2:m-2,1,l) = 0.
+    As_w(2:m-2,1,l) = 0.
+    An_w(2:m-2,1,l) = 1.
+    Ab_w(2:m-2,1,l) = 1.
+    At_w(2:m-2,1,l) = 0.
+
+    Ap_w(2:m-2,1,l) = 2.
+    b_w(2:m-2,1,l) = 0.
+
+    ! North-Bottom
+    Aw_w(2:m-2,n-1,1) = 0.
+    Ae_w(2:m-2,n-1,1) = 0.
+    As_w(2:m-2,n-1,1) = 1.
+    An_w(2:m-2,n-1,1) = 0.
+    Ab_w(2:m-2,n-1,1) = 0.
+    At_w(2:m-2,n-1,1) = 1.
+
+    Ap_w(2:m-2,n-1,1) = 2.
+    b_w(2:m-2,n-1,1) = 0.
+
+    ! North-Top
+    Aw_w(2:m-2,n-1,l) = 0.
+    Ae_w(2:m-2,n-1,l) = 0.
+    As_w(2:m-2,n-1,l) = 1.
+    An_w(2:m-2,n-1,l) = 0.
+    Ab_w(2:m-2,n-1,l) = 1.
+    At_w(2:m-2,n-1,l) = 0.
+
+    Ap_w(2:m-2,n-1,l) = 2.
+    b_w(2:m-2,n-1,l) = 0.
+
+    ! West-South-Bottom
+    Aw_w(1,1,1) = 0.
+    Ae_w(1,1,1) = 1.
+    As_w(1,1,1) = 0.
+    An_w(1,1,1) = 1.
+    Ab_w(1,1,1) = 0.
+    At_w(1,1,1) = 1.
+
+    Ap_w(1,1,1) = 3.
+    b_w(1,1,1) = 0.
+
+    ! West-North-Bottom
+    Aw_w(1,n-1,1) = 0.
+    Ae_w(1,n-1,1) = 1.
+    As_w(1,n-1,1) = 1.
+    An_w(1,n-1,1) = 0.
+    Ab_w(1,n-1,1) = 0.
+    At_w(1,n-1,1) = 1.
+
+    Ap_w(1,n-1,1) = 3.
+    b_w(1,n-1,1) = 0.
+
+    ! West-South-Top
+    Aw_w(1,1,l) = 0.
+    Ae_w(1,1,l) = 1.
+    As_w(1,1,l) = 0.
+    An_w(1,1,l) = 1.
+    Ab_w(1,1,l) = 1.
+    At_w(1,1,l) = 0.
+
+    Ap_w(1,1,l) = 3.
+    b_w(1,1,l) = 0.
+
+    ! West-North-Top
+    Aw_w(1,n-1,l) = 0.
+    Ae_w(1,n-1,l) = 1.
+    As_w(1,n-1,l) = 1.
+    An_w(1,n-1,l) = 0.
+    Ab_w(1,n-1,l) = 1.
+    At_w(1,n-1,l) = 0.
+
+    Ap_w(1,n-1,l) = 3.
+    b_w(1,n-1,l) = 0.
+
+    ! East-South-Bottom
+    Aw_w(m-1,1,1) = 1.
+    Ae_w(m-1,1,1) = 0.
+    As_w(m-1,1,1) = 0.
+    An_w(m-1,1,1) = 1.
+    Ab_w(m-1,1,1) = 0.
+    At_w(m-1,1,1) = 1.
+
+    Ap_w(m-1,1,1) = 3.
+    b_w(m-1,1,1) = 0.
+
+    ! East-North-Bottom
+    Aw_w(m-1,n-1,1) = 1.
+    Ae_w(m-1,n-1,1) = 0.
+    As_w(m-1,n-1,1) = 1.
+    An_w(m-1,n-1,1) = 0.
+    Ab_w(m-1,n-1,1) = 0.
+    At_w(m-1,n-1,1) = 1.
+
+    Ap_w(m-1,n-1,1) = 3.
+    b_w(m-1,n-1,1) = 0.
+
+    ! East-South-Top
+    Aw_w(m-1,1,l) = 1.
+    Ae_w(m-1,1,l) = 0.
+    As_w(m-1,1,l) = 0.
+    An_w(m-1,1,l) = 1.
+    Ab_w(m-1,1,l) = 1.
+    At_w(m-1,1,l) = 0.
+
+    Ap_w(m-1,1,l) = 3.
+    b_w(m-1,1,l) = 0.
+
+    ! East-North-Top
+    Aw_w(m-1,n-1,l) = 1.
+    Ae_w(m-1,n-1,l) = 0.
+    As_w(m-1,n-1,l) = 1.
+    An_w(m-1,n-1,l) = 0.
+    Ab_w(m-1,n-1,l) = 1.
+    At_w(m-1,n-1,l) = 0.
+
+    Ap_w(m-1,n-1,l) = 3.
+    b_w(m-1,n-1,l) = 0.
+
   end if
 
   return
@@ -391,16 +1061,30 @@ subroutine velocity3d_source(direction)
 
   ! Define internal variables
   integer :: i, j, k
+
   real(8) :: Fw, Fe, Fs, Fn, Fb, Ft, Dw, De, Ds, Dn, Db, Dt
 
   ! ====================== U-Velocity ====================== !
   ! u-velocity update loop
   if (direction .eq. "u") then
 
+    ! Initialize coefficients
+    Ab_u = 0.
+    As_u = 0.
+    Aw_u = 0.
+    Ap_u = 1.
+    Ae_u = 0.
+    An_u = 0.
+    At_u = 0.
+    b_u = 0.
+
+    ! Update coefficients at boundaries
+    call velocity3d_boundary("u")
+
     ! Calculate interior coefficients
-    do i = 2,m-1
-      do j = 2,n-2
-        do k = 1,l-1
+    do i = 2, m-1
+      do j = jstart_u, jend_u
+        do k = kstart_u, kend_u
 
           ! Update convection terms
           Fw = dy*dz*(u_star(i-1,j,k)+u_star(i,j,k))/2
@@ -449,18 +1133,29 @@ subroutine velocity3d_source(direction)
       end do
     end do
 
-    call velocity3d_boundary("u")
-
   end if
 
   ! ====================== V-Velocity ====================== !
   ! v-velocity update loop
   if (direction .eq. "v") then
 
+    ! Initialize coefficients
+    Ab_v = 0.
+    As_v = 0.
+    Aw_v = 0.
+    Ap_v = 1.
+    Ae_v = 0.
+    An_v = 0.
+    At_v = 0.
+    b_v = 0.
+
+    ! Update coefficients at boundaries
+    call velocity3d_boundary("v")
+
     ! Calculate interior coefficients
-    do i = 2,m-2
+    do i = istart_v,iend_v
       do j = 2,n-1
-        do k = 1,l-1
+        do k = kstart_v,kend_v
 
           ! Update convection terms
 		      Fw = dy*dz*(u_star(i,j-1,k)+u_star(i,j,k))/2
@@ -509,17 +1204,28 @@ subroutine velocity3d_source(direction)
       end do
     end do
 
-    call velocity3d_boundary("v")
-
   end if
 
   ! ====================== W-Velocity ====================== !
   ! w-velocity update loop
   if (direction .eq. "w") then
 
+    ! Initialize coefficients
+    Ab_w = 0.
+    As_w = 0.
+    Aw_w = 0.
+    Ap_w = 1.
+    Ae_w = 0.
+    An_w = 0.
+    At_w = 0.
+    b_w = 0.
+
+    ! Update coefficients at boundaries
+    call velocity3d_boundary("w")
+
     ! Calculate interior coefficients
-    do i = 2,m-2
-      do j = 2,n-2
+    do i = istart_w,iend_w
+      do j = jstart_w,jend_w
         do k = 2,l-1
 
           ! Update convection terms
@@ -561,8 +1267,6 @@ subroutine velocity3d_source(direction)
         end do
       end do
     end do
-
-    call velocity3d_boundary("w")
 
   end if
 

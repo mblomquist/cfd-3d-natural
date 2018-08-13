@@ -43,6 +43,10 @@
   real(8) :: u_bc_wv, u_bc_ev, u_bc_nv, u_bc_sv, u_bc_bv, u_bc_tv
   common u_bc_wv, u_bc_ev, u_bc_nv, u_bc_sv, u_bc_bv, u_bc_tv
 
+! U-Velocity :: Source Update Bounds
+  integer :: jstart_u, kstart_u, jend_u, kend_u
+  common jstart_u, kstart_u, jend_u, kend_u
+
 ! V-Velocity :: v
   real(8), dimension(1:m-1,1:n,1:l-1) :: v, v_hat, v_star, Sp_v, Su_v
   common v, v_hat, v_star, Sp_v, Su_v
@@ -58,6 +62,10 @@
 ! V-Velocity :: boundary values
   real(8) :: v_bc_wv, v_bc_ev, v_bc_sv, v_bc_nv, v_bc_bv, v_bc_tv
   common v_bc_wv, v_bc_ev, v_bc_sv, v_bc_nv, v_bc_bv, v_bc_tv
+
+! V-Velocity :: Source Update Bounds
+  integer :: istart_v, kstart_v, iend_v, kend_v
+  common istart_v, kstart_v, iend_v, kend_v
 
 ! W-Velocity :: w
   real(8), dimension(1:m-1,1:n-1,1:l) :: w, w_hat, w_star, Sp_w, Su_w
@@ -75,6 +83,10 @@
   real(8) :: w_bc_wv, w_bc_ev, w_bc_sv, w_bc_nv, w_bc_bv, w_bc_tv
   common w_bc_wv, w_bc_ev, w_bc_sv, w_bc_nv, w_bc_bv, w_bc_tv
 
+! W-Velocity :: Source Update Bounds
+  integer :: istart_w, jstart_w, iend_w, jend_w
+  common istart_w, jstart_w, iend_w, jend_w
+
 ! Temperature :: T
   real(8), dimension(1:m-1,1:n-1,1:l-1) :: T, Su_T, Sp_T
   common T, Su_T, Sp_T
@@ -90,6 +102,10 @@
 ! Temperature :: boundary values
   real(8) :: T_bc_wv, T_bc_ev, T_bc_sv, T_bc_nv, T_bc_bv, T_bc_tv
   common T_bc_wv, T_bc_ev, T_bc_sv, T_bc_nv, T_bc_bv, T_bc_tv
+
+! Temperature :: Source Update Bounds
+  integer :: istart_T, jstart_T, kstart_T, iend_T, jend_T, kend_T
+  common istart_T, jstart_T, kstart_T, iend_T, jend_T, kend_T
 
 ! Convergence Parameters
   !integer :: itrmax
