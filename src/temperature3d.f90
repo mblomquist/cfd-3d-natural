@@ -83,7 +83,7 @@ subroutine temperature3d_boundary
   if (T_bc_wc .eq. 1) then
     Ap_T(1,2:n-2,2:l-2) = 1.
     b_T(1,2:n-2,2:l-2) = (T_bc_wv-T_c)/(delta_T)
-  elseif (T_bc_Tc .eq. 2) then
+  elseif (T_bc_wc .eq. 2) then
     Ap_T(1,2:n-2,2:l-2) = 1.
     Ae_T(1,2:n-2,2:l-2) = 1.
   else
@@ -157,15 +157,15 @@ subroutine temperature3d_boundary
   b_T(1,1,2:l-2) = 0.
 
   ! West-North
-  Aw_T(1,1,2:l-2) = 0.
-  Ae_T(1,1,2:l-2) = 1.
-  As_T(1,1,2:l-2) = 1.
-  An_T(1,1,2:l-2) = 0.
-  Ab_T(1,1,2:l-2) = 0.
-  At_T(1,1,2:l-2) = 0.
+  Aw_T(1,n-1,2:l-2) = 0.
+  Ae_T(1,n-1,2:l-2) = 1.
+  As_T(1,n-1,2:l-2) = 1.
+  An_T(1,n-1,2:l-2) = 0.
+  Ab_T(1,n-1,2:l-2) = 0.
+  At_T(1,n-1,2:l-2) = 0.
 
-  Ap_T(1,1,2:l-2) = 2.
-  b_T(1,1,2:l-2) = 0.
+  Ap_T(1,n-1,2:l-2) = 2.
+  b_T(1,n-1,2:l-2) = 0.
 
   ! West-Bottom
   Aw_T(1,2:n-2,1) = 0.
@@ -382,7 +382,7 @@ subroutine temperature3d_source
   Ab_T = 0.
   As_T = 0.
   Aw_T = 0.
-  Ap_T = 0.
+  Ap_T = 1.
   Ae_T = 0.
   An_T = 0.
   At_T = 0.
@@ -390,7 +390,7 @@ subroutine temperature3d_source
 
   ! Update boundary conditions
   call temperature3d_boundary
-
+  
   ! Solve for source coefficients
   do i = istart_T, iend_T
     do j = jstart_T, jend_T
@@ -463,7 +463,7 @@ subroutine temperature3d_solve(start)
     do j = jstart_T, jend_T
       do k = kstart_T, kend_T
         Ap_T(i,j,k) = Ap_T(i,j,k)/alpha_temp
-        b_T(i,j,k) = Su_T(i,j,k)+(1.0-alpha_temp)*Ap_T(i,j,k)*T(i,j,k)
+        b_T(i,j,k) = b_T(i,j,k)+(1.0-alpha_temp)*Ap_T(i,j,k)*T(i,j,k)
       end do
     end do
   end do

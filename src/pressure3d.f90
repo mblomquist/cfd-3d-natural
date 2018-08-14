@@ -79,22 +79,22 @@ subroutine pressure3d_solve
         end if
 
         ! Check South Wall
-        if (i .eq. 1) then
+        if (j .eq. 1) then
           As_p(i,j,k) = 0.
         end if
 
         ! Check North Wall
-        if (i .eq. n-1) then
+        if (j .eq. n-1) then
           An_p(i,j,k) = 0.
         end if
 
         ! Check Bottom Wall
-        if (i .eq. 1) then
+        if (k .eq. 1) then
           Ab_p(i,j,k) = 0.
         end if
 
         ! Check Top Wall
-        if (i .eq. l-1) then
+        if (k .eq. l-1) then
           At_p(i,j,k) = 0.
         end if
 

@@ -79,6 +79,11 @@ subroutine velocity3d_init
   Su_v = 0.
 
   ! Define source update bounds
+  print *, "v_bc_wc:", v_bc_wc
+  print *, "v_bc_ec:", v_bc_ec
+  print *, "v_bc_bc:", v_bc_bc
+  print *, "v_bc_tc:", v_bc_tc
+  
   if (v_bc_wc .eq. 0) then
     istart_v = 1
   else
@@ -253,15 +258,15 @@ subroutine velocity3d_boundary(direction)
     b_u(1,1,2:l-2) = 0.
 
     ! West-North
-    Aw_u(1,1,2:l-2) = 0.
-    Ae_u(1,1,2:l-2) = 1.
-    As_u(1,1,2:l-2) = 1.
-    An_u(1,1,2:l-2) = 0.
-    Ab_u(1,1,2:l-2) = 0.
-    At_u(1,1,2:l-2) = 0.
+    Aw_u(1,n-1,2:l-2) = 0.
+    Ae_u(1,n-1,2:l-2) = 1.
+    As_u(1,n-1,2:l-2) = 1.
+    An_u(1,n-1,2:l-2) = 0.
+    Ab_u(1,n-1,2:l-2) = 0.
+    At_u(1,n-1,2:l-2) = 0.
 
-    Ap_u(1,1,2:l-2) = 2.
-    b_u(1,1,2:l-2) = 0.
+    Ap_u(1,n-1,2:l-2) = 2.
+    b_u(1,n-1,2:l-2) = 0.
 
     ! West-Bottom
     Aw_u(1,2:n-2,1) = 0.
@@ -545,15 +550,15 @@ subroutine velocity3d_boundary(direction)
     b_v(1,1,2:l-2) = 0.
 
     ! West-North
-    Aw_v(1,1,2:l-2) = 0.
-    Ae_v(1,1,2:l-2) = 1.
-    As_v(1,1,2:l-2) = 1.
-    An_v(1,1,2:l-2) = 0.
-    Ab_v(1,1,2:l-2) = 0.
-    At_v(1,1,2:l-2) = 0.
+    Aw_v(1,n,2:l-2) = 0.
+    Ae_v(1,n,2:l-2) = 1.
+    As_v(1,n,2:l-2) = 1.
+    An_v(1,n,2:l-2) = 0.
+    Ab_v(1,n,2:l-2) = 0.
+    At_v(1,n,2:l-2) = 0.
 
-    Ap_v(1,1,2:l-2) = 2.
-    b_v(1,1,2:l-2) = 0.
+    Ap_v(1,n,2:l-2) = 2.
+    b_v(1,n,2:l-2) = 0.
 
     ! West-Bottom
     Aw_v(1,2:n-1,1) = 0.
@@ -837,15 +842,15 @@ subroutine velocity3d_boundary(direction)
     b_w(1,1,2:l-1) = 0.
 
     ! West-North
-    Aw_w(1,1,2:l-1) = 0.
-    Ae_w(1,1,2:l-1) = 1.
-    As_w(1,1,2:l-1) = 1.
-    An_w(1,1,2:l-1) = 0.
-    Ab_w(1,1,2:l-1) = 0.
-    At_w(1,1,2:l-1) = 0.
+    Aw_w(1,n-1,2:l-1) = 0.
+    Ae_w(1,n-1,2:l-1) = 1.
+    As_w(1,n-1,2:l-1) = 1.
+    An_w(1,n-1,2:l-1) = 0.
+    Ab_w(1,n-1,2:l-1) = 0.
+    At_w(1,n-1,2:l-1) = 0.
 
-    Ap_w(1,1,2:l-1) = 2.
-    b_w(1,1,2:l-1) = 0.
+    Ap_w(1,n-1,2:l-1) = 2.
+    b_w(1,n-1,2:l-1) = 0.
 
     ! West-Bottom
     Aw_w(1,2:n-2,1) = 0.
@@ -1152,6 +1157,11 @@ subroutine velocity3d_source(direction)
     ! Update coefficients at boundaries
     call velocity3d_boundary("v")
 
+    print *, "istart_v:", istart_v
+    print *, "iend_v:", iend_v
+    print *, "kstart_v:", kstart_v
+    print *, "kend_v:", kend_v
+
     ! Calculate interior coefficients
     do i = istart_v,iend_v
       do j = 2,n-1
@@ -1262,7 +1272,7 @@ subroutine velocity3d_source(direction)
           end if
 
 		      ! Update b values
-		      b_w(i,j,k) = (((T(i,j,k)+T(i,j,k-1))/2.0)-0.5)/Pr*dx*dy*dz
+		      b_w(i,j,k) = (((T(i,j,k)+T(i,j,k-1))/2.0))*dx*dy*dz
 
         end do
       end do

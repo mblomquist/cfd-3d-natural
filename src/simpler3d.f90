@@ -20,12 +20,11 @@ subroutine simpler3d
   ! Solve Temperature for Natural Convection First
   !print *, "Step 0: Solve Temperature Equation"
   call temperature3d_solve(0)
+
   !print *, "................"
   !print *, "T:", T
   !print *, "................"
 
-  return
-  
   do i = 1,itrmax
 
     ! Calculate velocity coefficients
@@ -33,21 +32,32 @@ subroutine simpler3d
     call velocity3d_source("v")
     call velocity3d_source("w")
 
+    print *, "................"
+    print *, "Ab_v:", Ab_v
+    print *, "As_v:", As_v
+    print *, "Aw_v:", Aw_v
+    print *, "Ap_v:", Ap_v
+    print *, "Ae_v:", Ae_v
+    print *, "An_v:", An_v
+    print *, "At_v:", At_v
+    print *, "b_v:", b_v
+    print *, "................"
+
     ! Step 2: Calculate Pseudo-Velocities
-    !print *, "Step 1: Solve Pseudo-Velocities"
+    print *, "Step 1: Solve Pseudo-Velocities"
     call cpu_time(t_start)
     call pseudo3d_solve
     call cpu_time(t_end)
     t_1(i) = t_end - t_start
 
-    !print *, "................"
+    print *, "................"
     !print *, "u_hat:", u_hat
-    !print *, "v_hat:", v_hat
+    print *, "v_hat:", v_hat
     !print *, "w_hat:", w_hat
-    !print *, "................"
+    print *, "................"
 
     ! Step 3: Solve Pressure Equation
-    !print *, "Step 2: Solve Pressure Equation"
+    print *, "Step 2: Solve Pressure Equation"
     call cpu_time(t_start)
     call pressure3d_solve
     call cpu_time(t_end)
@@ -92,20 +102,24 @@ subroutine simpler3d
     !print *, "................"
 
     ! Step 4: Solve Momentum Equations
-    !print *, "Step 4: Solve Momentum Equations"
+    print *, "Step 4: Solve Momentum Equations"
     call cpu_time(t_start)
     call velocity3d_solve
     call cpu_time(t_end)
     t_4(i) = t_end - t_start
 
-    !print *, "................"
+    print *, "................"
+    print *, "b_v:", b_v
+    print *, "................"
+
+    print *, "................"
     !print *, "u_star:", u_star
-    !print *, "v_star:", v_star
+    print *, "v_star:", v_star
     !print *, "w_star:", w_star
-    !print *, "................"
+    print *, "................"
 
     ! Step 5: Solve Pressure Equation
-    !print *, "Step 5: Solve Pressure Correction"
+    print *, "Step 5: Solve Pressure Correction"
     call cpu_time(t_start)
     call pressure3d_correct
     call cpu_time(t_end)
@@ -116,20 +130,20 @@ subroutine simpler3d
     !print *, "................"
 
     ! Step 6: Correct Velocities
-    !print *, "Step 6: Correct Velocities"
+    print *, "Step 6: Correct Velocities"
     call cpu_time(t_start)
     call velocity3d_correct
     call cpu_time(t_end)
     t_6(i) = t_end - t_start
 
-    !print *, "................"
+    print *, "................"
     !print *, "u:", u
-    !print *, "v:", v
+    print *, "v:", v
     !print *, "w:", w
-    !print *, "................"
+    print *, "................"
 
     ! Step 7: Solve Temperature Equation
-    !print *, "Step 7: Solve Temperature Equation"
+    print *, "Step 7: Solve Temperature Equation"
     call cpu_time(t_start)
     call temperature3d_solve(1)
     call cpu_time(t_end)
