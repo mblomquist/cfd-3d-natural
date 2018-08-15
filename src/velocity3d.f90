@@ -79,11 +79,6 @@ subroutine velocity3d_init
   Su_v = 0.
 
   ! Define source update bounds
-  print *, "v_bc_wc:", v_bc_wc
-  print *, "v_bc_ec:", v_bc_ec
-  print *, "v_bc_bc:", v_bc_bc
-  print *, "v_bc_tc:", v_bc_tc
-  
   if (v_bc_wc .eq. 0) then
     istart_v = 1
   else
@@ -131,7 +126,7 @@ subroutine velocity3d_init
     istart_w = 2
   end if
 
-  if (w_bc_tc .eq. 0) then
+  if (w_bc_ec .eq. 0) then
     iend_w = m-1
   else
     iend_w = m-2
@@ -1123,7 +1118,7 @@ subroutine velocity3d_source(direction)
           end if
 
 		      ! Update Ap coefficient
-		      Ap_u(i,j,k) = Aw_u(i,j,k)+Ae_u(i,j,k)+As_u(i,j,k)+An_u(i,j,k)+Ab_u(i,j,k)+At_u(i,j,k)+Sp_u(i,j,k)
+		      Ap_u(i,j,k) = Aw_u(i,j,k)+Ae_u(i,j,k)+As_u(i,j,k)+An_u(i,j,k)+Ab_u(i,j,k)+At_u(i,j,k)-Sp_u(i,j,k)
 
 		      ! Check False Diffusion
 		      if (Ap_u(i,j,k) .eq. 0.) then
@@ -1156,11 +1151,6 @@ subroutine velocity3d_source(direction)
 
     ! Update coefficients at boundaries
     call velocity3d_boundary("v")
-
-    print *, "istart_v:", istart_v
-    print *, "iend_v:", iend_v
-    print *, "kstart_v:", kstart_v
-    print *, "kend_v:", kend_v
 
     ! Calculate interior coefficients
     do i = istart_v,iend_v
@@ -1199,7 +1189,7 @@ subroutine velocity3d_source(direction)
           end if
 
 		      ! Update Ap coefficient
-		      Ap_v(i,j,k) = Aw_v(i,j,k)+Ae_v(i,j,k)+As_v(i,j,k)+An_v(i,j,k)+Ab_v(i,j,k)+At_v(i,j,k)+Sp_v(i,j,k)
+		      Ap_v(i,j,k) = Aw_v(i,j,k)+Ae_v(i,j,k)+As_v(i,j,k)+An_v(i,j,k)+Ab_v(i,j,k)+At_v(i,j,k)-Sp_v(i,j,k)
 
 		      ! Check False Diffusion
 		      if (Ap_v(i,j,k) .eq. 0.) then
@@ -1263,7 +1253,7 @@ subroutine velocity3d_source(direction)
 		      At_w(i,j,k) = Dt*max(0.0,(1-0.1*abs(Ft/Dt))**5)+max(-Ft,0.0)
 
 		      ! Update Ap coefficient
-		      Ap_w(i,j,k) = Aw_w(i,j,k)+Ae_w(i,j,k)+As_w(i,j,k)+An_w(i,j,k)+Ab_w(i,j,k)+At_w(i,j,k)+Sp_w(i,j,k)
+		      Ap_w(i,j,k) = Aw_w(i,j,k)+Ae_w(i,j,k)+As_w(i,j,k)+An_w(i,j,k)+Ab_w(i,j,k)+At_w(i,j,k)-Sp_w(i,j,k)*dx*dy*dz
 
 		      ! Check False Diffusion
 		      if (Ap_w(i,j,k) .eq. 0.) then
@@ -1272,7 +1262,7 @@ subroutine velocity3d_source(direction)
           end if
 
 		      ! Update b values
-		      b_w(i,j,k) = (((T(i,j,k)+T(i,j,k-1))/2.0))*dx*dy*dz
+		      b_w(i,j,k) = (((T(i,j,k)+T(i,j,k-1))/2.0)-0.5)*dif_fac
 
         end do
       end do
@@ -1399,25 +1389,6 @@ subroutine velocity3d_correct
   ! Define internal variables
   integer :: i, j, k
 
-
-    ! ====================== W-Velocity ====================== !
-    ! Correct velocity values
-    do i = 2,m-2
-      do j = 2,n-2
-        do k = 2,l-1
-          w(i,j,k) = w_star(i,j,k)+dx*dy/Ap_w(i,j,k)*(P_prime(i,j,k-1)-P_prime(i,j,k))*alpha_v
-        end do
-      end do
-    end do
-
-    w(1,:,:) = w(2,:,:)
-    w(m-1,:,:) = w(m-2,:,:)
-    w(:,1,:) = w(:,2,:)
-    w(:,n-1,:) = w(:,n-2,:)
-
-    w(:,:,1) = 0.
-    w(:,:,l) = 0.
-
   ! ====================== U-Velocity ====================== !
   ! Correct velocity values
   do i = 2,m-1
@@ -1438,17 +1409,35 @@ subroutine velocity3d_correct
   ! ====================== V-Velocity ====================== !
   ! Correct velocity values
   do i = 2,m-2
-    do j = 2,n-2
+    do j = 2,n-1
       do k = 1,l-1
         v(i,j,k) = v_star(i,j,k)+dx*dz/Ap_v(i,j,k)*(P_prime(i,j-1,k)-P_prime(i,j,k))*alpha_v
       end do
     end do
   end do
 
-  v(1,:,:) = v(1,:,:)
+  v(1,:,:) = v(2,:,:)
   v(m-1,:,:) = v(m-2,:,:)
   v(:,1,:) = v(:,2,:)
   v(:,n,:) = v(:,n-1,:)
+
+  ! ====================== W-Velocity ====================== !
+  ! Correct velocity values
+  do i = 2,m-2
+    do j = 2,n-2
+      do k = 2,l-1
+        w(i,j,k) = w_star(i,j,k)+dx*dy/Ap_w(i,j,k)*(P_prime(i,j,k-1)-P_prime(i,j,k))*alpha_v
+      end do
+    end do
+  end do
+
+  w(1,:,:) = w(2,:,:)
+  w(m-1,:,:) = w(m-2,:,:)
+  w(:,1,:) = w(:,2,:)
+  w(:,n-1,:) = w(:,n-2,:)
+
+  w(:,:,1) = 0.
+  w(:,:,l) = 0.
 
   return
 

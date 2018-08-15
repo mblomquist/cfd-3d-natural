@@ -53,7 +53,9 @@ subroutine solver3d_bicg(Ab, As, Aw, Ap, Ae, An, At, b, phi, m, n, l, tol, maxit
   ! ================================================================= !
 
   ! Set x
-  !x = 1.
+  !if (sum(abs(x)) .eq. 0.0) then
+  !  x = 1.
+  !end if
 
   ! Compute r0
   call mkl_ddiagemv('N', m*n*l, A_values, m*n*l, A_distance, 7, x, Axx)
@@ -189,9 +191,9 @@ subroutine solver3d_bicgstab(Ab, As, Aw, Ap, Ae, An, At, b, phi, m, n, l, tol, m
   ! ================================================================= !
 
   ! Set preconditioning array to 1
-  if (sum(x) .eq. 0) then
-    x = 1
-  end if
+  !if (sum(abs(x)) .eq. 0.0) then
+  !  x = 1.
+  !end if
 
   call mkl_ddiagemv('N', m*n*l, A_values, m*n*l, A_distance, 7, x, Axx)
 
@@ -337,6 +339,10 @@ subroutine solver3d_bicgstab2(Ab, As, Aw, Ap, Ae, An, At, b, phi, m, n, l, tol, 
   ! ========== Start Bi-conjugate Gradients Stabilized (2) Method ========== !
   ! ======================================================================== !
 
+  ! Check x0
+  !if (sum(abs(x0)) .eq. 0.0) then
+  !  x0 = 1.
+  !end if
 
     ! Check inital guess
     call mkl_ddiagemv('N', m*n*l, A_values, m*n*l, A_distance, 7, x0, Ax)
@@ -345,8 +351,8 @@ subroutine solver3d_bicgstab2(Ab, As, Aw, Ap, Ae, An, At, b, phi, m, n, l, tol, 
     r_norm = abs(dnrm2(m*n*l, r0, 1))
 
     if (r_norm < tol) then
-      !print *, 'Initial guess is a sufficient solution'
-  	  !print *, 'relative residual: ', r_norm
+      print *, 'Initial guess is a sufficient solution'
+  	  print *, 'relative residual: ', r_norm
       return
     end if
 
@@ -596,8 +602,10 @@ subroutine solver3d_gmres(Ab, As, Aw, Ap, Ae, An, At, b, phi, m, n, l, tol, maxi
   ! ====================== Start GMRES Algoritm ===================== !
   ! ================================================================= !
 
-  ! Set x = 1
-  !x = 1.
+  ! Check x
+  !if (sum(abs(x)) .eq. 0.0) then
+  !  x = 1.
+  !end if
 
   ! Compute residual vector
   call mkl_ddiagemv('N', m*n*l, A_values, m*n*l, A_distance, 7, x, Axx)

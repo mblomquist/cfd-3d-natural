@@ -390,7 +390,7 @@ subroutine temperature3d_source
 
   ! Update boundary conditions
   call temperature3d_boundary
-  
+
   ! Solve for source coefficients
   do i = istart_T, iend_T
     do j = jstart_T, jend_T
