@@ -18,13 +18,13 @@ subroutine output3d_results
 
   write(2, *), 'TITLE = "3D CFD - Natural Convection - Field Scalar Data"'
   write(2, *), 'VARIABLES = "X", "Y", "Z", "Pressure", "U-Velocity", "V-Velocity", "W-Velocity", "Temperature"'
-  write(2, *), 'ZONE I=16, J=16, K=8, DATAPACKING=POINT'
+  write(2, *), 'ZONE I=18, J=18, K=18, DATAPACKING=POINT'
 
   do k = 1,l-1
     do j = 1,n-1
       do i = 1,m-1
 
-        write(2, *), i*dx, j*dy, k*dz, P(i,j,k), (u(i,j,k)+u(i+1,j,k))/2, (v(i,j,k)+v(i,j+1,k))/2, &
+        write(2, *), depth*i*dx, depth*j*dy, depth*k*dz, P(i,j,k), (u(i,j,k)+u(i+1,j,k))/2, (v(i,j,k)+v(i,j+1,k))/2, &
                     (w(i,j,k)+w(i,j,k+1))/2, T(i,j,k)
 
       end do

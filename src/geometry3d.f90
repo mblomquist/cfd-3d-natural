@@ -12,9 +12,9 @@ subroutine geometry3d
   include "var3d.dec"
 
   ! Calculate non-dimensional quantities for SIMPLER
-  dx = length/m
-  dy = width/n
-  dz = depth/l
+  dx = length/m/depth
+  dy = width/n/depth
+  dz = depth/l/depth
 
   return
 

@@ -205,7 +205,7 @@ subroutine velocity3d_boundary(direction)
       Ap_u(2:m-1,1,2:l-2) = 1.
       An_u(2:m-1,1,2:l-2) = 1.
     else
-      Sp_u(2:m-1,1,2:l-2) = -2.0*dx*dz/dy*(Pr/Ra)**(0.5)
+      Sp_u(2:m-1,1,2:l-2) = -2.0*dx*dz/dy*Pr*(Pr/Ra)**(0.5)
     end if
 
     ! North
@@ -216,7 +216,7 @@ subroutine velocity3d_boundary(direction)
       Ap_u(2:m-1,n-1,2:l-2) = 1.
       As_u(2:m-1,n-1,2:l-2) = 1.
     else
-      Sp_u(2:m-1,n-1,2:l-2) = -2.0*dx*dz/dy*(Pr/Ra)**(0.5)
+      Sp_u(2:m-1,n-1,2:l-2) = -2.0*dx*dz/dy*Pr*(Pr/Ra)**(0.5)
     end if
 
     ! Bottom
@@ -227,7 +227,7 @@ subroutine velocity3d_boundary(direction)
       Ap_u(2:m-1,2:n-2,1) = 1.
       At_u(2:m-1,2:n-2,1) = 1.
     else
-      Sp_u(2:m-1,2:n-2,1) = -2.0*dx*dy/dz*(Pr/Ra)**(0.5)
+      Sp_u(2:m-1,2:n-2,1) = -2.0*dx*dy/dz*Pr*(Pr/Ra)**(0.5)
     end if
 
     ! Top
@@ -238,7 +238,7 @@ subroutine velocity3d_boundary(direction)
       Ap_u(2:m-1,2:n-2,l-1) = 1.
       Ab_u(2:m-1,2:n-2,l-1) = 1.
     else
-      Sp_u(2:m-1,2:n-2,l-1) = -2.0*dx*dy/dz*(Pr/Ra)**(0.5)
+      Sp_u(2:m-1,2:n-2,l-1) = -2.0*dx*dy/dz*Pr*(Pr/Ra)**(0.5)
     end if
 
     ! West-South
@@ -473,7 +473,7 @@ subroutine velocity3d_boundary(direction)
       Ap_v(1,2:n-1,2:l-2) = 1.
       Ae_v(1,2:n-1,2:l-2) = 1.
     else
-      Sp_v(1,2:n-1,2:l-2) = -2.0*dy*dz/dx*(Pr/Ra)**(0.5)
+      Sp_v(1,2:n-1,2:l-2) = -2.0*dy*dz/dx*Pr*(Pr/Ra)**(0.5)
     end if
 
     ! East
@@ -484,7 +484,7 @@ subroutine velocity3d_boundary(direction)
       Ap_v(m-1,2:n-1,2:l-2) = 1.
       Aw_v(m-1,2:n-1,2:l-2) = 1.
     else
-      Sp_v(m-1,2:n-1,2:l-2) = -2.0*dy*dz/dx*(Pr/Ra)**(0.5)
+      Sp_v(m-1,2:n-1,2:l-2) = -2.0*dy*dz/dx*Pr*(Pr/Ra)**(0.5)
     end if
 
     ! South
@@ -519,7 +519,7 @@ subroutine velocity3d_boundary(direction)
       Ap_v(2:m-2,2:n-1,1) = 1.
       At_v(2:m-2,2:n-1,1) = 1.
     else
-      Sp_v(2:m-2,2:n-1,1) = -2.0*dx*dy/dz*(Pr/Ra)**(0.5)
+      Sp_v(2:m-2,2:n-1,1) = -2.0*dx*dy/dz*Pr*(Pr/Ra)**(0.5)
     end if
 
     ! Top
@@ -530,7 +530,7 @@ subroutine velocity3d_boundary(direction)
       Ap_v(2:m-2,2:n-1,l-1) = 1.
       Ab_v(2:m-2,2:n-1,l-1) = 1.
     else
-      Sp_v(2:m-2,2:n-1,l-1) = -2.0*dx*dy/dz*(Pr/Ra)**(0.5)
+      Sp_v(2:m-2,2:n-1,l-1) = -2.0*dx*dy/dz*Pr*(Pr/Ra)**(0.5)
     end if
 
     ! West-South
@@ -765,7 +765,7 @@ subroutine velocity3d_boundary(direction)
       Ap_w(1,2:n-2,2:l-1) = 1.
       Ae_w(1,2:n-2,2:l-1) = 1.
     else
-      Sp_w(1,2:n-2,2:l-1) = -2.0*dy*dz/dx*(Pr/Ra)**(0.5)
+      Sp_w(1,2:n-2,2:l-1) = -2.0*dy*dz/dx*Pr*(Pr/Ra)**(0.5)
     end if
 
     ! East
@@ -776,7 +776,7 @@ subroutine velocity3d_boundary(direction)
       Ap_w(m-1,2:n-2,2:l-1) = 1.
       Aw_w(m-1,2:n-2,2:l-1) = 1.
     else
-      Sp_w(m-1,2:n-2,2:l-1) = -2.0*dy*dz/dx*(Pr/Ra)**(0.5)
+      Sp_w(m-1,2:n-2,2:l-1) = -2.0*dy*dz/dx*Pr*(Pr/Ra)**(0.5)
     end if
 
     ! South
@@ -787,7 +787,7 @@ subroutine velocity3d_boundary(direction)
       Ap_w(2:m-2,1,2:l-1) = 1.
       An_w(2:m-2,1,2:l-1) = 1.
     else
-      Sp_w(2:m-2,1,2:l-1) = -2.0*dx*dz/dy*(Pr/Ra)**(0.5)
+      Sp_w(2:m-2,1,2:l-1) = -2.0*dx*dz/dy*Pr*(Pr/Ra)**(0.5)
     end if
 
     ! North
@@ -798,7 +798,7 @@ subroutine velocity3d_boundary(direction)
       Ap_w(2:m-2,n-1,2:l-1) = 1.
       As_w(2:m-2,n-1,2:l-1) = 1.
     else
-      Sp_w(2:m-2,n-1,2:l-1) = -2.0*dx*dz/dy*(Pr/Ra)**(0.5)
+      Sp_w(2:m-2,n-1,2:l-1) = -2.0*dx*dz/dy*Pr*(Pr/Ra)**(0.5)
     end if
 
     ! Bottom
@@ -1095,12 +1095,12 @@ subroutine velocity3d_source(direction)
 		      Ft = dx*dy*(w_star(i-1,j,k+1)+w_star(i,j,k+1))/2
 
           ! Update diffusion terms
-          Dw = dy*dz/dx*(Pr/Ra)**(0.5)
-          De = dy*dz/dx*(Pr/Ra)**(0.5)
-          Ds = dz*dx/dy*(Pr/Ra)**(0.5)
-          Dn = dz*dx/dy*(Pr/Ra)**(0.5)
-          Db = dx*dy/dz*(Pr/Ra)**(0.5)
-          Dt = dx*dy/dz*(Pr/Ra)**(0.5)
+          Dw = dy*dz/dx*Pr*(Pr/Ra)**(0.5)
+          De = dy*dz/dx*Pr*(Pr/Ra)**(0.5)
+          Ds = dz*dx/dy*Pr*(Pr/Ra)**(0.5)
+          Dn = dz*dx/dy*Pr*(Pr/Ra)**(0.5)
+          Db = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
+          Dt = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
 
 		      ! Compute Coefficients - Power Law Differening Scheme
 		      Aw_u(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
@@ -1166,12 +1166,12 @@ subroutine velocity3d_source(direction)
 		      Ft = dx*dy*(w_star(i,j-1,k+1)+w_star(i,j,k+1))/2
 
           ! Update diffusion terms
-          Dw = dy*dz/dx*(Pr/Ra)**(0.5)
-          De = dy*dz/dx*(Pr/Ra)**(0.5)
-          Ds = dz*dx/dy*(Pr/Ra)**(0.5)
-          Dn = dz*dx/dy*(Pr/Ra)**(0.5)
-		      Db = dx*dy/dz*(Pr/Ra)**(0.5)
-		      Dt = dx*dy/dz*(Pr/Ra)**(0.5)
+          Dw = dy*dz/dx*Pr*(Pr/Ra)**(0.5)
+          De = dy*dz/dx*Pr*(Pr/Ra)**(0.5)
+          Ds = dz*dx/dy*Pr*(Pr/Ra)**(0.5)
+          Dn = dz*dx/dy*Pr*(Pr/Ra)**(0.5)
+		      Db = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
+		      Dt = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
 
 		      ! Compute Coefficients - Power Law Differening Scheme
 		      Aw_v(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
@@ -1237,12 +1237,12 @@ subroutine velocity3d_source(direction)
 		      Ft = dx*dy*(w_star(i,j,k)+w_star(i,j,k+1))/2
 
           ! Update diffusion terms
-          Dw = dy*dz/dx*(Pr/Ra)**(0.5)
-          De = dy*dz/dx*(Pr/Ra)**(0.5)
-          Ds = dz*dx/dy*(Pr/Ra)**(0.5)
-          Dn = dz*dx/dy*(Pr/Ra)**(0.5)
-		      Db = dx*dy/dz*(Pr/Ra)**(0.5)
-		      Dt = dx*dy/dz*(Pr/Ra)**(0.5)
+          Dw = dy*dz/dx*Pr*(Pr/Ra)**(0.5)
+          De = dy*dz/dx*Pr*(Pr/Ra)**(0.5)
+          Ds = dz*dx/dy*Pr*(Pr/Ra)**(0.5)
+          Dn = dz*dx/dy*Pr*(Pr/Ra)**(0.5)
+		      Db = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
+		      Dt = dx*dy/dz*Pr*(Pr/Ra)**(0.5)
 
 		      ! Compute Coefficients - Power Law Differening Scheme
 		      Aw_w(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
@@ -1262,7 +1262,7 @@ subroutine velocity3d_source(direction)
           end if
 
 		      ! Update b values
-		      b_w(i,j,k) = (((T(i,j,k)+T(i,j,k-1))/2.0)-0.5)*dif_fac
+		      b_w(i,j,k) = (Pr*((T(i,j,k)+T(i,j,k-1))/2.0)-Pr/2.0)*dx*dy*dz*dif_fac
 
         end do
       end do
