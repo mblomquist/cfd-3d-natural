@@ -16,10 +16,10 @@
 ! w-velocity bc type :: west, east, north, south, bottom, top
 2, 2, 2, 2, 0, 0
 ! Temperature bc :: T_west, T_east, T_north, T_south, T_bottom, T_top :: Note - 275.49 = 10k Ra, 274.09 = 4500Ra, 273.73 = 3000 Ra
-273.0, 273.0, 273.0, 273.0, 273.00133, 273.0
+273.0, 273.0, 273.0, 273.0, 273.00109, 273.0
 ! Temperature bc type :: west, east, north, south, bottom, top
 2, 2, 2, 2, 1, 1
 ! solution parameters :: itrmax, maxit, solver_tol, simpler_tol, alpha_v, alpha_t, solver
-1, 1e4, 1.0e-4, 1.0e-10, 0.25, 0.25, 1
+10000, 1e4, 1.0e-4, 1.0e-10, 0.5, 0.5, 1
 ! diff_fac
 1.0

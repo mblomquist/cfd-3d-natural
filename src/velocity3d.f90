@@ -1522,14 +1522,14 @@ subroutine pseudo3d_solve
                           b_v(i,j,k))/Ap_v(i,j,k)
         end if
 
-        v_hat(1,:,:) = v_hat(2,:,:)
-        v_hat(m-1,:,:) = v_hat(m-2,:,:)
-        v_hat(:,1,:) = v_hat(:,2,:)
-        v_hat(:,n,:) = v_hat(:,n-1,:)
-
       end do
     end do
   end do
+
+  v_hat(1,:,:) = v_hat(2,:,:)
+  v_hat(m-1,:,:) = v_hat(m-2,:,:)
+  v_hat(:,1,:) = v_hat(:,2,:)
+  v_hat(:,n,:) = v_hat(:,n-1,:)
 
   ! ========================== w_hat ========================== !
 
@@ -1553,6 +1553,7 @@ subroutine pseudo3d_solve
   w_hat(m-1,:,:) = w_hat(m-2,:,:)
   w_hat(:,1,:) = w_hat(:,2,:)
   w_hat(:,n-1,:) = w_hat(:,n-2,:)
+  
   w_hat(:,:,1) = 0.
   w_hat(:,:,l) = 0.
 
