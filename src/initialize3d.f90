@@ -35,7 +35,7 @@ subroutine initialize3d
   read(2,*)
   read(2,*) itrmax, maxit, solver_tol, simpler_tol, alpha_v, alpha_t, solver
   read(2,*)
-  read(2,*) dif_fac
+  read(2,*) dif_fac, dif_fac2, dif_fac3
   close(2)
 
   ! Determine T_h and T_c

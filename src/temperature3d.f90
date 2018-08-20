@@ -397,20 +397,20 @@ subroutine temperature3d_source
       do k = kstart_T, kend_T
 
         ! Update convective terms
-        Fw = dy*dz*u(i,j,k)
-        Fe = dy*dz*u(i+1,j,k)
-        Fs = dz*dx*v(i,j,k)
-        Fn = dz*dx*v(i,j+1,k)
-        Fb = dx*dy*w(i,j,k)
-        Ft = dx*dy*w(i,j,k+1)
+        Fw = dy*dz*u(i,j,k)*dif_fac
+        Fe = dy*dz*u(i+1,j,k)*dif_fac
+        Fs = dz*dx*v(i,j,k)*dif_fac2
+        Fn = dz*dx*v(i,j+1,k)*dif_fac2
+        Fb = dx*dy*w(i,j,k)*dif_fac3
+        Ft = dx*dy*w(i,j,k+1)*dif_fac3
 
         ! Update diffusion terms
-        Dw = dy*dz/dx/(Ra/Pr)**(0.5)
-        De = dy*dz/dx/(Ra/Pr)**(0.5)
-        Dn = dz*dx/dy/(Ra/Pr)**(0.5)
-        Ds = dz*dx/dy/(Ra/Pr)**(0.5)
-        Db = dx*dy/dz/(Ra/Pr)**(0.5)
-        Dt = dx*dy/dz/(Ra/Pr)**(0.5)
+        Dw = dy*dz/dx*(Pr/Ra)**(0.5)
+        De = dy*dz/dx*(Pr/Ra)**(0.5)
+        Dn = dz*dx/dy*(Pr/Ra)**(0.5)
+        Ds = dz*dx/dy*(Pr/Ra)**(0.5)
+        Db = dx*dy/dz*(Pr/Ra)**(0.5)
+        Dt = dx*dy/dz*(Pr/Ra)**(0.5)
 
         ! Compute Coefficients - Power Law Differening Scheme
         Aw_T(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)

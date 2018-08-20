@@ -9,7 +9,7 @@
 
 ! Mesh parameters :: nodes in x, nodes in y, nodes in z
   integer :: m, n, l
-  parameter (m=11, n=11, l=11)
+  parameter (m=36, n=36, l=36)
 
 ! Geometry variables ::
   real(8) :: length, width, depth, dx, dy, dz
@@ -115,8 +115,8 @@
   real(8), dimension(100000) :: R_e, R_t, t_1, t_2, t_3, t_4, t_5, t_6, t_7
   common R_e, R_t, t_1, t_2, t_3, t_4, t_5, t_6, t_7
 
-  real(8) :: solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time, t_start, t_end, dif_fac
-  common solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time, t_start, t_end, dif_fac
+  real(8) :: solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time, t_start, t_end, dif_fac, dif_fac2, dif_fac3
+  common solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time, t_start, t_end, dif_fac, dif_fac2, dif_fac3
 
   integer :: maxit, solver, solved, itrmax
   common maxit, solver, solved, itrmax
