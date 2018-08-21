@@ -18,7 +18,7 @@ subroutine output3d_results
 
   write(2, *), 'TITLE = "3D CFD - Natural Convection - Field Scalar Data"'
   write(2, *), 'VARIABLES = "X", "Y", "Z", "Pressure", "U-Velocity", "V-Velocity", "W-Velocity", "Temperature"'
-  write(2, *), 'ZONE I=35, J=35, K=35, DATAPACKING=POINT'
+  write(2, *), 'ZONE I=5, J=5, K=5, DATAPACKING=POINT'
 
   do k = 1,l-1
     do j = 1,n-1
@@ -42,8 +42,8 @@ subroutine output3d_results
   write (5, *), "Solver #:", solver
   write (5, *), "R_e, R_t, t_1, t_2, t_3, t_4, t_5, t_6, t_7"
   do i = 1, itrmax
-    write (5,'(E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5)', advance="no"), &
-               R_e(i), R_t(i), t_1(i), t_2(i), t_3(i), t_4(i), t_5(i), t_6(i), t_7(i)
+    write (5,'(E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5)', advance="no"), &
+               R_e(i), R_t(i), R_u(i), R_v(i), R_w(i), t_1(i), t_2(i), t_3(i), t_4(i), t_5(i), t_6(i), t_7(i)
   end do
 
   close(5)

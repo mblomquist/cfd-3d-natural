@@ -109,14 +109,14 @@ subroutine pressure3d_solve
   end do
 
   ! Set reference pressure node (east-north corner)
-  Aw_p(:,:,1) = 0.
-  Ae_p(:,:,1) = 0.
-  As_p(:,:,1) = 0.
-  An_p(:,:,1) = 0.
-  Ab_p(:,:,1) = 0.
-  At_p(:,:,1) = 0.
-  Ap_p(:,:,1) = 1.
-  b_p(:,:,1) = 0.
+  Aw_p(1,1,1) = 0.
+  Ae_p(1,1,1) = 0.
+  As_p(1,1,1) = 0.
+  An_p(1,1,1) = 0.
+  Ab_p(1,1,1) = 0.
+  At_p(1,1,1) = 0.
+  Ap_p(1,1,1) = 1.
+  b_p(1,1,1) = 0.
 
   ! Initialize P
   P = 0.
@@ -178,14 +178,14 @@ subroutine pressure3d_correct
   end do
 
   ! Set reference pressure node (east-north corner)
-  Aw_p(:,:,1) = 0.
-  Ae_p(:,:,1) = 0.
-  As_p(:,:,1) = 0.
-  An_p(:,:,1) = 0.
-  Ab_p(:,:,1) = 0.
-  At_p(:,:,1) = 0.
-  Ap_p(:,:,1) = 1.
-  b_p(:,:,1) = 0.
+  Aw_p(1,1,1) = 0.
+  Ae_p(1,1,1) = 0.
+  As_p(1,1,1) = 0.
+  An_p(1,1,1) = 0.
+  Ab_p(1,1,1) = 0.
+  At_p(1,1,1) = 0.
+  Ap_p(1,1,1) = 1.
+  b_p(1,1,1) = 0.
 
   ! Initialize P_prime
   P_prime = 0.

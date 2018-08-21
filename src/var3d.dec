@@ -9,7 +9,7 @@
 
 ! Mesh parameters :: nodes in x, nodes in y, nodes in z
   integer :: m, n, l
-  parameter (m=36, n=36, l=36)
+  parameter (m=6, n=6, l=6)
 
 ! Geometry variables ::
   real(8) :: length, width, depth, dx, dy, dz
@@ -112,11 +112,17 @@
   !parameter (itrmax=250)
 
 ! Convergence variables
-  real(8), dimension(100000) :: R_e, R_t, t_1, t_2, t_3, t_4, t_5, t_6, t_7
-  common R_e, R_t, t_1, t_2, t_3, t_4, t_5, t_6, t_7
+  real(8), dimension(100000) :: R_e, R_t, R_u, R_v, R_w, t_1, t_2, t_3, t_4, t_5, t_6, t_7
+  common R_e, R_t, R_u, R_v, R_w, t_1, t_2, t_3, t_4, t_5, t_6, t_7
 
-  real(8) :: solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time, t_start, t_end, dif_fac, dif_fac2, dif_fac3
-  common solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time, t_start, t_end, dif_fac, dif_fac2, dif_fac3
+  real(8), dimension(m-1,n-1,l-1) :: T_temp, U_temp, V_temp, W_temp
+  common T_temp, U_temp, V_temp, W_temp
+
+  real(8) :: solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time, t_start, t_end
+  common solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time, t_start, t_end
+
+  real(8) :: P_res, P_resold, u_res, u_resold, v_res, v_resold, w_res, w_resold, T_res, T_resold
+  common P_res, P_resold, u_res, u_resold, v_res, v_resold, w_res, w_resold, T_res, T_resold
 
   integer :: maxit, solver, solved, itrmax
   common maxit, solver, solved, itrmax

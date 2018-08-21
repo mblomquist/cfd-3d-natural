@@ -63,43 +63,13 @@ subroutine simpler3d
     call cpu_time(t_end)
     t_2(i) = t_end - t_start
 
+
+    ! Set p_star := P
+    P_star = P
+
     !print *, "................"
     !print *, "P:", P
     !print *, "................"
-
-    ! Step 8: Check Convergence
-    !print *, "Check Convergence"
-    call cpu_time(t_start)
-    call convergence3d(i)
-    call cpu_time(t_end)
-    t_3(i) = t_end - t_start
-
-    if (i .eq. 1) then
-
-      ! Print Current Information to Terminal
-      print *, "Iteration:", i
-      print *, "Relative Momentum Error: ", R_e(i)
-      print *, "Relative Energy Error:", R_t(i)
-
-    else
-
-	    !  Print Current Information to Terminal
-	    print *, "Iteration:", i
-      print *, "Relative Momentum Error: ", R_e(i)
-      print *, "Relative Energy Error:", R_t(i)
-
-      ! Check for Convergence
-      if ((R_e(i) .le. simpler_tol) .and. (R_t(i) .le. simpler_tol)) then
-
-        call temperature3d_solve(1)
-        print *, "Simpler completed in: ", i
-        exit
-
-      end if
-    end if
-
-	  ! Set p_star := P
-	  P_star = P
 
     ! Step 4: Solve Momentum Equations
     !print *, "Step 4: Solve Momentum Equations"
@@ -117,6 +87,47 @@ subroutine simpler3d
     !print *, "v_star:", v_star
     !print *, "w_star:", w_star
     !print *, "................"
+
+    ! Step 8: Check Convergence
+    !print *, "Check Convergence"
+    call cpu_time(t_start)
+    call convergence3d(i)
+    call cpu_time(t_end)
+    t_3(i) = t_end - t_start
+
+    if (i .eq. 1) then
+
+      ! Print Current Information to Terminal
+      print *, ""
+	    print *, "Iteration:", i
+      print *, "Continuity Error: ", R_e(i)
+      print *, "X Momentum Error: ", R_u(i)
+      print *, "Y Momentum Error: ", R_v(i)
+      print *, "Z Momentum Error: ", R_w(i)
+      print *, "Temperature Error:", R_t(i)
+      print *, ""
+
+    else
+
+	    !  Print Current Information to Terminal
+      print *, ""
+	    print *, "Iteration:", i
+      print *, "Continuity Error: ", R_e(i)
+      print *, "X Momentum Error: ", R_u(i)
+      print *, "Y Momentum Error: ", R_v(i)
+      print *, "Z Momentum Error: ", R_w(i)
+      print *, "Temperature Error:", R_t(i)
+      print *, ""
+
+      ! Check for Convergence
+      if ((R_e(i) .le. simpler_tol) .and. (R_t(i).le. simpler_tol*100.0)) then
+
+        call temperature3d_solve(1)
+        print *, "Simpler completed in: ", i
+        exit
+
+      end if
+    end if
 
     ! Step 5: Solve Pressure Equation
     !print *, "Step 5: Solve Pressure Correction"
