@@ -34,6 +34,8 @@ subroutine initialize3d
   read(2,*) T_bc_wc, T_bc_ec, T_bc_nc, T_bc_sc, T_bc_bc, T_bc_tc
   read(2,*)
   read(2,*) itrmax, maxit, solver_tol, simpler_tol, alpha_v, alpha_t, solver
+  read(2,*)
+  read(2,*) dif_fac, dif_fac1
   close(2)
 
   ! Determine T_h and T_c
@@ -46,11 +48,12 @@ subroutine initialize3d
   delta_T = T_h - T_c
 
   ! Calculate Characteristic Velocity
-  u0 = (g*beta*delta_T*depth)**(0.5)
+  u0 = nu/depth
 
   ! Calculate dimensionless numbers
   Ra = g*beta*delta_T*depth**3.0/alpha/nu
   Pr = nu/alpha
+  Ga = g*depth**(3.0)/nu**(2.0)
 
   ! Calculate geometry properties.
   call geometry3d

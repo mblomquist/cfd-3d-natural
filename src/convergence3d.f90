@@ -15,11 +15,11 @@ subroutine convergence3d(itr)
   ! Define internal variables
   integer :: i, j, k, itr
 
-  R_e(itr) = 0.
-  R_u(itr) = 0.
-  R_v(itr) = 0.
-  R_w(itr) = 0.
-  R_t(itr) = 0.
+  R_e(itr, :) = 0.
+  R_u(itr, :) = 0.
+  R_v(itr, :) = 0.
+  R_w(itr, :) = 0.
+  R_t(itr, :) = 0.
 
   P_res = 0.
   T_res = 0.
@@ -93,19 +93,25 @@ subroutine convergence3d(itr)
 
   if (itr .eq. 1) then
 
-    R_e(itr) = P_res
-    R_u(itr) = U_res
-    R_v(itr) = V_res
-    R_w(itr) = W_res
-    R_t(itr) = T_res
+    R_e(itr, :) = 1.
+    R_u(itr, :) = 1.
+    R_v(itr, :) = 1.
+    R_w(itr, :) = 1.
+    R_t(itr, :) = 1.
 
   else
 
-    R_e(itr) = abs(P_res-P_resold)/P_res
-    R_u(itr) = abs(u_res-u_resold)/u_res
-    R_v(itr) = abs(v_res-v_resold)/v_res
-    R_w(itr) = abs(w_res-w_resold)/w_res
-    R_t(itr) = abs(T_res-T_resold)/T_res
+    R_e(itr, 2) = P_res
+    R_u(itr, 2) = u_res
+    R_v(itr, 2) = v_res
+    R_w(itr, 2) = w_res
+    R_t(itr, 2) = T_res
+
+    R_e(itr, 1) = abs(P_res-P_resold)/P_res
+    R_u(itr, 1) = abs(u_res-u_resold)/u_res
+    R_v(itr, 1) = abs(v_res-v_resold)/v_res
+    R_w(itr, 1) = abs(w_res-w_resold)/w_res
+    R_t(itr, 1) = abs(T_res-T_resold)/T_res
 
   end if
 

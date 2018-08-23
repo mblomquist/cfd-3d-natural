@@ -29,6 +29,7 @@ program main3d
   print *, 'u0:', u0
   print *, 'Rayleigh Number: ', Ra
   print *, 'Prandtl Number: ', Pr
+  print *, 'dx, dy, dz:', dx, dy, dz
   print *, ''
 
   call cpu_time(start_time)

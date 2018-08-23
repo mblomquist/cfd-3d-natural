@@ -35,9 +35,9 @@ subroutine simpler3d
     !print *, "................"
     !print *, "Ab_v:", Ab_v
     !print *, "As_v:", As_v
-    !print *, "Aw_v:", Aw_v
+    !print *, "Ap_u:", Ap_u
     !print *, "Ap_v:", Ap_v
-    !print *, "Ae_v:", Ae_v
+    !print *, "Ap_w:", Ap_w
     !print *, "An_v:", An_v
     !print *, "At_v:", At_v
     !print *, "b_v:", b_v
@@ -50,12 +50,6 @@ subroutine simpler3d
     call cpu_time(t_end)
     t_1(i) = t_end - t_start
 
-    !print *, "................"
-    !print *, "u_hat:", u_hat
-    !print *, "v_hat:", v_hat
-    !print *, "w_hat:", w_hat
-    !print *, "................"
-
     ! Step 3: Solve Pressure Equation
     !print *, "Step 2: Solve Pressure Equation"
     call cpu_time(t_start)
@@ -63,13 +57,8 @@ subroutine simpler3d
     call cpu_time(t_end)
     t_2(i) = t_end - t_start
 
-
     ! Set p_star := P
     P_star = P
-
-    !print *, "................"
-    !print *, "P:", P
-    !print *, "................"
 
     ! Step 4: Solve Momentum Equations
     !print *, "Step 4: Solve Momentum Equations"
@@ -77,10 +66,6 @@ subroutine simpler3d
     call velocity3d_solve
     call cpu_time(t_end)
     t_4(i) = t_end - t_start
-
-    !print *, "................"
-    !print *, "b_v:", b_v
-    !print *, "................"
 
     !print *, "................"
     !print *, "u_star:", u_star
@@ -100,11 +85,11 @@ subroutine simpler3d
       ! Print Current Information to Terminal
       print *, ""
 	    print *, "Iteration:", i
-      print *, "Continuity Error: ", R_e(i)
-      print *, "X Momentum Error: ", R_u(i)
-      print *, "Y Momentum Error: ", R_v(i)
-      print *, "Z Momentum Error: ", R_w(i)
-      print *, "Temperature Error:", R_t(i)
+      print *, "Continuity Error: ", R_e(i,1), R_e(i,2)
+      print *, "X Momentum Error: ", R_u(i,1), R_u(i,2)
+      print *, "Y Momentum Error: ", R_v(i,1), R_v(i,2)
+      print *, "Z Momentum Error: ", R_w(i,1), R_w(i,2)
+      print *, "Temperature Error:", R_t(i,1), R_t(i,2)
       print *, ""
 
     else
@@ -112,15 +97,21 @@ subroutine simpler3d
 	    !  Print Current Information to Terminal
       print *, ""
 	    print *, "Iteration:", i
-      print *, "Continuity Error: ", R_e(i)
-      print *, "X Momentum Error: ", R_u(i)
-      print *, "Y Momentum Error: ", R_v(i)
-      print *, "Z Momentum Error: ", R_w(i)
-      print *, "Temperature Error:", R_t(i)
+      print *, "Continuity Error: ", R_e(i,1), R_e(i,2)
+      print *, "X Momentum Error: ", R_u(i,1), R_u(i,2)
+      print *, "Y Momentum Error: ", R_v(i,1), R_v(i,2)
+      print *, "Z Momentum Error: ", R_w(i,1), R_w(i,2)
+      print *, "Temperature Error:", R_t(i,1), R_t(i,2)
       print *, ""
 
       ! Check for Convergence
-      if ((R_e(i) .le. simpler_tol) .and. (R_t(i).le. simpler_tol*100.0)) then
+      if ((R_e(i,2) .le. simpler_tol) .and. (R_t(i,2).le. simpler_tol)) then
+
+        call temperature3d_solve(1)
+        print *, "Simpler completed in: ", i
+        exit
+
+      elseif ((R_e(i,2)+R_u(i,2)+R_v(i,2)+R_w(i,2)+R_t(i,2)) .le. 5.0*simpler_tol) then
 
         call temperature3d_solve(1)
         print *, "Simpler completed in: ", i
@@ -135,10 +126,6 @@ subroutine simpler3d
     call pressure3d_correct
     call cpu_time(t_end)
     t_5(i) = t_end - t_start
-
-    !print *, "................"
-    !print *, "P_prime:", P_Prime
-    !print *, "................"
 
     ! Step 6: Correct Velocities
     !print *, "Step 6: Correct Velocities"

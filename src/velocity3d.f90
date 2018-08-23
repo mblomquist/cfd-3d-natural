@@ -205,7 +205,7 @@ subroutine velocity3d_boundary(direction)
       Ap_u(2:m-1,1,2:l-2) = 1.
       An_u(2:m-1,1,2:l-2) = 1.
     else
-      Sp_u(2:m-1,1,2:l-2) = -2.0*dx*dz/dy
+      Sp_u(2:m-1,1,2:l-2) = -2.0*dx*dz/dy*mu*u0
     end if
 
     ! North
@@ -216,7 +216,7 @@ subroutine velocity3d_boundary(direction)
       Ap_u(2:m-1,n-1,2:l-2) = 1.
       As_u(2:m-1,n-1,2:l-2) = 1.
     else
-      Sp_u(2:m-1,n-1,2:l-2) = -2.0*dx*dz/dy
+      Sp_u(2:m-1,n-1,2:l-2) = -2.0*dx*dz/dy*mu*u0
     end if
 
     ! Bottom
@@ -227,7 +227,7 @@ subroutine velocity3d_boundary(direction)
       Ap_u(2:m-1,2:n-2,1) = 1.
       At_u(2:m-1,2:n-2,1) = 1.
     else
-      Sp_u(2:m-1,2:n-2,1) = -2.0*dx*dy/dz
+      Sp_u(2:m-1,2:n-2,1) = -2.0*dx*dy/dz*mu*u0
     end if
 
     ! Top
@@ -238,7 +238,7 @@ subroutine velocity3d_boundary(direction)
       Ap_u(2:m-1,2:n-2,l-1) = 1.
       Ab_u(2:m-1,2:n-2,l-1) = 1.
     else
-      Sp_u(2:m-1,2:n-2,l-1) = -2.0*dx*dy/dz
+      Sp_u(2:m-1,2:n-2,l-1) = -2.0*dx*dy/dz*mu*u0
     end if
 
     ! West-South
@@ -473,7 +473,7 @@ subroutine velocity3d_boundary(direction)
       Ap_v(1,2:n-1,2:l-2) = 1.
       Ae_v(1,2:n-1,2:l-2) = 1.
     else
-      Sp_v(1,2:n-1,2:l-2) = -2.0*dy*dz/dx
+      Sp_v(1,2:n-1,2:l-2) = -2.0*dy*dz/dx*mu*u0
     end if
 
     ! East
@@ -484,7 +484,7 @@ subroutine velocity3d_boundary(direction)
       Ap_v(m-1,2:n-1,2:l-2) = 1.
       Aw_v(m-1,2:n-1,2:l-2) = 1.
     else
-      Sp_v(m-1,2:n-1,2:l-2) = -2.0*dy*dz/dx
+      Sp_v(m-1,2:n-1,2:l-2) = -2.0*dy*dz/dx*mu*u0
     end if
 
     ! South
@@ -519,7 +519,7 @@ subroutine velocity3d_boundary(direction)
       Ap_v(2:m-2,2:n-1,1) = 1.
       At_v(2:m-2,2:n-1,1) = 1.
     else
-      Sp_v(2:m-2,2:n-1,1) = -2.0*dx*dy/dz
+      Sp_v(2:m-2,2:n-1,1) = -2.0*dx*dy/dz*mu*u0
     end if
 
     ! Top
@@ -530,7 +530,7 @@ subroutine velocity3d_boundary(direction)
       Ap_v(2:m-2,2:n-1,l-1) = 1.
       Ab_v(2:m-2,2:n-1,l-1) = 1.
     else
-      Sp_v(2:m-2,2:n-1,l-1) = -2.0*dx*dy/dz
+      Sp_v(2:m-2,2:n-1,l-1) = -2.0*dx*dy/dz*mu*u0
     end if
 
     ! West-South
@@ -765,7 +765,7 @@ subroutine velocity3d_boundary(direction)
       Ap_w(1,2:n-2,2:l-1) = 1.
       Ae_w(1,2:n-2,2:l-1) = 1.
     else
-      Sp_w(1,2:n-2,2:l-1) = -2.0*dy*dz/dx
+      Sp_w(1,2:n-2,2:l-1) = -2.0*dy*dz/dx*mu*u0
     end if
 
     ! East
@@ -776,7 +776,7 @@ subroutine velocity3d_boundary(direction)
       Ap_w(m-1,2:n-2,2:l-1) = 1.
       Aw_w(m-1,2:n-2,2:l-1) = 1.
     else
-      Sp_w(m-1,2:n-2,2:l-1) = -2.0*dy*dz/dx
+      Sp_w(m-1,2:n-2,2:l-1) = -2.0*dy*dz/dx*mu*u0
     end if
 
     ! South
@@ -787,7 +787,7 @@ subroutine velocity3d_boundary(direction)
       Ap_w(2:m-2,1,2:l-1) = 1.
       An_w(2:m-2,1,2:l-1) = 1.
     else
-      Sp_w(2:m-2,1,2:l-1) = -2.0*dx*dz/dy
+      Sp_w(2:m-2,1,2:l-1) = -2.0*dx*dz/dy*mu*u0
     end if
 
     ! North
@@ -798,7 +798,7 @@ subroutine velocity3d_boundary(direction)
       Ap_w(2:m-2,n-1,2:l-1) = 1.
       As_w(2:m-2,n-1,2:l-1) = 1.
     else
-      Sp_w(2:m-2,n-1,2:l-1) = -2.0*dx*dz/dy
+      Sp_w(2:m-2,n-1,2:l-1) = -2.0*dx*dz/dy*mu*u0
     end if
 
     ! Bottom
@@ -1118,7 +1118,7 @@ subroutine velocity3d_source(direction)
           end if
 
 		      ! Update Ap coefficient
-		      Ap_u(i,j,k) = Aw_u(i,j,k)+Ae_u(i,j,k)+As_u(i,j,k)+An_u(i,j,k)+Ab_u(i,j,k)+At_u(i,j,k)-Sp_u(i,j,k)*dx*dy*dz
+		      Ap_u(i,j,k) = Aw_u(i,j,k)+Ae_u(i,j,k)+As_u(i,j,k)+An_u(i,j,k)+Ab_u(i,j,k)+At_u(i,j,k)-Sp_u(i,j,k)
 
 		      ! Check False Diffusion
 		      if (Ap_u(i,j,k) .eq. 0.) then
@@ -1189,7 +1189,7 @@ subroutine velocity3d_source(direction)
           end if
 
 		      ! Update Ap coefficient
-		      Ap_v(i,j,k) = Aw_v(i,j,k)+Ae_v(i,j,k)+As_v(i,j,k)+An_v(i,j,k)+Ab_v(i,j,k)+At_v(i,j,k)-Sp_v(i,j,k)*dx*dy*dz
+		      Ap_v(i,j,k) = Aw_v(i,j,k)+Ae_v(i,j,k)+As_v(i,j,k)+An_v(i,j,k)+Ab_v(i,j,k)+At_v(i,j,k)-Sp_v(i,j,k)
 
 		      ! Check False Diffusion
 		      if (Ap_v(i,j,k) .eq. 0.) then
@@ -1253,7 +1253,7 @@ subroutine velocity3d_source(direction)
 		      At_w(i,j,k) = Dt*max(0.0,(1-0.1*abs(Ft/Dt))**5)+max(-Ft,0.0)
 
 		      ! Update Ap coefficient
-		      Ap_w(i,j,k) = Aw_w(i,j,k)+Ae_w(i,j,k)+As_w(i,j,k)+An_w(i,j,k)+Ab_w(i,j,k)+At_w(i,j,k)-Sp_w(i,j,k)*dx*dy*dz
+		      Ap_w(i,j,k) = Aw_w(i,j,k)+Ae_w(i,j,k)+As_w(i,j,k)+An_w(i,j,k)+Ab_w(i,j,k)+At_w(i,j,k)-Sp_w(i,j,k)
 
 		      ! Check False Diffusion
 		      if (Ap_w(i,j,k) .eq. 0.) then
@@ -1262,7 +1262,7 @@ subroutine velocity3d_source(direction)
           end if
 
 		      ! Update b values
-		      b_w(i,j,k) = Ra/Pr*(((T(i,j,k)+T(i,j,k-1))/2.0)-0.5)*dx*dy*dz
+		      b_w(i,j,k) = Ra/Pr*(((T(i,j,k)+T(i,j,k-1))/2.0)-dif_fac1)*dx*dy*dz
 
         end do
       end do
@@ -1286,7 +1286,7 @@ subroutine velocity3d_solve
 
   ! ====================== U-Velocity ====================== !
   ! Update source terms :: u
-  do i = 2,m-1
+  do i = 3,m-1
     do j = 2,n-2
       do k = 2,l-2
 
@@ -1318,7 +1318,7 @@ subroutine velocity3d_solve
   ! ====================== V-Velocity ====================== !
   ! Update source terms :: v
   do i = 2, m-2
-    do j = 2, n-1
+    do j = 3, n-1
       do k = 2,l-2
 
         Ap_v(i,j,k) = Ap_v(i,j,k)/alpha_v
@@ -1350,7 +1350,7 @@ subroutine velocity3d_solve
   ! Update source terms :: w
   do i = 2, m-2
     do j = 2, n-2
-      do k = 2,l-1
+      do k = 3,l-1
 
         Ap_w(i,j,k) = Ap_w(i,j,k)/alpha_v
         b_w(i,j,k) = b_w(i,j,k)+dx*dy*(P_star(i,j,k-1)-P_star(i,j,k))+(1.0-alpha_v)*Ap_w(i,j,k)*w_hat(i,j,k)
@@ -1377,6 +1377,18 @@ subroutine velocity3d_solve
     call solver3d_tdma(Ab_w, As_w, Aw_w, Ap_w, Ae_w, An_w, At_w, b_w, w_star, m-1, n-1, l, solver_tol, maxit)
   end if
 
+  u_star(1,:,:) = u_star(m,:,:)
+  u_star(:,1,:) = u_star(:,n-1,:)
+
+  v_star(1,:,:) = v_star(m,:,:)
+  v_star(:,1,:) = v_star(:,n,:)
+
+  w_star(1,:,:) = w_star(m-1,:,:)
+  w_star(:,1,:) = w_star(:,n-1,:)
+
+  w_star(:,:,1) = 0.
+  w_star(:,:,l-1) = 0.
+
   return
 
 end subroutine velocity3d_solve
@@ -1390,10 +1402,13 @@ subroutine velocity3d_correct
   integer :: i, j, k
 
   ! ====================== U-Velocity ====================== !
-  ! Correct velocity values
+  u = u_star
+  v = v_star
+  w = w_star
 
+  ! Correct velocity values
   ! U-Velocity Update
-  do i = 2,m-1
+  do i = 3,m-1
     do j = 2,n-2
       do k = 1,l-1
         u(i,j,k) = u_star(i,j,k)+dy*dz/Ap_u(i,j,k)*(P_prime(i-1,j,k)-P_prime(i,j,k))*alpha_v
@@ -1409,34 +1424,26 @@ subroutine velocity3d_correct
 
   ! V-Velocity Update
   do i = 1,m-1
-    do j = 2,n
+    do j = 3,n-1
       do k = 1,l-1
         v(i,j,k) = v_star(i,j,k)+dx*dz/Ap_v(i,j,k)*(P_prime(i,j-1,k)-P_prime(i,j,k))*alpha_v
       end do
     end do
   end do
 
-  v(:,1,:) = v(:,2,:)
-  v(:,n,:) = v(:,n-1,:)
   v(1,:,:) = v(2,:,:)
   v(m-1,:,:) = v(m-2,:,:)
+  v(:,1,:) = v(:,2,:)
+  v(:,n,:) = v(:,n-1,:)
 
   ! W-Velocity Update
   do i = 2,m-2
     do j = 2,n-2
-      do k = 2,l-1
+      do k = 3,l-1
         w(i,j,k) = w_star(i,j,k)+dx*dy/Ap_w(i,j,k)*(P_prime(i,j,k-1)-P_prime(i,j,k))*alpha_v
       end do
     end do
   end do
-
-  w(1,:,:) = w(1,:,:)
-  w(m-1,:,:) =  w(m-2,:,:)
-  w(:,n-1,:) = w(:,n-2,:)
-  w(:,1,:) = w(:,2,:)
-
-  w(:,:,1) = 0.
-  w(:,:,l) = 0.
 
   return
 
@@ -1453,10 +1460,13 @@ subroutine pseudo3d_solve
   integer :: i, j, k
 
   ! ========================== u_hat ========================== !
+  u_hat = u_star
+  v_hat = v_star
+  w_hat = w_star
 
-  do i = 1, m
-    do j = 1, n-1
-      do k = 1, l-1
+  do i = 2, m-1
+    do j = 2, n-2
+      do k = 2, l-2
 
           u_hat(i,j,k) = (Aw_u(i,j,k)*u_star(i-1,j,k)+ &
                         Ae_u(i,j,k)*u_star(i+1,j,k)+ &
@@ -1472,9 +1482,9 @@ subroutine pseudo3d_solve
 
   ! ========================== v_hat ========================== !
 
-  do i = 1, m-1
-    do j = 1, n
-      do k = 1, l-1
+  do i = 2, m-2
+    do j = 2, n-1
+      do k = 2, l-2
 
           v_hat(i,j,k) = (Aw_v(i,j,k)*v_star(i-1,j,k)+ &
                           Ae_v(i,j,k)*v_star(i+1,j,k)+ &
@@ -1490,9 +1500,9 @@ subroutine pseudo3d_solve
 
   ! ========================== w_hat ========================== !
 
-  do i = 1, m-1
-    do j = 1, n-1
-      do k = 1, l
+  do i = 2, m-2
+    do j = 2, n-2
+      do k = 2, l-1
 
 			  w_hat(i,j,k) = (Aw_w(i,j,k)*w_star(i-1,j,k)+ &
                         Ae_w(i,j,k)*w_star(i+1,j,k)+ &
@@ -1505,6 +1515,15 @@ subroutine pseudo3d_solve
 	    end do
     end do
   end do
+
+  u_hat(1,:,:) = u_hat(m,:,:)
+  u_hat(:,1,:) = u_hat(:,n-1,:)
+
+  v_hat(1,:,:) = v_hat(m,:,:)
+  v_hat(:,1,:) = v_hat(:,n-1,:)
+
+  w_hat(1,:,:) = w_hat(m-1,:,:)
+  w_hat(:,1,:) = w_hat(:,n-1,:)
 
   w_hat(:,:,1) = 0.
   w_hat(:,:,l) = 0.
