@@ -84,14 +84,14 @@ subroutine simpler3d
       print *, ""
 
       ! Check for Convergence
-      if ((R_e(i,2) .le. simpler_tol) .and. (R_t(i,2).le. simpler_tol)) then
+      if ((R_e(i,1) .le. simpler_tol) .and. (R_t(i,1).le. simpler_tol)) then
 
         call temperature3d_solve(1)
         print *, "Simpler completed in: ", i
         exit
 
       end if
-    end if 
+    end if
 
     ! Step 5: Solve Pressure Equation
     !print *, "Step 5: Solve Pressure Correction"
