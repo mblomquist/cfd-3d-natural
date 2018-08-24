@@ -21,27 +21,12 @@ subroutine simpler3d
   !print *, "Step 0: Solve Temperature Equation"
   call temperature3d_solve(0)
 
-  !print *, "................"
-  !print *, "T:", T
-  !print *, "................"
-
   do i = 1,itrmax
 
     ! Calculate velocity coefficients
     call velocity3d_source("u")
     call velocity3d_source("v")
     call velocity3d_source("w")
-
-    !print *, "................"
-    !print *, "Ab_v:", Ab_v
-    !print *, "As_v:", As_v
-    !print *, "Ap_u:", Ap_u
-    !print *, "Ap_v:", Ap_v
-    !print *, "Ap_w:", Ap_w
-    !print *, "An_v:", An_v
-    !print *, "At_v:", At_v
-    !print *, "b_v:", b_v
-    !print *, "................"
 
     ! Step 2: Calculate Pseudo-Velocities
     !print *, "Step 1: Solve Pseudo-Velocities"
@@ -66,12 +51,6 @@ subroutine simpler3d
     call velocity3d_solve
     call cpu_time(t_end)
     t_4(i) = t_end - t_start
-
-    !print *, "................"
-    !print *, "u_star:", u_star
-    !print *, "v_star:", v_star
-    !print *, "w_star:", w_star
-    !print *, "................"
 
     ! Step 8: Check Convergence
     !print *, "Check Convergence"
@@ -111,14 +90,8 @@ subroutine simpler3d
         print *, "Simpler completed in: ", i
         exit
 
-      elseif ((R_e(i,2)+R_u(i,2)+R_v(i,2)+R_w(i,2)+R_t(i,2)) .le. 5.0*simpler_tol) then
-
-        call temperature3d_solve(1)
-        print *, "Simpler completed in: ", i
-        exit
-
       end if
-    end if
+    end if 
 
     ! Step 5: Solve Pressure Equation
     !print *, "Step 5: Solve Pressure Correction"
@@ -134,22 +107,12 @@ subroutine simpler3d
     call cpu_time(t_end)
     t_6(i) = t_end - t_start
 
-    !print *, "................"
-    !print *, "u:", u
-    !print *, "v:", v
-    !print *, "w:", w
-    !print *, "................"
-
     ! Step 7: Solve Temperature Equation
     !print *, "Step 7: Solve Temperature Equation"
     call cpu_time(t_start)
     call temperature3d_solve(1)
     call cpu_time(t_end)
     t_7(i) = t_end - t_start
-
-    !print *, "................"
-    !print *, "T:", T
-    !print *, "................"
 
     ! Reset Initial  Initial Guesses
 	  u_star = u

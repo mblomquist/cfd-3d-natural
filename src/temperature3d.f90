@@ -405,12 +405,12 @@ subroutine temperature3d_source
         Ft = dx*dy*w(i,j,k+1)
 
         ! Update diffusion terms
-        Dw = dy*dz/dx/Pr*dif_fac
-        De = dy*dz/dx/Pr*dif_fac
-        Ds = dz*dx/dy/Pr*dif_fac
-        Dn = dz*dx/dy/Pr*dif_fac
-        Db = dx*dy/dz/Pr*dif_fac
-        Dt = dx*dy/dz/Pr*dif_fac
+        Dw = dy*dz/dx/(Ra/Pr)**(0.5)
+        De = dy*dz/dx/(Ra/Pr)**(0.5)
+        Ds = dz*dx/dy/(Ra/Pr)**(0.5)
+        Dn = dz*dx/dy/(Ra/Pr)**(0.5)
+        Db = dx*dy/dz/(Ra/Pr)**(0.5)
+        Dt = dx*dy/dz/(Ra/Pr)**(0.5)
 
         ! Compute Coefficients - Power Law Differening Scheme
         Aw_T(i,j,k) = Dw*max(0.0,(1-0.1*abs(Fw/Dw))**5)+max(Fw,0.0)
@@ -485,6 +485,9 @@ subroutine temperature3d_solve(start)
   else
     call solver3d_tdma(Ab_T, As_T, Aw_T, Ap_T, Ae_T, An_T, At_T, b_T, T, m-1, n-1, l-1, solver_tol, maxit)
   end if
+
+  T(1,:,:) = T(m-1,:,:)
+  T(:,1,:) = T(:,n-1,:)
 
   return
 

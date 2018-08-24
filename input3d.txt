@@ -1,6 +1,6 @@
 ! Sample input file for 3d cfd
 ! geometry :: length, width, depth
-0.05, 0.05, 0.01
+0.1, 0.1, 0.01
 ! media :: g, rho, mu, k, Cp, beta
 9.81e-0, 9.97e2, 1.07e-3, 6.40e-1, 4.19e3, 6.90e-5
 ! u-velocity bc value :: u_west, u_east, u_north, u_south, u_bottom, u_top
@@ -16,13 +16,13 @@
 ! w-velocity bc type :: west, east, north, south, bottom, top
 2, 2, 2, 2, 1, 1
 ! Temperature bc :: T_west, T_east, T_north, T_south, T_bottom, T_top
-273.0, 273.0, 273.0, 273.0, 273.4323, 273.0
+273.0, 273.0, 273.0, 273.0, 275.0, 273.0
 ! Temperature bc type :: west, east, north, south, bottom, top
 2, 2, 2, 2, 1, 1
 ! solution parameters :: itrmax, maxit, solver_tol, simpler_tol, alpha_v, alpha_t, solver
-100, 1e3, 1.0e-5, 1.0e-7, 0.75, 0.75, 1
+1, 1e3, 1.0e-5, 1.0e-7, 0.69, 0.69, 1
 ! dif_fac
-5.0, 0.5
+1.0e-2, 0.5
 
 ! Notes ::
 !   Ra 988 = 273.24

@@ -56,8 +56,8 @@ subroutine pressure3d_solve
   b_p = 0.
 
   ! Update coefficients
-  do i = 2,m-2
-    do j = 2,n-2
+  do i = 1,m-1
+    do j = 1,n-1
       do k = 1,l-1
 
         ! Update coefficients
@@ -154,8 +154,8 @@ subroutine pressure3d_correct
   integer :: i, j, k, fault
 
   ! Update coefficients
-  do i = 2,m-2
-    do j = 2,n-2
+  do i = 1,m-1
+    do j = 1,n-1
 	    do k = 1,l-1
 
 	      ! Solve mass source term
