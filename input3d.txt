@@ -1,30 +1,17 @@
 ! Sample input file for 3d cfd
 ! geometry :: length, width, depth
-0.1, 0.1, 0.01
+0.02, 0.02, 0.01
 ! media :: g, rho, mu, k, Cp, beta
 9.81e-0, 9.97e2, 1.07e-3, 6.40e-1, 4.19e3, 6.90e-5
-! u-velocity bc value :: u_west, u_east, u_north, u_south, u_bottom, u_top
-0.0, 0.0, 0.0, 0.0, 0.0, 0.0
-! u-velocity bc type :: west, east, north, south, bottom, top
-2, 2, 2, 2, 0, 0
-! v-velocity bc :: v_west, v_east, v_north, v_south, v_bottom, v_top
-0.0, 0.0, 0.0, 0.0, 0.0, 0.0
-! v-velocity bc type :: west, east, north, south, bottom, top
-2, 2, 2, 2, 0, 0
-! w-velocity bc :: w_west, w_east, w_north, w_south, w_bottom, w_top
-0.0, 0.0, 0.0, 0.0, 0.0, 0.0
-! w-velocity bc type :: west, east, north, south, bottom, top
-2, 2, 2, 2, 1, 1
-! Temperature bc :: T_west, T_east, T_north, T_south, T_bottom, T_top
-273.0, 273.0, 273.0, 273.0, 275.0, 273.0
-! Temperature bc type :: west, east, north, south, bottom, top
-2, 2, 2, 2, 1, 1
+! Temperature :: delta_T
+0.7288
 ! solution parameters :: itrmax, maxit, solver_tol, simpler_tol, alpha_v, alpha_t, solver
-10, 330, 1.0e-5, 1.0e-5, 0.55, 0.55, 5
-! dif_fac
-1.0e-2, 0.5
+10000, 20, 1.0e-6, 1.0e-10, 0.5, 0.5, 1
+! Beta Vals
+70.0, 1.0
 
 ! Notes ::
-!   Ra 988 = 273.24
-!   Ra 1780 = 273.4323
-!   Ra 4500 = 274.1
+!   Ra  1780 = 0.43238
+!   Ra  3000 = 0.7288
+!   Ra  4500 = 1.0932
+!   Ra 10000 = 2.4292

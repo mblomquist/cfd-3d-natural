@@ -9,15 +9,15 @@
 
 ! Mesh parameters :: nodes in x, nodes in y, nodes in z
   integer :: m, n, l
-  parameter (m=6, n=6, l=6)
+  parameter (m=16, n=16, l=8)
 
 ! Geometry variables ::
   real(8) :: length, width, depth, dx, dy, dz
   common length, width, depth, dx, dy, dz
 
 ! Media variables ::
-  real(8) :: Re, Pr, Ra, Ga, rho, mu, k_const, Cp, alpha, beta, u0, g, nu, delta_T, T_h, T_c
-  common Re, Pr, Ra, Ga, rho, mu, k_const, Cp, alpha, beta, u0, g, nu, delta_T, T_h, T_c
+  real(8) :: Re, Pr, Ra, Ga, rho, mu, k_const, Cp, alpha, beta, u0, g, nu, delta_T, beta_u, beta_v
+  common Re, Pr, Ra, Ga, rho, mu, k_const, Cp, alpha, beta, u0, g, nu, delta_T, beta_u, beta_v
 
 ! Pressure :: P
   real(8), dimension(1:m-1,1:n-1,1:l-1) :: P, P_star, P_prime, Sp_p, Su_p
@@ -35,18 +35,6 @@
   real(8), dimension(1:m,1:n-1,1:l-1) :: As_u, Aw_u, Ap_u, Ae_u, An_u, Ab_u, At_u, b_u
   common As_u, Aw_u, Ap_u, Ae_u, An_u, Ab_u, At_u, b_u
 
-! U-Velocity :: boundary conditions
-  integer :: u_bc_wc, u_bc_ec, u_bc_nc, u_bc_sc, u_bc_bc, u_bc_tc
-  common u_bc_wc, u_bc_ec, u_bc_nc, u_bc_sc, u_bc_bc, u_bc_tc
-
-! U-Velocity :: boundary values
-  real(8) :: u_bc_wv, u_bc_ev, u_bc_nv, u_bc_sv, u_bc_bv, u_bc_tv
-  common u_bc_wv, u_bc_ev, u_bc_nv, u_bc_sv, u_bc_bv, u_bc_tv
-
-! U-Velocity :: Source Update Bounds
-  integer :: jstart_u, kstart_u, jend_u, kend_u
-  common jstart_u, kstart_u, jend_u, kend_u
-
 ! V-Velocity :: v
   real(8), dimension(1:m-1,1:n,1:l-1) :: v, v_hat, v_star, Sp_v, Su_v
   common v, v_hat, v_star, Sp_v, Su_v
@@ -54,18 +42,6 @@
 ! V-Velocity :: solution variables
   real(8), dimension(1:m-1,1:n,1:l-1) :: As_v, Aw_v, Ap_v, Ae_v, An_v, Ab_v, At_v, b_v
   common As_v, Aw_v, Ap_v, Ae_v, An_v, Ab_v, At_v, b_v
-
-! V-Velocity :: boundary conditions
-  integer :: v_bc_wc, v_bc_ec, v_bc_sc, v_bc_nc, v_bc_bc, v_bc_tc
-  common v_bc_wc, v_bc_ec, v_bc_sc, v_bc_nc, v_bc_bc, v_bc_tc
-
-! V-Velocity :: boundary values
-  real(8) :: v_bc_wv, v_bc_ev, v_bc_sv, v_bc_nv, v_bc_bv, v_bc_tv
-  common v_bc_wv, v_bc_ev, v_bc_sv, v_bc_nv, v_bc_bv, v_bc_tv
-
-! V-Velocity :: Source Update Bounds
-  integer :: istart_v, kstart_v, iend_v, kend_v
-  common istart_v, kstart_v, iend_v, kend_v
 
 ! W-Velocity :: w
   real(8), dimension(1:m-1,1:n-1,1:l) :: w, w_hat, w_star, Sp_w, Su_w
@@ -75,18 +51,6 @@
   real(8), dimension(1:m-1,1:n-1,1:l) :: As_w, Aw_w, Ap_w, Ae_w, An_w, Ab_w, At_w, b_w
   common As_w, Aw_w, Ap_w, Ae_w, An_w, Ab_w, At_w, b_w
 
-! W-Velocity :: boundary conditions
-  integer :: w_bc_wc, w_bc_ec, w_bc_sc, w_bc_nc, w_bc_bc, w_bc_tc
-  common w_bc_wc, w_bc_ec, w_bc_sc, w_bc_nc, w_bc_bc, w_bc_tc
-
-! W-Velocity :: boundary values
-  real(8) :: w_bc_wv, w_bc_ev, w_bc_sv, w_bc_nv, w_bc_bv, w_bc_tv
-  common w_bc_wv, w_bc_ev, w_bc_sv, w_bc_nv, w_bc_bv, w_bc_tv
-
-! W-Velocity :: Source Update Bounds
-  integer :: istart_w, jstart_w, iend_w, jend_w
-  common istart_w, jstart_w, iend_w, jend_w
-
 ! Temperature :: T
   real(8), dimension(1:m-1,1:n-1,1:l-1) :: T, Su_T, Sp_T
   common T, Su_T, Sp_T
@@ -94,18 +58,6 @@
 ! Temperature :: solution variables
   real(8), dimension(1:m-1,1:n-1,1:l-1) :: As_T, Aw_T, Ap_T, Ae_T, An_T, Ab_T, At_T, b_T
   common As_T, Aw_T, Ap_T, Ae_T, An_T, Ab_T, At_T, b_T
-
-! Temperature :: boundary conditions
-  integer :: T_bc_wc, T_bc_ec, T_bc_sc, T_bc_nc, T_bc_bc, T_bc_tc
-  common T_bc_wc, T_bc_ec, T_bc_sc, T_bc_nc, T_bc_bc, T_bc_tc
-
-! Temperature :: boundary values
-  real(8) :: T_bc_wv, T_bc_ev, T_bc_sv, T_bc_nv, T_bc_bv, T_bc_tv
-  common T_bc_wv, T_bc_ev, T_bc_sv, T_bc_nv, T_bc_bv, T_bc_tv
-
-! Temperature :: Source Update Bounds
-  integer :: istart_T, jstart_T, kstart_T, iend_T, jend_T, kend_T
-  common istart_T, jstart_T, kstart_T, iend_T, jend_T, kend_T
 
 ! Convergence Parameters
   !integer :: itrmax
@@ -121,8 +73,8 @@
   real(8), dimension(m-1,n-1,l-1) :: T_temp, U_temp, V_temp, W_temp
   common T_temp, U_temp, V_temp, W_temp
 
-  real(8) :: solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time, t_start, t_end, dif_fac, dif_fac1
-  common solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time, t_start, t_end, dif_fac, dif_fac1
+  real(8) :: solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time, t_start, t_end
+  common solver_tol, simpler_tol, alpha_v, alpha_t, start_time, end_time, t_start, t_end
 
   real(8) :: P_res, P_resold, u_res, u_resold, v_res, v_resold, w_res, w_resold, T_res, T_resold
   common P_res, P_resold, u_res, u_resold, v_res, v_resold, w_res, w_resold, T_res, T_resold

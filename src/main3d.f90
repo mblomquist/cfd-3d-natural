@@ -10,6 +10,8 @@ program main3d
 
   implicit none
 
+  integer :: k
+
   ! Include standard variable header
   !   Standard variable header establishes parameters and global values
   !   subroutines will call these modify these values.
@@ -39,6 +41,10 @@ program main3d
   print *, 'Starting SIMPLER Algorithm...'
   call simpler3d
   print *, 'SIMPLER Algorithm Complete.'
+
+  do k = 2,l
+    print *, "dP", P(8,8,k)-P(8,8,k-1), P_prime(8,8,k)-P_prime(8,8,k-1) 
+  end do
 
   call cpu_time(end_time)
 

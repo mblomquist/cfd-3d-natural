@@ -33,43 +33,6 @@ subroutine temperature3d_init
   Su_T = 0.
   Sp_T = 0.
 
-  ! Define source update bounds
-  if (T_bc_wc .eq. 0) then
-    istart_T = 1
-  else
-    istart_T = 2
-  end if
-
-  if (T_bc_ec .eq. 0) then
-    iend_T = m-1
-  else
-    iend_T = m-2
-  end if
-
-  if (T_bc_sc .eq. 0) then
-    jstart_T = 1
-  else
-    jstart_T = 2
-  end if
-
-  if (T_bc_nc .eq. 0) then
-    jend_T = n-1
-  else
-    jend_T = n-2
-  end if
-
-  if (T_bc_bc .eq. 0) then
-    kstart_T = 1
-  else
-    kstart_T = 2
-  end if
-
-  if (T_bc_tc .eq. 0) then
-    kend_T = l-1
-  else
-    kend_T = l-2
-  end if
-
   return
 
 end subroutine temperature3d_init
@@ -79,291 +42,57 @@ subroutine temperature3d_boundary
   ! Pull in standard variable header
   include "var3d.dec"
 
-  ! West
-  if (T_bc_wc .eq. 1) then
-    Ap_T(1,2:n-2,2:l-2) = 1.
-    b_T(1,2:n-2,2:l-2) = (T_bc_wv-T_c)/(delta_T)
-  elseif (T_bc_wc .eq. 2) then
-    Ap_T(1,2:n-2,2:l-2) = 1.
-    Ae_T(1,2:n-2,2:l-2) = 1.
-  else
-    Su_T(1,2:n-2,2:l-2) = 0.
-  end if
+  ! Initialize coefficients
+  Aw_T = 0.
+  Ae_T = 0.
+  As_T = 0.
+  An_T = 0.
+  Ab_T = 0.
+  At_T = 0.
+  Ap_T = 1.
+  b_T = 0.
 
-  ! East
-  if (T_bc_ec .eq. 1) then
-    Ap_T(m-1,2:n-2,2:l-2) = 1.
-    b_T(m-1,2:n-2,2:l-2) = (T_bc_ev-T_c)/(delta_T)
-  elseif (T_bc_ec .eq. 2) then
-    Ap_T(m-1,2:n-2,2:l-2) = 1.
-    Aw_T(m-1,2:n-2,2:l-2) = 1.
-  else
-    Su_T(m-1,2:n-2,2:l-2) = 0.
-  end if
+  ! Set temperature source terms
+  Su_T = 0.
+  Sp_T = 0.
 
-  ! South
-  if (T_bc_sc .eq. 1) then
-    Ap_T(2:m-2,1,2:l-2) = 1.
-    b_T(2:m-2,1,2:l-2) = (T_bc_sv-T_c)/(delta_T)
-  elseif (T_bc_sc .eq. 2) then
-    Ap_T(2:m-2,1,2:l-2) = 1.
-    An_T(2:m-2,1,2:l-2) = 1.
-  else
-    Su_T(2:m-2,1,2:l-2) = 0.
-  end if
+  ! West Wall
+  Ae_T(1,2:n-2,2:l-2) = 1.
 
-  ! North
-  if (T_bc_nc .eq. 1) then
-    Ap_T(2:m-2,n-1,2:l-2) = 1.
-    b_T(2:m-2,n-1,2:l-2) = (T_bc_nv-T_c)/(delta_T)
-  elseif (T_bc_nc .eq. 2) then
-    Ap_T(2:m-2,n-1,2:l-2) = 1.
-    As_T(2:m-2,n-1,2:l-2) = 1.
-  else
-    Su_T(2:m-2,n-1,2:l-2) = 0.
-  end if
+  ! East Wall
+  Aw_T(m-1,2:n-2,2:l-2) = 1.
 
-  ! Bottom
-  if (T_bc_bc .eq. 1) then
-    Ap_T(2:m-2,2:n-2,1) = 1.
-    b_T(2:m-2,2:n-2,1) = (T_bc_bv-T_c)/(delta_T)
-  elseif (T_bc_bc .eq. 2) then
-    Ap_T(2:m-2,2:n-2,1) = 1.
-    At_T(2:m-2,2:n-2,1) = 1.
-  else
-    Su_T(2:m-2,2:n-2,1) = 0.
-  end if
+  ! South Wall
+  An_T(2:m-2,1,2:l-2) = 1.
 
-  ! Top
-  if (T_bc_tc .eq. 1) then
-    Ap_T(2:m-2,2:n-2,l-1) = 1.
-    b_T(2:m-2,2:n-2,l-1) = (T_bc_tv-T_c)/(delta_T)
-  elseif (T_bc_tc .eq. 2) then
-    Ap_T(2:m-2,2:n-2,l-1) = 1.
-    Ab_T(2:m-2,2:n-2,l-1) = 1.
-  else
-    Su_T(2:m-2,2:n-2,l-1) = 0.
-  end if
+  ! North Wall
+  As_T(2:m-2,n-1,2:l-2) = 1.
+
+  ! Bottom Wall
+  b_T(:,:,1) = 1.
+
+  ! Top Wall
+  b_T(:,:,l-1) = 0.
 
   ! West-South
-  Aw_T(1,1,2:l-2) = 0.
   Ae_T(1,1,2:l-2) = 1.
-  As_T(1,1,2:l-2) = 0.
   An_T(1,1,2:l-2) = 1.
-  Ab_T(1,1,2:l-2) = 0.
-  At_T(1,1,2:l-2) = 0.
-
   Ap_T(1,1,2:l-2) = 2.
-  b_T(1,1,2:l-2) = 0.
 
   ! West-North
-  Aw_T(1,n-1,2:l-2) = 0.
   Ae_T(1,n-1,2:l-2) = 1.
   As_T(1,n-1,2:l-2) = 1.
-  An_T(1,n-1,2:l-2) = 0.
-  Ab_T(1,n-1,2:l-2) = 0.
-  At_T(1,n-1,2:l-2) = 0.
-
   Ap_T(1,n-1,2:l-2) = 2.
-  b_T(1,n-1,2:l-2) = 0.
-
-  ! West-Bottom
-  Aw_T(1,2:n-2,1) = 0.
-  Ae_T(1,2:n-2,1) = 1.
-  As_T(1,2:n-2,1) = 0.
-  An_T(1,2:n-2,1) = 0.
-  Ab_T(1,2:n-2,1) = 0.
-  At_T(1,2:n-2,1) = 1.
-
-  Ap_T(1,2:n-2,1) = 2.
-  b_T(1,2:n-2,1) = 0.
-
-  ! West-Top
-  Aw_T(1,2:n-2,l-1) = 0.
-  Ae_T(1,2:n-2,l-1) = 1.
-  As_T(1,2:n-2,l-1) = 0.
-  An_T(1,2:n-2,l-1) = 0.
-  Ab_T(1,2:n-2,l-1) = 1.
-  At_T(1,2:n-2,l-1) = 0.
-
-  Ap_T(1,2:n-2,l-1) = 2.
-  b_T(1,2:n-2,l-1) = 0.
 
   ! East-South
   Aw_T(m-1,1,2:l-2) = 1.
-  Ae_T(m-1,1,2:l-2) = 0.
-  As_T(m-1,1,2:l-2) = 0.
   An_T(m-1,1,2:l-2) = 1.
-  Ab_T(m-1,1,2:l-2) = 0.
-  At_T(m-1,1,2:l-2) = 0.
-
   Ap_T(m-1,1,2:l-2) = 2.
-  b_T(m-1,1,2:l-2) = 0.
 
   ! East-North
   Aw_T(m-1,n-1,2:l-2) = 1.
-  Ae_T(m-1,n-1,2:l-2) = 0.
   As_T(m-1,n-1,2:l-2) = 1.
-  An_T(m-1,n-1,2:l-2) = 0.
-  Ab_T(m-1,n-1,2:l-2) = 0.
-  At_T(m-1,n-1,2:l-2) = 0.
-
   Ap_T(m-1,n-1,2:l-2) = 2.
-  b_T(m-1,n-1,2:l-2) = 0.
-
-  ! East Bottom
-  Aw_T(m-1,2:n-2,1) = 1.
-  Ae_T(m-1,2:n-2,1) = 0.
-  As_T(m-1,2:n-2,1) = 0.
-  An_T(m-1,2:n-2,1) = 0.
-  Ab_T(m-1,2:n-2,1) = 0.
-  At_T(m-1,2:n-2,1) = 1.
-
-  Ap_T(m-1,2:n-2,1) = 2.
-  b_T(m-1,2:n-2,1) = 0.
-
-  ! East Top
-  Aw_T(m-1,2:n-2,l-1) = 1.
-  Ae_T(m-1,2:n-2,l-1) = 0.
-  As_T(m-1,2:n-2,l-1) = 0.
-  An_T(m-1,2:n-2,l-1) = 0.
-  Ab_T(m-1,2:n-2,l-1) = 1.
-  At_T(m-1,2:n-2,l-1) = 0.
-
-  Ap_T(m-1,2:n-2,l-1) = 2.
-  b_T(m-1,2:n-2,l-1) = 0.
-
-  ! South-Bottom
-  Aw_T(2:m-2,1,1) = 0.
-  Ae_T(2:m-2,1,1) = 0.
-  As_T(2:m-2,1,1) = 0.
-  An_T(2:m-2,1,1) = 1.
-  Ab_T(2:m-2,1,1) = 0.
-  At_T(2:m-2,1,1) = 1.
-
-  Ap_T(2:m-2,1,1) = 2.
-  b_T(2:m-2,1,1) = 0.
-
-  ! South-Top
-  Aw_T(2:m-2,1,l-1) = 0.
-  Ae_T(2:m-2,1,l-1) = 0.
-  As_T(2:m-2,1,l-1) = 0.
-  An_T(2:m-2,1,l-1) = 1.
-  Ab_T(2:m-2,1,l-1) = 1.
-  At_T(2:m-2,1,l-1) = 0.
-
-  Ap_T(2:m-2,1,l-1) = 2.
-  b_T(2:m-2,1,l-1) = 0.
-
-  ! North-Bottom
-  Aw_T(2:m-2,n-1,1) = 0.
-  Ae_T(2:m-2,n-1,1) = 0.
-  As_T(2:m-2,n-1,1) = 1.
-  An_T(2:m-2,n-1,1) = 0.
-  Ab_T(2:m-2,n-1,1) = 0.
-  At_T(2:m-2,n-1,1) = 1.
-
-  Ap_T(2:m-2,n-1,1) = 2.
-  b_T(2:m-2,n-1,1) = 0.
-
-  ! North-Top
-  Aw_T(2:m-2,n-1,l-1) = 0.
-  Ae_T(2:m-2,n-1,l-1) = 0.
-  As_T(2:m-2,n-1,l-1) = 1.
-  An_T(2:m-2,n-1,l-1) = 0.
-  Ab_T(2:m-2,n-1,l-1) = 1.
-  At_T(2:m-2,n-1,l-1) = 0.
-
-  Ap_T(2:m-2,n-1,l-1) = 2.
-  b_T(2:m-2,n-1,l-1) = 0.
-
-  ! West-South-Bottom
-  Aw_T(1,1,1) = 0.
-  Ae_T(1,1,1) = 1.
-  As_T(1,1,1) = 0.
-  An_T(1,1,1) = 1.
-  Ab_T(1,1,1) = 0.
-  At_T(1,1,1) = 1.
-
-  Ap_T(1,1,1) = 3.
-  b_T(1,1,1) = 0.
-
-  ! West-North-Bottom
-  Aw_T(1,n-1,1) = 0.
-  Ae_T(1,n-1,1) = 1.
-  As_T(1,n-1,1) = 1.
-  An_T(1,n-1,1) = 0.
-  Ab_T(1,n-1,1) = 0.
-  At_T(1,n-1,1) = 1.
-
-  Ap_T(1,n-1,1) = 3.
-  b_T(1,n-1,1) = 0.
-
-  ! West-South-Top
-  Aw_T(1,1,l-1) = 0.
-  Ae_T(1,1,l-1) = 1.
-  As_T(1,1,l-1) = 0.
-  An_T(1,1,l-1) = 1.
-  Ab_T(1,1,l-1) = 1.
-  At_T(1,1,l-1) = 0.
-
-  Ap_T(1,1,l-1) = 3.
-  b_T(1,1,l-1) = 0.
-
-  ! West-North-Top
-  Aw_T(1,n-1,l-1) = 0.
-  Ae_T(1,n-1,l-1) = 1.
-  As_T(1,n-1,l-1) = 1.
-  An_T(1,n-1,l-1) = 0.
-  Ab_T(1,n-1,l-1) = 1.
-  At_T(1,n-1,l-1) = 0.
-
-  Ap_T(1,n-1,l-1) = 3.
-  b_T(1,n-1,l-1) = 0.
-
-  ! East-South-Bottom
-  Aw_T(m-1,1,1) = 1.
-  Ae_T(m-1,1,1) = 0.
-  As_T(m-1,1,1) = 0.
-  An_T(m-1,1,1) = 1.
-  Ab_T(m-1,1,1) = 0.
-  At_T(m-1,1,1) = 1.
-
-  Ap_T(m-1,1,1) = 3.
-  b_T(m-1,1,1) = 0.
-
-  ! East-North-Bottom
-  Aw_T(m-1,n-1,1) = 1.
-  Ae_T(m-1,n-1,1) = 0.
-  As_T(m-1,n-1,1) = 1.
-  An_T(m-1,n-1,1) = 0.
-  Ab_T(m-1,n-1,1) = 0.
-  At_T(m-1,n-1,1) = 1.
-
-  Ap_T(m-1,n-1,1) = 3.
-  b_T(m-1,n-1,1) = 0.
-
-  ! East-South-Top
-  Aw_T(m-1,1,l-1) = 1.
-  Ae_T(m-1,1,l-1) = 0.
-  As_T(m-1,1,l-1) = 0.
-  An_T(m-1,1,l-1) = 1.
-  Ab_T(m-1,1,l-1) = 1.
-  At_T(m-1,1,l-1) = 0.
-
-  Ap_T(m-1,1,l-1) = 3.
-  b_T(m-1,1,l-1) = 0.
-
-  ! East-North-Top
-  Aw_T(m-1,n-1,l-1) = 1.
-  Ae_T(m-1,n-1,l-1) = 0.
-  As_T(m-1,n-1,l-1) = 1.
-  An_T(m-1,n-1,l-1) = 0.
-  Ab_T(m-1,n-1,l-1) = 1.
-  At_T(m-1,n-1,l-1) = 0.
-
-  Ap_T(m-1,n-1,l-1) = 3.
-  b_T(m-1,n-1,l-1) = 0.
 
   return
 
@@ -392,9 +121,9 @@ subroutine temperature3d_source
   call temperature3d_boundary
 
   ! Solve for source coefficients
-  do i = istart_T, iend_T
-    do j = jstart_T, jend_T
-      do k = kstart_T, kend_T
+  do i = 2,m-2
+    do j = 2,n-2
+      do k = 2,l-2
 
         ! Update convective terms
         Fw = dy*dz*u(i,j,k)
@@ -422,13 +151,6 @@ subroutine temperature3d_source
 
   	    ! Update Ap coefficient
   	    Ap_T(i,j,k) = Aw_T(i,j,k)+Ae_T(i,j,k)+As_T(i,j,k)+An_T(i,j,k)+Ab_T(i,j,k)+At_T(i,j,k)
-
-        if (Ap_T(i,j,k) .eq. 0.) then
-
-          print *, "False Diffusion (temperature)@:", i, j, k
-          Ap_T(i,j,k) = 1.0
-
-        end if
 
   	    ! Update b values
   	    b_T(i,j,k) = 0.
@@ -459,9 +181,9 @@ subroutine temperature3d_solve(start)
   end if
 
   ! Update source terms
-  do i = istart_T, iend_T
-    do j = jstart_T, jend_T
-      do k = kstart_T, kend_T
+  do i = 2,m-2
+    do j = 2,n-2
+      do k = 2,l-2
         Ap_T(i,j,k) = Ap_T(i,j,k)/alpha_temp
         b_T(i,j,k) = b_T(i,j,k)+(1.0-alpha_temp)*Ap_T(i,j,k)*T(i,j,k)
       end do
@@ -485,9 +207,6 @@ subroutine temperature3d_solve(start)
   else
     call solver3d_tdma(Ab_T, As_T, Aw_T, Ap_T, Ae_T, An_T, At_T, b_T, T, m-1, n-1, l-1, solver_tol, maxit)
   end if
-
-  T(1,:,:) = T(m-1,:,:)
-  T(:,1,:) = T(:,n-1,:)
 
   return
 

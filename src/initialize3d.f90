@@ -17,43 +17,26 @@ subroutine initialize3d
   read(2,*)
   read(2,*) g, rho, mu, k_const, Cp, beta
   read(2,*)
-  read(2,*) u_bc_wv, u_bc_ev, u_bc_nv, u_bc_sv, u_bc_bv, u_bc_tv
-  read(2,*)
-  read(2,*) u_bc_wc, u_bc_ec, u_bc_nc, u_bc_sc, u_bc_bc, u_bc_tc
-  read(2,*)
-  read(2,*) v_bc_wv, v_bc_ev, v_bc_nv, v_bc_sv, v_bc_bv, v_bc_tv
-  read(2,*)
-  read(2,*) v_bc_wc, v_bc_ec, v_bc_nc, v_bc_sc, v_bc_bc, v_bc_tc
-  read(2,*)
-  read(2,*) w_bc_wv, w_bc_ev, w_bc_nv, w_bc_sv, w_bc_bv, w_bc_tv
-  read(2,*)
-  read(2,*) w_bc_wc, w_bc_ec, w_bc_nc, w_bc_sc, w_bc_bc, w_bc_tc
-  read(2,*)
-  read(2,*) T_bc_wv, T_bc_ev, T_bc_nv, T_bc_sv, T_bc_bv, T_bc_tv
-  read(2,*)
-  read(2,*) T_bc_wc, T_bc_ec, T_bc_nc, T_bc_sc, T_bc_bc, T_bc_tc
+  read(2,*) delta_T
   read(2,*)
   read(2,*) itrmax, maxit, solver_tol, simpler_tol, alpha_v, alpha_t, solver
   read(2,*)
-  read(2,*) dif_fac, dif_fac1
+  read(2,*) beta_u, beta_v
+  read(2,*)
   close(2)
-
-  ! Determine T_h and T_c
-  T_h = maxval((/T_bc_wv, T_bc_ev, T_bc_sv, T_bc_nv, T_bc_bv, T_bc_tv/))
-  T_c = minval((/T_bc_wv, T_bc_ev, T_bc_sv, T_bc_nv, T_bc_bv, T_bc_tv/))
 
   ! Calculate parameters
   alpha = k_const / Cp / rho
   nu = mu / rho
-  delta_T = T_h - T_c
 
   ! Calculate dimensionless numbers
   Ra = g*beta*delta_T*depth**3.0/alpha/nu
   Pr = nu/alpha
 
   ! Calculate Characteristic Velocity
-  u0 = depth/alpha/(Ra/Pr)**(0.5)
-    
+  u0 = nu/depth
+  Re = u0*length/nu
+
   ! Calculate geometry properties.
   call geometry3d
 
