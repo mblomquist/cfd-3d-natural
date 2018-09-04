@@ -39,7 +39,7 @@ subroutine solver3d_bicg(Ab, As, Aw, Ap, Ae, An, At, b, phi, m, n, l, tol, maxit
 		    A_values(i+(j-1)*m+(k-1)*m*n,7) = -At(i,j,k)
 
         ! Compress right-hand side values
-        b_values(i+(j-1)*m+(k-1)*m*n) = b(i,j,k) !+1.0e-8
+        b_values(i+(j-1)*m+(k-1)*m*n) = b(i,j,k)+1.0e-12
 
         ! Compress preconditioning values
         x(i+(j-1)*m+(k-1)*m*n) = phi(i,j,k)
@@ -94,14 +94,14 @@ subroutine solver3d_bicg(Ab, As, Aw, Ap, Ae, An, At, b, phi, m, n, l, tol, maxit
 
 	  r_norm = dnrm2(m*n*l, r, 1)
 
-    print *, 'Iteration: ', itr
-    print *, 'Relative residual: ', r_norm
+    !print *, 'Iteration: ', itr
+    !print *, 'Relative residual: ', r_norm
 
 	  if (r_norm .le. tol) then
 
-      print *, 'BiCG Algorithm successfully converged!'
-      print *, 'Number of Iterations: ', itr
-      print *, 'Relative residual: ', r_norm
+      !print *, 'BiCG Algorithm successfully converged!'
+      !print *, 'Number of Iterations: ', itr
+      !print *, 'Relative residual: ', r_norm
 
       ! Update phi with the solution
       do k = 1,l
@@ -115,9 +115,9 @@ subroutine solver3d_bicg(Ab, As, Aw, Ap, Ae, An, At, b, phi, m, n, l, tol, maxit
 	    return
 
     elseif (itr .eq. maxit) then
-      print *, 'BiCG Algorithm did not converge!'
-      print *, 'Number of Iterations: ', itr
-      print *, 'Relative residual: ', r_norm
+      !print *, 'BiCG Algorithm did not converge!'
+      !print *, 'Number of Iterations: ', itr
+      !print *, 'Relative residual: ', r_norm
 
       ! Update phi with the solution
       do k = 1,l

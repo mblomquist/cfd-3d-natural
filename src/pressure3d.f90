@@ -61,12 +61,12 @@ subroutine pressure3d_solve
       do k = 1,l-1
 
         ! Update coefficients
-        Aw_p(i,j,k) = dy*dz/Ap_u(i,j,k)*alpha_v/beta_u
-        Ae_p(i,j,k) = dy*dz/Ap_u(i+1,j,k)*alpha_v/beta_u
-        As_p(i,j,k) = dz*dx/Ap_v(i,j,k)*alpha_v/beta_u
-        An_p(i,j,k) = dz*dx/Ap_v(i,j+1,k)*alpha_v/beta_u
-        Ab_p(i,j,k) = dx*dy/Ap_w(i,j,k)*alpha_v/beta_u
-        At_p(i,j,k) = dx*dy/Ap_w(i,j,k+1)*alpha_v/beta_u
+        Aw_p(i,j,k) = dy*dz/Ap_u(i,j,k)*alpha_v
+        Ae_p(i,j,k) = dy*dz/Ap_u(i+1,j,k)*alpha_v
+        As_p(i,j,k) = dz*dx/Ap_v(i,j,k)*alpha_v
+        An_p(i,j,k) = dz*dx/Ap_v(i,j+1,k)*alpha_v
+        Ab_p(i,j,k) = dx*dy/Ap_w(i,j,k)*alpha_v
+        At_p(i,j,k) = dx*dy/Ap_w(i,j,k+1)*alpha_v
 
         ! Check West Wall
         if (i .eq. 1) then
@@ -102,7 +102,7 @@ subroutine pressure3d_solve
         Ap_p(i,j,k) = Aw_p(i,j,k)+Ae_p(i,j,k)+As_p(i,j,k)+An_p(i,j,k)+Ab_p(i,j,k)+At_p(i,j,k)
 
         ! Solve mass source term
-        b_p(i,j,k) = ((u_hat(i,j,k)-u_hat(i+1,j,k))*dy*dz+(v_hat(i,j,k)-v_hat(i,j+1,k))*dz*dx+(w_hat(i,j,k)-w_hat(i,j,k+1))*dx*dy)*beta_v
+        b_p(i,j,k) = (dz*dy*(u_hat(i,j,k)-u_hat(i+1,j,k))+dx*dz*(v_hat(i,j,k)-v_hat(i,j+1,k))+dx*dy*(w_hat(i,j,k)-w_hat(i,j,k+1)))
 
       end do
     end do
@@ -139,8 +139,6 @@ subroutine pressure3d_solve
     call solver3d_tdma(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, P, m-1, n-1, l-1, solver_tol, maxit)
   end if
 
-  P(1,1,1) = 0.
-
   return
 
 end subroutine pressure3d_solve
@@ -161,7 +159,7 @@ subroutine pressure3d_correct
 	    do k = 1,l-1
 
 	      ! Solve mass source term
-		    b_p(i,j,k) = (u_star(i,j,k)-u_star(i+1,j,k))*dy*dz+(v_star(i,j,k)-v_star(i,j+1,k))*dz*dx+(w_star(i,j,k)-w_star(i,j,k+1))*dx*dy
+		    b_p(i,j,k) = (dy*dz*(u_star(i,j,k)-u_star(i+1,j,k))+dz*dx*(v_star(i,j,k)-v_star(i,j+1,k))+dx*dy*(w_star(i,j,k)-w_star(i,j,k+1)))
 
 	    end do
     end do
@@ -197,8 +195,6 @@ subroutine pressure3d_correct
   else
     call solver3d_tdma(Ab_p, As_p, Aw_p, Ap_p, Ae_p, An_p, At_p, b_p, P_prime, m-1, n-1, l-1, solver_tol, maxit)
   end if
-
-  P_prime(1,1,1) = 0.
 
   return
 

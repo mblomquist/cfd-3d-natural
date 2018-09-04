@@ -6,9 +6,9 @@
 ! Temperature :: delta_T
 0.7288
 ! solution parameters :: itrmax, maxit, solver_tol, simpler_tol, alpha_v, alpha_t, solver
-10000, 20, 1.0e-6, 1.0e-10, 0.5, 0.5, 1
+100, 1e3, 1.0e-6, 1.0e-10, 0.5, 0.5, 5
 ! Beta Vals
-1.0, 62.0
+5.0e-3, 1.0e-4
 
 ! Notes ::
 !   Ra  1780 = 0.43238

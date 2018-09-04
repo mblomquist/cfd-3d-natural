@@ -13,7 +13,7 @@ subroutine convergence3d(itr)
   include "var3d.dec"
 
   ! Define internal variables
-  integer :: i, j, k, itr
+  integer :: i, j, k, itr, imax, jmax, kmax
 
   R_e(itr, :) = 0.
   R_u(itr, :) = 0.
@@ -33,6 +33,10 @@ subroutine convergence3d(itr)
 
         if (P_res .le. abs(b_p(i,j,k))) then
           P_res = abs(b_p(i,j,k))
+          imax = i
+          jmax = j
+          kmax = k
+
         end if
 
         U_temp(i,j,k) = abs(Ap_u(i,j,k)*u_star(i,j,k)- &
@@ -90,6 +94,12 @@ subroutine convergence3d(itr)
       end do
     end do
   end do
+
+  print *, "max location"
+  print *, imax, jmax, kmax
+  print *, "du:", dz*dy*(u_hat(imax,jmax,kmax)-u_hat(imax+1,jmax,kmax))
+  print *, "dv:", dx*dz*(v_hat(imax,jmax,kmax)-v_hat(imax,jmax+1,kmax))
+  print *, "dw:", dz*dy*(w_hat(imax,jmax,kmax)-w_hat(imax,jmax,kmax+1))
 
   if (itr .eq. 1) then
 

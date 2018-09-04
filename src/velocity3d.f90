@@ -328,7 +328,7 @@ subroutine velocity3d_source(direction)
 		      Ap_u(i,j,k) = Aw_u(i,j,k)+Ae_u(i,j,k)+As_u(i,j,k)+An_u(i,j,k)+Ab_u(i,j,k)+At_u(i,j,k)-Sp_u(i,j,k)
 
 		      ! Update b values
-		      b_u(i,j,k) = 0.
+		      b_u(i,j,k) = beta_u*dx*dy*dz
 
 	     end do
       end do
@@ -380,7 +380,7 @@ subroutine velocity3d_source(direction)
           end if
 
 		      ! Update Ap coefficient
-		      Ap_v(i,j,k) = Aw_v(i,j,k)+Ae_v(i,j,k)+As_v(i,j,k)+An_v(i,j,k)+Ab_v(i,j,k)+At_v(i,j,k)-Sp_v(i,j,k)
+		      Ap_v(i,j,k) = Aw_v(i,j,k)+Ae_v(i,j,k)+As_v(i,j,k)+An_v(i,j,k)+Ab_v(i,j,k)+At_v(i,j,k)-Sp_v(i,j,k)+beta_v
 
           ! Update b values
           b_v(i,j,k) = 0.
@@ -460,7 +460,7 @@ subroutine velocity3d_solve
       do k = 2,l-2
 
         Ap_u(i,j,k) = Ap_u(i,j,k)/alpha_v
-        b_u(i,j,k) = b_u(i,j,k)+dy*dz*(P_star(i-1,j,k)-P_star(i,j,k))+(1.0-alpha_v)*Ap_u(i,j,k)*u_hat(i,j,k)
+        b_u(i,j,k) = b_u(i,j,k)+(P_star(i-1,j,k)-P_star(i,j,k))+(1.0-alpha_v)*Ap_u(i,j,k)*u_hat(i,j,k)
 
 	     end do
     end do
@@ -491,7 +491,7 @@ subroutine velocity3d_solve
       do k = 2,l-2
 
         Ap_v(i,j,k) = Ap_v(i,j,k)/alpha_v
-        b_v(i,j,k) = b_v(i,j,k)+dz*dx*(P_star(i,j-1,k)-P_star(i,j,k))+(1.0-alpha_v)*Ap_v(i,j,k)*v_hat(i,j,k)
+        b_v(i,j,k) = b_v(i,j,k)+(P_star(i,j-1,k)-P_star(i,j,k))+(1.0-alpha_v)*Ap_v(i,j,k)*v_hat(i,j,k)
 
       end do
     end do
@@ -522,7 +522,7 @@ subroutine velocity3d_solve
       do k = 2,l-1
 
         Ap_w(i,j,k) = Ap_w(i,j,k)/alpha_v
-        b_w(i,j,k) = b_w(i,j,k)+dx*dy*(P_star(i,j,k-1)-P_star(i,j,k))+(1.0-alpha_v)*Ap_w(i,j,k)*w_hat(i,j,k)
+        b_w(i,j,k) = b_w(i,j,k)+(P_star(i,j,k-1)-P_star(i,j,k))+(1.0-alpha_v)*Ap_w(i,j,k)*w_hat(i,j,k)
 
       end do
     end do
