@@ -102,7 +102,7 @@ subroutine pressure3d_solve
         Ap_p(i,j,k) = Aw_p(i,j,k)+Ae_p(i,j,k)+As_p(i,j,k)+An_p(i,j,k)+Ab_p(i,j,k)+At_p(i,j,k)
 
         ! Solve mass source term
-        b_p(i,j,k) = (u_hat(i,j,k)-u_hat(i+1,j,k))*dy*dz+(v_hat(i,j,k)-v_hat(i,j+1,k))*dz*dx+(w_hat(i,j,k)-w_hat(i,j,k+1))*dx*dy
+        b_p(i,j,k) = ((u_hat(i,j,k)-u_hat(i+1,j,k))*dy*dz+(v_hat(i,j,k)-v_hat(i,j+1,k))*dz*dx+(w_hat(i,j,k)-w_hat(i,j,k+1))*dx*dy)*beta_v
 
       end do
     end do

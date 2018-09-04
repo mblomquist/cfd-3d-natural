@@ -8,7 +8,7 @@
 ! solution parameters :: itrmax, maxit, solver_tol, simpler_tol, alpha_v, alpha_t, solver
 10000, 20, 1.0e-6, 1.0e-10, 0.5, 0.5, 1
 ! Beta Vals
-70.0, 1.0
+1.0, 62.0
 
 ! Notes ::
 !   Ra  1780 = 0.43238
