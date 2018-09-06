@@ -13,7 +13,8 @@ subroutine convergence3d(itr)
   include "var3d.dec"
 
   ! Define internal variables
-  integer :: i, j, k, itr, imax, jmax, kmax
+  integer :: i, j, k, itr
+  real(8) :: e2_sum, u2_sum, v2_sum, w2_sum, T2_sum
 
   R_e(itr, :) = 0.
   R_u(itr, :) = 0.
@@ -33,10 +34,6 @@ subroutine convergence3d(itr)
 
         if (P_res .le. abs(b_p(i,j,k))) then
           P_res = abs(b_p(i,j,k))
-          imax = i
-          jmax = j
-          kmax = k
-
         end if
 
         U_temp(i,j,k) = abs(Ap_u(i,j,k)*u_star(i,j,k)- &
@@ -95,12 +92,6 @@ subroutine convergence3d(itr)
     end do
   end do
 
-  print *, "max location"
-  print *, imax, jmax, kmax
-  print *, "du:", dz*dy*(u_hat(imax,jmax,kmax)-u_hat(imax+1,jmax,kmax))
-  print *, "dv:", dx*dz*(v_hat(imax,jmax,kmax)-v_hat(imax,jmax+1,kmax))
-  print *, "dw:", dz*dy*(w_hat(imax,jmax,kmax)-w_hat(imax,jmax,kmax+1))
-
   if (itr .eq. 1) then
 
     R_e(itr, :) = 1.
@@ -111,25 +102,41 @@ subroutine convergence3d(itr)
 
   else
 
-    R_e(itr, 2) = P_res
-    R_u(itr, 2) = u_res
-    R_v(itr, 2) = v_res
-    R_w(itr, 2) = w_res
-    R_t(itr, 2) = T_res
+    R_e(itr, 1) = P_res
+    R_u(itr, 1) = u_res
+    R_v(itr, 1) = v_res
+    R_w(itr, 1) = w_res
+    R_t(itr, 1) = T_res
 
-    R_e(itr, 1) = abs(P_res-P_resold)/P_res
-    R_u(itr, 1) = abs(u_res-u_resold)/u_res
-    R_v(itr, 1) = abs(v_res-v_resold)/v_res
-    R_w(itr, 1) = abs(w_res-w_resold)/w_res
-    R_t(itr, 1) = abs(T_res-T_resold)/T_res
+    e2_sum = 0.0
+    u2_sum = 0.0
+    v2_sum = 0.0
+    w2_sum = 0.0
+    T2_sum = 0.0
+
+    do i = itr, 1, -1
+
+      e2_sum = R_e(i,1)**2.0 + e2_sum
+      u2_sum = R_u(i,1)**2.0 + u2_sum
+      v2_sum = R_v(i,1)**2.0 + v2_sum
+      w2_sum = R_w(i,1)**2.0 + w2_sum
+      T2_sum = R_T(i,1)**2.0 + T2_sum
+
+    end do
+
+    R_e(itr, 2) = (e2_sum/itr)**(0.5)
+    R_u(itr, 2) = (u2_sum/itr)**(0.5)
+    R_v(itr, 2) = (v2_sum/itr)**(0.5)
+    R_w(itr, 2) = (w2_sum/itr)**(0.5)
+    R_t(itr, 2) = (T2_sum/itr)**(0.5)
+
+    R_e(itr, 3) = abs(abs(R_e(itr-1, 2))-abs(R_e(itr, 2)))/abs(R_e(itr, 2))
+    R_u(itr, 3) = abs(abs(R_u(itr-1, 2))-abs(R_u(itr, 2)))/abs(R_u(itr, 2))
+    R_v(itr, 3) = abs(abs(R_v(itr-1, 2))-abs(R_v(itr, 2)))/abs(R_v(itr, 2))
+    R_w(itr, 3) = abs(abs(R_w(itr-1, 2))-abs(R_w(itr, 2)))/abs(R_w(itr, 2))
+    R_t(itr, 3) = abs(abs(R_t(itr-1, 2))-abs(R_t(itr, 2)))/abs(R_t(itr, 2))
 
   end if
-
-  P_resold = P_res
-  u_resold = u_res
-  v_resold = v_res
-  w_resold = w_res
-  T_resold = T_res
 
   return
 

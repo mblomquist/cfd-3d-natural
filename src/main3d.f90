@@ -42,10 +42,6 @@ program main3d
   call simpler3d
   print *, 'SIMPLER Algorithm Complete.'
 
-  do k = 2,l
-    print *, "dP", P(8,8,k)-P(8,8,k-1), P_prime(8,8,k)-P_prime(8,8,k-1) 
-  end do
-
   call cpu_time(end_time)
 
   print *, "SIMPLER Algorithm Duration:", end_time-start_time

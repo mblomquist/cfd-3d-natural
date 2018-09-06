@@ -113,10 +113,10 @@ subroutine velocity3d_boundary(direction)
     Su_u = 0.
 
     ! West
-    b_u(1,2:n-2,2:l-2) = u0
+    b_u(1,2:n-2,2:l-2) = 0.
 
     ! East
-    b_u(m,2:n-2,2:l-2) = -u0
+    b_u(m,2:n-2,2:l-2) = 1.
 
     ! South
     An_u(2:m-1,1,2:l-2) = 1.

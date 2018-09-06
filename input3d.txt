@@ -4,9 +4,9 @@
 ! media :: g, rho, mu, k, Cp, beta
 9.81e-0, 9.97e2, 1.07e-3, 6.40e-1, 4.19e3, 6.90e-5
 ! Temperature :: delta_T
-1.0932
+0.7288
 ! solution parameters :: itrmax, maxit, solver_tol, simpler_tol, alpha_v, alpha_t, solver
-1000, 1e3, 1.0e-6, 1.0e-10, 0.5, 0.5, 1
+50, 1e3, 1.0e-6, 1.0e-6, 0.5, 0.5, 1
 ! Beta Vals
 5.0e-3, 1.0e-1
 

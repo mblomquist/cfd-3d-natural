@@ -64,11 +64,12 @@ subroutine simpler3d
       ! Print Current Information to Terminal
       print *, ""
 	    print *, "Iteration:", i
-      print *, "Continuity Error: ", R_e(i,1), R_e(i,2)
-      print *, "X Momentum Error: ", R_u(i,1), R_u(i,2)
-      print *, "Y Momentum Error: ", R_v(i,1), R_v(i,2)
-      print *, "Z Momentum Error: ", R_w(i,1), R_w(i,2)
-      print *, "Temperature Error:", R_t(i,1), R_t(i,2)
+      print *, "                    RMSE                    dRMSE"
+      print *, "Continuity Error: ", R_e(i,2), R_e(i,3)
+      print *, "X Momentum Error: ", R_u(i,2), R_u(i,3)
+      print *, "Y Momentum Error: ", R_v(i,2), R_v(i,3)
+      print *, "Z Momentum Error: ", R_w(i,2), R_w(i,3)
+      print *, "Temperature Error:", R_t(i,2), R_t(i,3)
       print *, ""
 
     else
@@ -76,15 +77,17 @@ subroutine simpler3d
 	    !  Print Current Information to Terminal
       print *, ""
 	    print *, "Iteration:", i
-      print *, "Continuity Error: ", R_e(i,1), R_e(i,2)
-      print *, "X Momentum Error: ", R_u(i,1), R_u(i,2)
-      print *, "Y Momentum Error: ", R_v(i,1), R_v(i,2)
-      print *, "Z Momentum Error: ", R_w(i,1), R_w(i,2)
-      print *, "Temperature Error:", R_t(i,1), R_t(i,2)
+      print *, "                    RMSE                    dRMSE"
+      print *, "Continuity Error: ", R_e(i,2), R_e(i,3)
+      print *, "X Momentum Error: ", R_u(i,2), R_u(i,3)
+      print *, "Y Momentum Error: ", R_v(i,2), R_v(i,3)
+      print *, "Z Momentum Error: ", R_w(i,2), R_w(i,3)
+      print *, "Temperature Error:", R_t(i,2), R_t(i,3)
       print *, ""
 
       ! Check for Convergence
-      if ((R_e(i,1) .le. simpler_tol) .and. (R_t(i,1).le. simpler_tol)) then
+      !if ((R_e(i,3) .le. simpler_tol) .and. (R_t(i,3).le. simpler_tol)) then
+      if ((R_e(i, 3) .le. simpler_tol)) then
 
         call temperature3d_solve(1)
         print *, "Simpler completed in: ", i

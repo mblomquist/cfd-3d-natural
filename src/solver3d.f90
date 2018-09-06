@@ -186,7 +186,7 @@ subroutine solver3d_bicgstab(Ab, As, Aw, Ap, Ae, An, At, b, phi, m, n, l, tol, m
 		    A_values(i+(j-1)*m+(k-1)*m*n,7) = -At(i,j,k)
 
         ! Compress right-hand side values
-        b_values(i+(j-1)*m+(k-1)*m*n) = b(i,j,k)+1.0e-8
+        b_values(i+(j-1)*m+(k-1)*m*n) = b(i,j,k)+1.0e-12
 
         ! Compress preconditioning values
         x(i+(j-1)*m+(k-1)*m*n) = phi(i,j,k)
@@ -336,7 +336,7 @@ subroutine solver3d_bicgstab2(Ab, As, Aw, Ap, Ae, An, At, b, phi, m, n, l, tol, 
 		    A_values(i+(j-1)*m+(k-1)*m*n,7) = -At(i,j,k)
 
         ! Compress right-hand side values
-        b_values(i+(j-1)*m+(k-1)*m*n) = b(i,j,k)+1.0e-8
+        b_values(i+(j-1)*m+(k-1)*m*n) = b(i,j,k)+1.0e-12
 
         ! Compress preconditioning values
         x0(i+(j-1)*m+(k-1)*m*n) = phi(i,j,k)

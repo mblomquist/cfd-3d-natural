@@ -9,7 +9,7 @@
 
 ! Mesh parameters :: nodes in x, nodes in y, nodes in z
   integer :: m, n, l
-  parameter (m=20, n=20, l=10)
+  parameter (m=12, n=12, l=6)
 
 ! Geometry variables ::
   real(8) :: length, width, depth, dx, dy, dz
@@ -67,7 +67,7 @@
   real(8), dimension(100000) :: t_1, t_2, t_3, t_4, t_5, t_6, t_7
   common t_1, t_2, t_3, t_4, t_5, t_6, t_7
 
-  real(8), dimension(100000, 2) :: R_e, R_t, R_u, R_v, R_w
+  real(8), dimension(100000, 3) :: R_e, R_t, R_u, R_v, R_w
   common R_e, R_t, R_u, R_v, R_w
 
   real(8), dimension(m-1,n-1,l-1) :: T_temp, U_temp, V_temp, W_temp
