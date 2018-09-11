@@ -1,57 +1,55 @@
 ! 3D CFD Solver for Natural Convection
 !
 ! Written by Matt Blomquist
-! Last Update: 2018-07-17 (YYYY-MM-DD)
+! Last Update: 2018-09-07 (YYYY-MM-DD)
 !
-! This program solves a three-dimensional, steady state CFD problem
-! using the SIMPLER method.
-
+! This program solves a three-dimensional, steady state
+! Rayleigh-Benard, Natural Convection problem
+!
 program main3d
 
+  ! Define implicit
   implicit none
 
-  integer :: k
-
-  ! Include standard variable header
-  !   Standard variable header establishes parameters and global values
-  !   subroutines will call these modify these values.
+  ! Pull in standard variable header
   include "var3d.dec"
 
-  ! Initialize Problem
-  !   The initialize subroutine modifies global vaules to incorporate
-  !   boundary conditions, calculate global values, etc.
+  ! Initalize problem
   call initialize3d
 
   ! Output Problem Parameters to Terminal
-  print *, 'Problem Initialization Complete.'
-  print *, ''
-  print *, 'Grid size: ', m, n, l
-  print *, 'delta_T:', delta_T
-  print *, 'length:', length
-  print *, 'u0:', u0
-  print *, 'Rayleigh Number: ', Ra
-  print *, 'Prandtl Number: ', Pr
-  print *, 'dx, dy, dz:', dx, dy, dz
-  print *, ''
-
-  call cpu_time(start_time)
+  print *, "3D Natural Convection"
+  print *, ""
+  print *, "Grid Size (m, n, l):"
+  print *, m, n, l
+  print *, ""
+  print *, "Dimensionless Quantities"
+  print *, "Ra:", Ra
+  print *, "Pr:", Pr
+  print *, ""
+  print *, "Characteristic Properties"
+  print *, "Velocity scale:", u0
+  print *, "Length scale", depth
+  print *, "Pressure scale", depth/rho/u0**(2.0)
+  print *, ""
 
   ! Start SIMPLER Algorithm
-  !   The SIMPLER Algorithm solves the problem using the iterative method.
-  print *, 'Starting SIMPLER Algorithm...'
+  print *, "Starting SIMPLER Algorithm..."
+
+  ! Start clock
+  call cpu_time(t0)
+
   call simpler3d
-  print *, 'SIMPLER Algorithm Complete.'
 
-  call cpu_time(end_time)
+  ! Stop clock
+  call cpu_time(tf)
 
-  print *, "SIMPLER Algorithm Duration:", end_time-start_time
+  print *, "SIMPLER Algorithm duration: ", tf-t0
 
   ! Output results
-  !   The output subroutine writes the final values of P, T, U, V, W,
-  !   and convergance outputs.
-  print *, 'Writing results to file.'
-  call output3d_results
-  print *, 'Program complete.'
+  print *, "Writing results to file..."
+  call output3d
+  print *, "Program complete."
 
-! End program
-end program main3d
+ ! End program
+ end program main3d

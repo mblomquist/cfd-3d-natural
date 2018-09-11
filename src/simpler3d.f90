@@ -1,126 +1,108 @@
-! simpler3d Subroutine for 2D CFD Problems
+! simpler3d subroutine
 !
 ! Written by Matt Blomquist
-! Last Update: 2018-07-17 (YYYY-MM-DD)
+! Last Update: 2018-09-07 (YYYY-MM-DD)
 !
-! This subroutine runs the SIMPLER algorithm for a 3D CFD problem.
+! This subroutine runs the SIMPLER algorithm for a 3D natural convection
+! problem.
 !
 subroutine simpler3d
 
+  ! Define implicit
   implicit none
 
   ! Pull in standard variable header
   include "var3d.dec"
 
-  ! Define Internal Variables
-  integer :: i, j, k
+  ! Define internal variables
+  integer :: i
 
-  print *, 'Start SIMPLER Algorithm.'
-
-  ! Solve Temperature for Natural Convection First
-  !print *, "Step 0: Solve Temperature Equation"
+  ! Step 0: Solve Inital Temperature Field (Assume Velocity = 0)
+  call temperature3d_source
   call temperature3d_solve(0)
+  !print *, "T:", T
 
-  do i = 1,itrmax
+  ! Step 1: Start with a guessed velocity field :: Set velocity to 0.
+  u = 0.
+  v = 0.
+  w = 0.
 
-    ! Calculate velocity coefficients
-    call velocity3d_source("u")
-    call velocity3d_source("v")
-    call velocity3d_source("w")
+  ! Start SIMPLER Algorithm
+  do i = 1, itrmax
 
-    ! Step 2: Calculate Pseudo-Velocities
-    !print *, "Step 1: Solve Pseudo-Velocities"
-    call cpu_time(t_start)
-    call pseudo3d_solve
-    call cpu_time(t_end)
-    t_1(i) = t_end - t_start
+	! Step 2: Calculate coefficients for velocity and
+	!         solve for u_hat, v_hat, w_hat
+	call velocity3d_source
+	call velocity3d_pseudo
+  !print *, "u_hat:", u_hat
+  !print *, "v_hat:", v_hat
+  !print *, "w_hat:", w_hat
+  !v_hat = 0.
+	! Step 3: Calculate coefficients for pressure and
+	!         solve for P
+	call pressure3d_solve
+  !print *, "P:", P
 
-    ! Step 3: Solve Pressure Equation
-    !print *, "Step 2: Solve Pressure Equation"
-    call cpu_time(t_start)
-    call pressure3d_solve
-    call cpu_time(t_end)
-    t_2(i) = t_end - t_start
+	! Check for Convergence
+	call convergence3d(i)
 
-    ! Set p_star := P
-    P_star = P
+  if (i .eq. 1) then
+    R_c(i) = 1.0
+    R_e(i) = 1.0
+  end if
 
-    ! Step 4: Solve Momentum Equations
-    !print *, "Step 4: Solve Momentum Equations"
-    call cpu_time(t_start)
-    call velocity3d_solve
-    call cpu_time(t_end)
-    t_4(i) = t_end - t_start
+	if (R_c(i) .le. simpler_tol) then
 
-    ! Step 8: Check Convergence
-    !print *, "Check Convergence"
-    call cpu_time(t_start)
-    call convergence3d(i)
-    call cpu_time(t_end)
-    t_3(i) = t_end - t_start
+	  ! Set u_hat, v_hat, w_hat to velocity solution
+	  u = u_hat
+	  v = v_hat
+	  w = w_hat
 
-    if (i .eq. 1) then
+	  ! Calculate the coefficients for temperature and
+	  ! solve for T
+	  call temperature3d_source
+	  call temperature3d_solve(1)
 
-      ! Print Current Information to Terminal
-      print *, ""
-	    print *, "Iteration:", i
-      print *, "                    RMSE                    dRMSE"
-      print *, "Continuity Error: ", R_e(i,2), R_e(i,3)
-      print *, "X Momentum Error: ", R_u(i,2), R_u(i,3)
-      print *, "Y Momentum Error: ", R_v(i,2), R_v(i,3)
-      print *, "Z Momentum Error: ", R_w(i,2), R_w(i,3)
-      print *, "Temperature Error:", R_t(i,2), R_t(i,3)
-      print *, ""
+	  print *, "SIMPLER Converged in: ", i
+	  print *, "Continuity Error: ", R_c(i)
+	  print *, "Energy Error: ", R_e(i)
+	  print *, ""
 
-    else
+    return
 
-	    !  Print Current Information to Terminal
-      print *, ""
-	    print *, "Iteration:", i
-      print *, "                    RMSE                    dRMSE"
-      print *, "Continuity Error: ", R_e(i,2), R_e(i,3)
-      print *, "X Momentum Error: ", R_u(i,2), R_u(i,3)
-      print *, "Y Momentum Error: ", R_v(i,2), R_v(i,3)
-      print *, "Z Momentum Error: ", R_w(i,2), R_w(i,3)
-      print *, "Temperature Error:", R_t(i,2), R_t(i,3)
-      print *, ""
+	else
 
-      ! Check for Convergence
-      !if ((R_e(i,3) .le. simpler_tol) .and. (R_t(i,3).le. simpler_tol)) then
-      if ((R_e(i, 3) .le. simpler_tol)) then
+	  print *, "Iteration:", i
+	  print *, "Continuity Error: ", R_c(i)
+	  print *, "Energy Error: ", R_e(i)
+	  print *, ""
 
-        call temperature3d_solve(1)
-        print *, "Simpler completed in: ", i
-        exit
+	end if
 
-      end if
-    end if
+	! Step 4: Solve the momentum equations
+	call velocity3d_solve
+  !print *, "u_star:", u_star
+  !print *, "v_star:", v_star
+  !print *, "w_star:", w_star
+  !v_star = 0.
 
-    ! Step 5: Solve Pressure Equation
-    !print *, "Step 5: Solve Pressure Correction"
-    call cpu_time(t_start)
-    call pressure3d_correct
-    call cpu_time(t_end)
-    t_5(i) = t_end - t_start
+	! Step 5: Calculate mass source and solve the
+	!         pressure correction equation, P_prime
+	call pressure3d_correct
+  !print *, "P_prime:", P_prime
 
-    ! Step 6: Correct Velocities
-    !print *, "Step 6: Correct Velocities"
-    call cpu_time(t_start)
-    call velocity3d_correct
-    call cpu_time(t_end)
-    t_6(i) = t_end - t_start
+	! Step 6: Correct the velocity field
+	call velocity3d_correct
+  !print *, "u:", u
+  !print *, "v:", v
+  !print *, "w:", w
+  !v = 0.
 
-    ! Step 7: Solve Temperature Equation
-    !print *, "Step 7: Solve Temperature Equation"
-    call cpu_time(t_start)
-    call temperature3d_solve(1)
-    call cpu_time(t_end)
-    t_7(i) = t_end - t_start
-
-    ! Reset Initial  Initial Guesses
-	  u_star = u
-	  v_star = v
-    w_star = w
+	! Step 7: Calculate the coefficients for temperature and
+	!         solve for T
+	call temperature3d_source
+	call temperature3d_solve(1)
+  !print *, "T:", T
 
   end do
 

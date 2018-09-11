@@ -6,12 +6,13 @@
 ! Temperature :: delta_T
 0.7288
 ! solution parameters :: itrmax, maxit, solver_tol, simpler_tol, alpha_v, alpha_t, solver
-50, 1e3, 1.0e-6, 1.0e-6, 0.5, 0.5, 1
-! Beta Vals
-5.0e-3, 1.0e-1
+100, 1e3, 1.0e-6, 1.0e-6, 1.0, 1.0, 1
+! test values
+0.015625
+! use 9.765e-4 for 64x64x32 grid
 
 ! Notes ::
-!   Ra  1780 = 0.43238
-!   Ra  3000 = 0.7288
-!   Ra  4500 = 1.0932
-!   Ra 10000 = 2.4292
+!   Ra =  1780 || delta_T = 0.4324
+!   Ra =  3000 || delta_T = 0.7288
+!   Ra =  4500 || delta_T = 1.0932
+!   Ra = 10000 || delta_T = 2.4292

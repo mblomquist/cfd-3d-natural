@@ -1,15 +1,20 @@
-! initialize3d Subroutine for 3D CFD Problems
+! initialize3d subroutine
 !
 ! Written by Matt Blomquist
-! Last Update: 2018-07-16 (YYYY-MM-DD)
+! Last Update: 2018-09-07 (YYYY-MM-DD)
 !
-
+! This subroutine reads the input file for a 3D natural convection problem
+! and calculates the dimensionless quantities
+!
 subroutine initialize3d
+
+  ! Define implicit
+  implicit none
 
   ! Pull in standard variable header
   include "var3d.dec"
 
-  ! Read Input File ..........
+  ! Read input file
   open(unit = 2, file = "input3d.txt")
   read(2,*)
   read(2,*)
@@ -21,11 +26,9 @@ subroutine initialize3d
   read(2,*)
   read(2,*) itrmax, maxit, solver_tol, simpler_tol, alpha_v, alpha_t, solver
   read(2,*)
-  read(2,*) beta_u, beta_v
-  read(2,*)
-  close(2)
+  read(2,*) beta_1
 
-  ! Calculate parameters
+  ! Calculate properties
   alpha = k_const / Cp / rho
   nu = mu / rho
 
@@ -33,22 +36,14 @@ subroutine initialize3d
   Ra = g*beta*delta_T*depth**3.0/alpha/nu
   Pr = nu/alpha
 
-  ! Calculate Characteristic Velocity
+  ! Calculate characteristic velocity
   u0 = nu/depth
-  Re = u0*length/nu
 
-  ! Calculate geometry properties.
-  call geometry3d
-
-  ! Calculate pressure source terms and initialize grid
-  call pressure3d_init
-
-  ! Calculate velocity source terms and initialize grid
-  call velocity3d_init
-
-  ! Calculate temperature source terms and initialize grid
-  call temperature3d_init
+  ! Calculate dx, dy, dz
+  dx = length/m/depth
+  dy = width/n/depth
+  dz = depth/l/depth
 
   return
 
-end subroutine initialize3d
+ end subroutine initialize3d
