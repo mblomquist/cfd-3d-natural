@@ -32,7 +32,7 @@ subroutine pressure3d_solve
   ! Calculate Coefficients for Pressure
   do i = 1, m-1
     do j = 1, n-1
-	  do k = 1, l-1
+      do k = 1, l-1
 
         Aw_p(i,j,k) = dy*dz*dy*dz/Ap_u(i,j,k)
         Ae_p(i,j,k) = dy*dz*dy*dz/Ap_u(i+1,j,k)
@@ -77,8 +77,8 @@ subroutine pressure3d_solve
 		    ! Calculate Mass Source Term from Pseudo-Velocities
 		    b_p(i,j,k) = dz*dy*(u_hat(i,j,k)-u_hat(i+1,j,k)) + dx*dz*(v_hat(i,j,k)-v_hat(i,j+1,k)) + dx*dy*(w_hat(i,j,k)-w_hat(i,j,k+1))
 
-	  end do
-	end do
+      end do
+    end do
   end do
 
   ! Set reference pressure node
@@ -129,12 +129,10 @@ subroutine pressure3d_correct
   ! Calculate the new mass source term
   do i = 1, m-1
     do j = 1, n-1
-	  do k = 1, l-1
-
-	    b_p(i,j,k) = dz*dy*(u_star(i,j,k)-u_star(i+1,j,k)) + dx*dz*(v_star(i,j,k)-v_star(i,j+1,k)) + dx*dy*(w_star(i,j,k)-w_star(i,j,k+1))
-
-	  end do
-	end do
+      do k = 1, l-1
+        b_p(i,j,k) = (dz*dy*(u_star(i,j,k)-u_star(i+1,j,k)) + dx*dz*(v_star(i,j,k)-v_star(i,j+1,k)) + dx*dy*(w_star(i,j,k)-w_star(i,j,k+1)))
+      end do
+    end do
   end do
 
   ! Set reference pressure node

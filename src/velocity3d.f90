@@ -185,7 +185,7 @@ subroutine velocity3d_source
 		At_v(i,j,k) = Dt*max(0.0,(1-0.1*abs(Ft/Dt))**5)+max(-Ft,0.0)
 
 		! Update Ap_u Coefficient
-		Ap_v(i,j,k) = Aw_v(i,j,k)+Ae_v(i,j,k)+As_v(i,j,k)+An_v(i,j,k)+Ab_v(i,j,k)+At_v(i,j,k)
+		Ap_v(i,j,k) = Aw_v(i,j,k)+Ae_v(i,j,k)+As_v(i,j,k)+An_v(i,j,k)+Ab_v(i,j,k)+At_v(i,j,k)+beta_1
 
 		! Calculate Source Term
 		b_v(i,j,k) = 0.
@@ -504,102 +504,138 @@ subroutine velocity3d_solve
 
   ! ====================================== !
   ! ====================================== !
-  ! Update U-Velocity Source Term and Add Relaxation
+  ! Update U-Velocity Source Term
   do i = 2, m-1
     do j = 2, n-2
-	  do k = 2, l-2
+      do k = 2, l-2
+        b_u(i,j,k) = b_u(i,j,k) + dy*dz*dy*dz*(P(i-1,j,k)-P(i,j,k))
+      end do
+    end do
+  end do
 
-	    Ap_u(i,j,k) = Ap_u(i,j,k)/alpha_v
-		  b_u(i,j,k) = b_u(i,j,k) + dy*dz*(P(i-1,j,k)-P(i,j,k))*beta_1 + (1.0-alpha_v)*Ap_u(i,j,k)*u_hat(i,j,k)
+  ! Add Relaxation
+  Ap_ur = Ap_u
+  b_ur = b_u
 
-	  end do
-	end do
+  do i = 2, m-1
+    do j = 2, n-2
+      do k = 2, l-2
+
+        Ap_ur(i,j,k) = Ap_u(i,j,k)/alpha_v
+        b_ur(i,j,k) = b_u(i,j,k) + (1.0-alpha_v)*Ap_ur(i,j,k)*u_star(i,j,k)
+
+      end do
+    end do
   end do
 
   ! Solve U-Velocity Equation
   if (solver .eq. 0) then
-    call solver3d_bicgstab(Ab_u, As_u, Aw_u, Ap_u, Ae_u, An_u, At_u, b_u, u_star, m, n-1, l-1, solver_tol, maxit)
+    call solver3d_bicgstab(Ab_u, As_u, Aw_u, Ap_ur, Ae_u, An_u, At_u, b_ur, u_star, m, n-1, l-1, solver_tol, maxit)
   elseif (solver .eq. 1) then
-    call solver3d_bicgstab2(Ab_u, As_u, Aw_u, Ap_u, Ae_u, An_u, At_u, b_u, u_star, m, n-1, l-1, solver_tol, maxit)
+    call solver3d_bicgstab2(Ab_u, As_u, Aw_u, Ap_ur, Ae_u, An_u, At_u, b_ur, u_star, m, n-1, l-1, solver_tol, maxit)
   elseif (solver .eq. 2) then
     fault = 0
     do i = 3, maxit
       if (fault .eq. 0) then
-        call solver3d_gmres(Ab_u, As_u, Aw_u, Ap_u, Ae_u, An_u, At_u, b_u, u_star, m, n-1, l-1, solver_tol, maxit, fault)
+        call solver3d_gmres(Ab_u, As_u, Aw_u, Ap_ur, Ae_u, An_u, At_u, b_ur, u_star, m, n-1, l-1, solver_tol, maxit, fault)
       end if
     end do
   elseif (solver .eq. 3) then
-    call solver3d_bicg(Ab_u, As_u, Aw_u, Ap_u, Ae_u, An_u, At_u, b_u, u_star, m, n-1, l-1, solver_tol, maxit)
+    call solver3d_bicg(Ab_u, As_u, Aw_u, Ap_ur, Ae_u, An_u, At_u, b_ur, u_star, m, n-1, l-1, solver_tol, maxit)
   else
-    call solver3d_tdma(Ab_u, As_u, Aw_u, Ap_u, Ae_u, An_u, At_u, b_u, u_star, m, n-1, l-1, solver_tol, maxit)
+    call solver3d_tdma(Ab_u, As_u, Aw_u, Ap_ur, Ae_u, An_u, At_u, b_ur, u_star, m, n-1, l-1, solver_tol, maxit)
   end if
   ! ====================================== !
   ! ====================================== !
 
   ! ====================================== !
   ! ====================================== !
-  ! Update V-Velocity Source Term and Add Relaxation
+  ! Update V-Velocity Source Term
   do i = 2, m-2
     do j = 2, n-1
-	  do k = 2, l-2
+      do k = 2, l-2
+        b_v(i,j,k) = b_v(i,j,k) + dz*dx*dz*dx*(P(i,j-1,k)-P(i,j,k))
+      end do
+    end do
+  end do
 
-	    Ap_v(i,j,k) = Ap_v(i,j,k)/alpha_v
-		  b_v(i,j,k) = b_v(i,j,k) + dz*dx*(P(i,j-1,k)-P(i,j,k))*beta_1 + (1.0-alpha_v)*Ap_v(i,j,k)*v_hat(i,j,k)
+  ! Add Relaxation
+  Ap_vr = Ap_v
+  b_vr = b_v
 
-	  end do
-	end do
+  do i = 2, m-2
+    do j = 2, n-1
+      do k = 2, l-2
+
+        Ap_vr(i,j,k) = Ap_v(i,j,k)/alpha_v
+        b_vr(i,j,k) = b_v(i,j,k) + (1.0-alpha_v)*Ap_vr(i,j,k)*v_star(i,j,k)
+
+      end do
+    end do
   end do
 
   ! Solve V-Velocity Equation
   if (solver .eq. 0) then
-    call solver3d_bicgstab(Ab_v, As_v, Aw_v, Ap_v, Ae_v, An_v, At_v, b_v, v_star, m-1, n, l-1, solver_tol, maxit)
+    call solver3d_bicgstab(Ab_v, As_v, Aw_v, Ap_vr, Ae_v, An_v, At_v, b_vr, v_star, m-1, n, l-1, solver_tol, maxit)
   elseif (solver .eq. 1) then
-    call solver3d_bicgstab2(Ab_v, As_v, Aw_v, Ap_v, Ae_v, An_v, At_v, b_v, v_star, m-1, n, l-1, solver_tol, maxit)
+    call solver3d_bicgstab2(Ab_v, As_v, Aw_v, Ap_vr, Ae_v, An_v, At_v, b_vr, v_star, m-1, n, l-1, solver_tol, maxit)
   elseif (solver .eq. 2) then
     fault = 0
     do i = 3, maxit
       if (fault .eq. 0) then
-        call solver3d_gmres(Ab_v, As_v, Aw_v, Ap_v, Ae_v, An_v, At_v, b_v, v_star, m-1, n, l-1, solver_tol, maxit, fault)
+        call solver3d_gmres(Ab_v, As_v, Aw_v, Ap_vr, Ae_v, An_v, At_v, b_vr, v_star, m-1, n, l-1, solver_tol, maxit, fault)
       end if
     end do
   elseif (solver .eq. 3) then
-    call solver3d_bicg(Ab_v, As_v, Aw_v, Ap_v, Ae_v, An_v, At_v, b_v, v_star, m-1, n, l-1, solver_tol, maxit)
+    call solver3d_bicg(Ab_v, As_v, Aw_v, Ap_vr, Ae_v, An_v, At_v, b_vr, v_star, m-1, n, l-1, solver_tol, maxit)
   else
-    call solver3d_tdma(Ab_v, As_v, Aw_v, Ap_v, Ae_v, An_v, At_v, b_v, v_star, m-1, n, l-1, solver_tol, maxit)
+    call solver3d_tdma(Ab_v, As_v, Aw_v, Ap_vr, Ae_v, An_v, At_v, b_vr, v_star, m-1, n, l-1, solver_tol, maxit)
   end if
   ! ====================================== !
   ! ====================================== !
 
   ! ====================================== !
   ! ====================================== !
-  ! Update V-Velocity Source Term and Add Relaxation
+  ! Update W-Velocity Source Term
   do i = 2, m-2
     do j = 2, n-2
-	  do k = 2, l-1
+      do k = 2, l-1
+        b_w(i,j,k) = b_w(i,j,k) + dx*dy*dx*dy*(P(i,j,k-1)-P(i,j,k))
+      end do
+    end do
+  end do
 
-	    Ap_w(i,j,k) = Ap_w(i,j,k)/alpha_v
-		  b_w(i,j,k) = b_w(i,j,k) + dx*dy*(P(i,j,k-1)-P(i,j,k))*beta_1 + (1.0-alpha_v)*Ap_w(i,j,k)*w_hat(i,j,k)
+  ! Add Relaxation
+  Ap_wr = Ap_w
+  b_wr = b_w
 
-	  end do
-	end do
+  do i = 2, m-2
+    do j = 2, n-2
+      do k = 2, l-1
+
+        Ap_wr(i,j,k) = Ap_w(i,j,k)/alpha_v
+        b_wr(i,j,k) = b_w(i,j,k) + (1.0-alpha_v)*Ap_wr(i,j,k)*w_star(i,j,k)
+
+      end do
+    end do
   end do
 
   ! Solve W-Velocity Equation
   if (solver .eq. 0) then
-    call solver3d_bicgstab(Ab_w, As_w, Aw_w, Ap_w, Ae_w, An_w, At_w, b_w, w_star, m-1, n-1, l, solver_tol, maxit)
+    call solver3d_bicgstab(Ab_w, As_w, Aw_w, Ap_wr, Ae_w, An_w, At_w, b_wr, w_star, m-1, n-1, l, solver_tol, maxit)
   elseif (solver .eq. 1) then
-    call solver3d_bicgstab2(Ab_w, As_w, Aw_w, Ap_w, Ae_w, An_w, At_w, b_w, w_star, m-1, n-1, l, solver_tol, maxit)
+    call solver3d_bicgstab2(Ab_w, As_w, Aw_w, Ap_wr, Ae_w, An_w, At_w, b_wr, w_star, m-1, n-1, l, solver_tol, maxit)
   elseif (solver .eq. 2) then
     fault = 0
     do i = 3, maxit
       if (fault .eq. 0) then
-        call solver3d_gmres(Ab_w, As_w, Aw_w, Ap_w, Ae_w, An_w, At_w, b_w, w_star, m-1, n-1, l, solver_tol, maxit, fault)
+        call solver3d_gmres(Ab_w, As_w, Aw_w, Ap_wr, Ae_w, An_w, At_w, b_wr, w_star, m-1, n-1, l, solver_tol, maxit, fault)
       end if
     end do
   elseif (solver .eq. 3) then
-    call solver3d_bicg(Ab_w, As_w, Aw_w, Ap_w, Ae_w, An_w, At_w, b_w, w_star, m-1, n-1, l, solver_tol, maxit)
+    call solver3d_bicg(Ab_w, As_w, Aw_w, Ap_wr, Ae_w, An_w, At_w, b_wr, w_star, m-1, n-1, l, solver_tol, maxit)
   else
-    call solver3d_tdma(Ab_w, As_w, Aw_w, Ap_w, Ae_w, An_w, At_w, b_w, w_star, m-1, n-1, l, solver_tol, maxit)
+    call solver3d_tdma(Ab_w, As_w, Aw_w, Ap_wr, Ae_w, An_w, At_w, b_wr, w_star, m-1, n-1, l, solver_tol, maxit)
   end if
   ! ====================================== !
   ! ====================================== !
@@ -623,12 +659,10 @@ subroutine velocity3d_correct
   ! Correct U-Velocity
   do i = 2, m-1
     do j = 2, n-2
-	  do k = 2, l-2
-
-	    u(i,j,k) = u_star(i,j,k) + dy*dz/Ap_u(i,j,k)*(P_prime(i-1,j,k)-P_prime(i,j,k))
-
-	  end do
-	end do
+      do k = 2, l-2
+        u(i,j,k) = u_star(i,j,k) + dy*dz/Ap_u(i,j,k)*(P_prime(i-1,j,k)-P_prime(i,j,k))
+      end do
+    end do
   end do
 
   ! Update Boundary U-Velocity :: West // Symmetry Condition
@@ -656,12 +690,10 @@ subroutine velocity3d_correct
   ! Correct V-Velocity
   do i = 2, m-2
     do j = 2, n-1
-	  do k = 2, l-2
-
-	    v(i,j,k) = v_star(i,j,k) + dz*dx/Ap_v(i,j,k)*(P_prime(i,j-1,k)-P_prime(i,j,k))
-
-	  end do
-	end do
+      do k = 2, l-2
+        v(i,j,k) = v_star(i,j,k) + dz*dx/Ap_v(i,j,k)*(P_prime(i,j-1,k)-P_prime(i,j,k))
+      end do
+    end do
   end do
 
   ! Update Boundary V-Velocity :: West // Symmetry Condition

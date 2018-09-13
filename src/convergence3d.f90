@@ -18,42 +18,54 @@ subroutine convergence3d(itr)
 
   ! Define internal variables
   integer :: i, j, k, itr
-  real(8) :: c_temp, e_temp
+  real(8) :: c_temp, e_temp, c_rms, e_rms
 
   ! Find maximum mass source term
-  R_c(itr) = 0.0
-  R_e(itr) = 0.0
+  R_c(itr,1) = 0.0
+  R_e(itr,1) = 0.0
 
-  do i = 1, m-1
-    do j = 1, n-1
-	  do k = 1, l-1
+  c_rms = 0.0
+  e_rms = 0.0
 
-	    ! Check Continuity Equation
-	    c_temp = abs(b_p(i,j,k))
+  do i = 2, m-2
+    do j = 2, n-2
+      do k = 2, l-2
+        ! Check Continuity Equation
+        c_temp = abs(b_p(i,j,k))
 
-		if (R_c(itr) .le. c_temp) then
-		  R_c(itr) = c_temp
-		end if
+        if (R_c(itr,1) .le. c_temp) then
+          R_c(itr,1) = c_temp
+        end if
 
-		! Check Energy Equation
-		if ((i .ne. 1) .and. (i .ne. m-1) .and. (j .ne. 1) .and. (j .ne. n-1) .and. (k .ne. 1) .and. (k .ne. l-1)) then
-		  e_temp = abs(Ap_T(i,j,k)*T(i,j,k)- &
-		               Aw_T(i,j,k)*T(i-1,j,k)- &
-			  		   Ae_T(i,j,k)*T(i+1,j,k)- &
-					   As_T(i,j,k)*T(i,j-1,k)- &
-					   An_T(i,j,k)*T(i,j+1,k)- &
-					   Ab_T(i,j,k)*T(i,j,k-1)- &
-					   At_T(i,j,k)*T(i,j,k+1)- &
-					   b_T(i,j,k))
-		end if
+        ! Check Energy Equation
+        e_temp = abs(Ap_T(i,j,k)*T(i,j,k)- &
+                     Aw_T(i,j,k)*T(i-1,j,k)- &
+                     Ae_T(i,j,k)*T(i+1,j,k)- &
+                     As_T(i,j,k)*T(i,j-1,k)- &
+                     An_T(i,j,k)*T(i,j+1,k)- &
+                     Ab_T(i,j,k)*T(i,j,k-1)- &
+                     At_T(i,j,k)*T(i,j,k+1)- &
+                     b_T(i,j,k))
 
-		if (R_e(itr) .le. e_temp) then
-		  R_e(itr) = e_temp
-		end if
+        if (R_e(itr,1) .le. e_temp) then
+          R_e(itr,1) = e_temp
+        end if
 
-	  end do
-	end do
+      end do
+    end do
   end do
+
+  if (itr .eq. 1) then
+
+    R_c(itr,2) = 1.0
+    R_e(itr,2) = 1.0
+
+  else
+
+    R_c(itr,2) = abs(R_c(itr,1)-R_c(itr-1,1))/R_c(itr,1)
+    R_e(itr,2) = abs(R_e(itr,1)-R_e(itr-1,1))/R_e(itr,1)
+
+  end if 
 
   return
 end subroutine convergence3d

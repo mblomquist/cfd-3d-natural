@@ -1,15 +1,14 @@
 ! Sample input file for 3d cfd
 ! geometry :: length, width, depth
-0.02, 0.02, 0.01
+0.0100, 0.0200, 0.0100
 ! media :: g, rho, mu, k, Cp, beta
 9.81e-0, 9.97e2, 1.07e-3, 6.40e-1, 4.19e3, 6.90e-5
 ! Temperature :: delta_T
 0.7288
 ! solution parameters :: itrmax, maxit, solver_tol, simpler_tol, alpha_v, alpha_t, solver
-100, 1e3, 1.0e-6, 1.0e-6, 1.0, 1.0, 1
+1000, 1e3, 1.0e-6, 1.0e-9, 0.75, 0.90, 1
 ! test values
-0.015625
-! use 9.765e-4 for 64x64x32 grid
+0.0
 
 ! Notes ::
 !   Ra =  1780 || delta_T = 0.4324

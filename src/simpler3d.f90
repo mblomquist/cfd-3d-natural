@@ -30,79 +30,59 @@ subroutine simpler3d
   ! Start SIMPLER Algorithm
   do i = 1, itrmax
 
-	! Step 2: Calculate coefficients for velocity and
-	!         solve for u_hat, v_hat, w_hat
-	call velocity3d_source
-	call velocity3d_pseudo
-  !print *, "u_hat:", u_hat
-  !print *, "v_hat:", v_hat
-  !print *, "w_hat:", w_hat
-  !v_hat = 0.
-	! Step 3: Calculate coefficients for pressure and
-	!         solve for P
-	call pressure3d_solve
-  !print *, "P:", P
+  	! Step 2: Calculate coefficients for velocity and
+  	!         solve for u_hat, v_hat, w_hat
+  	call velocity3d_source
+  	call velocity3d_pseudo
 
-	! Check for Convergence
-	call convergence3d(i)
+  	! Step 3: Calculate coefficients for pressure and
+  	!         solve for P
+  	call pressure3d_solve
 
-  if (i .eq. 1) then
-    R_c(i) = 1.0
-    R_e(i) = 1.0
-  end if
+  	! Check for Convergence
+  	call convergence3d(i)
 
-	if (R_c(i) .le. simpler_tol) then
+  	if (R_c(i,2) .le. simpler_tol) then
 
-	  ! Set u_hat, v_hat, w_hat to velocity solution
-	  u = u_hat
-	  v = v_hat
-	  w = w_hat
+  	  ! Set u_hat, v_hat, w_hat to velocity solution
+  	  u = u_hat
+  	  v = v_hat
+  	  w = w_hat
 
-	  ! Calculate the coefficients for temperature and
-	  ! solve for T
-	  call temperature3d_source
-	  call temperature3d_solve(1)
+  	  ! Calculate the coefficients for temperature and
+  	  ! solve for T
+  	  call temperature3d_source
+  	  call temperature3d_solve(1)
 
-	  print *, "SIMPLER Converged in: ", i
-	  print *, "Continuity Error: ", R_c(i)
-	  print *, "Energy Error: ", R_e(i)
-	  print *, ""
+  	  print *, "SIMPLER Converged in: ", i
+  	  print *, "Continuity Error: ", R_c(i,1), R_c(i,2)
+  	  print *, "Energy Error: ", R_e(i,1), R_e(i,2)
+  	  print *, ""
 
-    return
+      return
 
-	else
+  	else
 
-	  print *, "Iteration:", i
-	  print *, "Continuity Error: ", R_c(i)
-	  print *, "Energy Error: ", R_e(i)
-	  print *, ""
+  	  print *, "Iteration:", i
+      print *, "Continuity Error: ", R_c(i,1), R_c(i,2)
+  	  print *, "Energy Error: ", R_e(i,1), R_e(i,2)
 
-	end if
+  	end if
 
-	! Step 4: Solve the momentum equations
-	call velocity3d_solve
-  !print *, "u_star:", u_star
-  !print *, "v_star:", v_star
-  !print *, "w_star:", w_star
-  !v_star = 0.
+  	! Step 4: Solve the momentum equations
+  	call velocity3d_solve
 
-	! Step 5: Calculate mass source and solve the
-	!         pressure correction equation, P_prime
-	call pressure3d_correct
-  !print *, "P_prime:", P_prime
+  	! Step 5: Calculate mass source and solve the
+  	!         pressure correction equation, P_prime
+  	call pressure3d_correct
 
-	! Step 6: Correct the velocity field
-	call velocity3d_correct
-  !print *, "u:", u
-  !print *, "v:", v
-  !print *, "w:", w
-  !v = 0.
+  	! Step 6: Correct the velocity field
+  	call velocity3d_correct
 
-	! Step 7: Calculate the coefficients for temperature and
-	!         solve for T
-	call temperature3d_source
-	call temperature3d_solve(1)
-  !print *, "T:", T
+  	! Step 7: Calculate the coefficients for temperature and
+  	!         solve for T
+  	call temperature3d_source
+  	call temperature3d_solve(1)
 
   end do
 

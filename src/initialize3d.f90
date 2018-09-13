@@ -44,6 +44,10 @@ subroutine initialize3d
   dy = width/n/depth
   dz = depth/l/depth
 
+  ! Set inital error to 0
+  R_c = 0.0
+  R_e = 0.0
+  
   return
 
  end subroutine initialize3d

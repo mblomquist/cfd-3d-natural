@@ -8,7 +8,7 @@
 
 ! Mesh parameters :: nodes in x, nodes in y, nodes in z
   integer :: m, n, l
-  parameter (m=16, n=16, l=8)
+  parameter (m=24, n=48, l=24)
 
 ! Geometry variables ::
   real(8) :: length, width, depth, dx, dy, dz
@@ -39,32 +39,32 @@
   common u, u_hat, u_star
 
 ! U-Velocity :: solution variables
-  real(8), dimension(1:m,1:n-1,1:l-1) :: As_u, Aw_u, Ap_u, Ae_u, An_u, Ab_u, At_u, b_u
-  common As_u, Aw_u, Ap_u, Ae_u, An_u, Ab_u, At_u, b_u
+  real(8), dimension(1:m,1:n-1,1:l-1) :: As_u, Aw_u, Ap_u, Ae_u, An_u, Ab_u, At_u, b_u, Ap_ur, b_ur
+  common As_u, Aw_u, Ap_u, Ae_u, An_u, Ab_u, At_u, b_u, Ap_ur, b_ur
 
 ! V-Velocity :: v
   real(8), dimension(1:m-1,1:n,1:l-1) :: v, v_hat, v_star
   common v, v_hat, v_star
 
 ! V-Velocity :: solution variables
-  real(8), dimension(1:m-1,1:n,1:l-1) :: As_v, Aw_v, Ap_v, Ae_v, An_v, Ab_v, At_v, b_v
-  common As_v, Aw_v, Ap_v, Ae_v, An_v, Ab_v, At_v, b_v
+  real(8), dimension(1:m-1,1:n,1:l-1) :: As_v, Aw_v, Ap_v, Ae_v, An_v, Ab_v, At_v, b_v, Ap_vr, b_vr
+  common As_v, Aw_v, Ap_v, Ae_v, An_v, Ab_v, At_v, b_v, Ap_vr, b_vr
 
 ! W-Velocity :: w
   real(8), dimension(1:m-1,1:n-1,1:l) :: w, w_hat, w_star
   common w, w_hat, w_star
 
 ! W-Velocity :: solution variables
-  real(8), dimension(1:m-1,1:n-1,1:l) :: As_w, Aw_w, Ap_w, Ae_w, An_w, Ab_w, At_w, b_w
-  common As_w, Aw_w, Ap_w, Ae_w, An_w, Ab_w, At_w, b_w
+  real(8), dimension(1:m-1,1:n-1,1:l) :: As_w, Aw_w, Ap_w, Ae_w, An_w, Ab_w, At_w, b_w, Ap_wr, b_wr
+  common As_w, Aw_w, Ap_w, Ae_w, An_w, Ab_w, At_w, b_w, Ap_wr, b_wr
 
 ! Temperature :: T
   real(8), dimension(1:m-1,1:n-1,1:l-1) :: T
   common T
 
 ! Temperature :: solution variables
-  real(8), dimension(1:m-1,1:n-1,1:l-1) :: As_T, Aw_T, Ap_T, Ae_T, An_T, Ab_T, At_T, b_T
-  common As_T, Aw_T, Ap_T, Ae_T, An_T, Ab_T, At_T, b_T
+  real(8), dimension(1:m-1,1:n-1,1:l-1) :: As_T, Aw_T, Ap_T, Ae_T, An_T, Ab_T, At_T, b_T, Ap_Tr, b_Tr
+  common As_T, Aw_T, Ap_T, Ae_T, An_T, Ab_T, At_T, b_T, Ap_Tr, b_Tr
 
 ! Convergence Variables
   integer :: itrmax, maxit
@@ -73,7 +73,7 @@
   real(8) :: simpler_tol, alpha_v, alpha_t, solver_tol
   common simpler_tol, alpha_v, alpha_t, solver_tol
 
-  real(8), dimension(10000) :: R_c, R_e
+  real(8), dimension(10000,2) :: R_c, R_e
   common R_c, R_e
 
 ! Performance variables

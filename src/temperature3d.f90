@@ -145,34 +145,47 @@ subroutine temperature3d_solve(start)
   integer :: i, j, k, start, fault
 
   if (start .eq. 1) then
+
+    ! Set Values for Boundaries
+    Ap_Tr = Ap_T
+    b_Tr = b_T
+
+    ! Update Values with Relaxation
     do i = 2, m-2
-	  do j = 2, n-2
-	    do k = 2, l-2
+      do j = 2, n-2
+        do k = 2, l-2
 
-		  Ap_T(i,j,k) = Ap_T(i,j,k)/alpha_t
-		  b_T(i,j,k) = b_T(i,j,k) + (1.0-alpha_t)*Ap_T(i,j,k)*T(i,j,k)
+          Ap_Tr(i,j,k) = Ap_T(i,j,k)/alpha_t
+          b_Tr(i,j,k) = b_T(i,j,k) + (1.0-alpha_t)*Ap_Tr(i,j,k)*T(i,j,k)
 
-		end do
-	  end do
-	end do
+        end do
+      end do
+    end do
+
+  else
+
+    ! Set Values
+    Ap_Tr = Ap_T
+    b_Tr = b_T
+
   end if
 
   ! Solve Temperature Equation
   if (solver .eq. 0) then
-    call solver3d_bicgstab(Ab_T, As_T, Aw_T, Ap_T, Ae_T, An_T, At_T, b_T, T, m-1, n-1, l-1, solver_tol, maxit)
+    call solver3d_bicgstab(Ab_T, As_T, Aw_T, Ap_Tr, Ae_T, An_T, At_T, b_Tr, T, m-1, n-1, l-1, solver_tol, maxit)
   elseif (solver .eq. 1) then
-    call solver3d_bicgstab2(Ab_T, As_T, Aw_T, Ap_T, Ae_T, An_T, At_T, b_T, T, m-1, n-1, l-1, solver_tol, maxit)
+    call solver3d_bicgstab2(Ab_T, As_T, Aw_T, Ap_Tr, Ae_T, An_T, At_T, b_Tr, T, m-1, n-1, l-1, solver_tol, maxit)
   elseif (solver .eq. 2) then
     fault = 0
     do i = 3, maxit
       if (fault .eq. 0) then
-        call solver3d_gmres(Ab_T, As_T, Aw_T, Ap_T, Ae_T, An_T, At_T, b_T, T, m-1, n-1, l-1, solver_tol, maxit, fault)
+        call solver3d_gmres(Ab_T, As_T, Aw_T, Ap_Tr, Ae_T, An_T, At_T, b_Tr, T, m-1, n-1, l-1, solver_tol, maxit, fault)
       end if
     end do
   elseif (solver .eq. 3) then
-    call solver3d_bicg(Ab_T, As_T, Aw_T, Ap_T, Ae_T, An_T, At_T, b_T, T, m-1, n-1, l-1, solver_tol, maxit)
+    call solver3d_bicg(Ab_T, As_T, Aw_T, Ap_Tr, Ae_T, An_T, At_T, b_Tr, T, m-1, n-1, l-1, solver_tol, maxit)
   else
-    call solver3d_tdma(Ab_T, As_T, Aw_T, Ap_T, Ae_T, An_T, At_T, b_T, T, m-1, n-1, l-1, solver_tol, maxit)
+    call solver3d_tdma(Ab_T, As_T, Aw_T, Ap_Tr, Ae_T, An_T, At_T, b_Tr, T, m-1, n-1, l-1, solver_tol, maxit)
   end if
 
   return

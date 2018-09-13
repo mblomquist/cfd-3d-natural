@@ -45,9 +45,9 @@ subroutine output3d
   write (5, '("delta_T: ", E15.4, /)', advance="no"), delta_T
   write (5, '("SIMPLER Algorithm Duration:", E15.4, /)', advance="no"), tf-t0
   write (5, *), "Solver #:", solver
-  write (5, *), "R_c, R_t"
+  write (5, *), "R_c, dR_c, R_e, dR_e"
   do i = 1, itrmax
-    write (5,'(E12.5, ",", E12.5, /)', advance="no"), R_c(i), R_e(i)
+    write (5,'(E12.5, ",", E12.5, ",", E12.5, ",", E12.5, /)', advance="no"), R_c(i,1), R_c(i,2), R_e(i,1), R_e(i,2)
   end do
   close(5)
 
