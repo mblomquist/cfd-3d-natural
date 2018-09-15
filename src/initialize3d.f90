@@ -24,7 +24,7 @@ subroutine initialize3d
   read(2,*)
   read(2,*) delta_T
   read(2,*)
-  read(2,*) itrmax, maxit, solver_tol, simpler_tol, alpha_v, alpha_t, solver
+  read(2,*) itrmax, maxit, solver_tol, simpler_tolc, simpler_tole, alpha_v, alpha_t, solver
   read(2,*)
   read(2,*) beta_1
 
@@ -47,7 +47,7 @@ subroutine initialize3d
   ! Set inital error to 0
   R_c = 0.0
   R_e = 0.0
-  
+
   return
 
  end subroutine initialize3d

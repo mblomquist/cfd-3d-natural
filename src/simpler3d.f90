@@ -42,7 +42,7 @@ subroutine simpler3d
   	! Check for Convergence
   	call convergence3d(i)
 
-  	if (R_c(i,2) .le. simpler_tol) then
+  	if ((R_c(i,2) .le. simpler_tolc) .and. (R_e(i,1) .le. simpler_tole)) then
 
   	  ! Set u_hat, v_hat, w_hat to velocity solution
   	  u = u_hat
