@@ -8,7 +8,7 @@
 
 ! Mesh parameters :: nodes in x, nodes in y, nodes in z
   integer :: m, n, l
-  parameter (m=8, n=16, l=8)
+  parameter (m=4, n=8, l=4)
 
 ! Geometry variables ::
   real(8) :: length, width, depth, dx, dy, dz
@@ -73,8 +73,11 @@
   real(8) :: simpler_tolc, simpler_tole, alpha_v, alpha_t, solver_tol
   common simpler_tolc, simpler_tole, alpha_v, alpha_t, solver_tol
 
-  real(8), dimension(10000,2) :: R_c, R_e
-  common R_c, R_e
+  real(8), dimension(10000,3) :: R_c, R_e, R_u, R_v, R_w
+  common R_c, R_e, R_u, R_v, R_w
+
+  real(8), dimension(10000,8) :: t_step
+  common t_step
 
 ! Performance variables
   real(8) :: t0, tf

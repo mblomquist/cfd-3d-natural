@@ -6,7 +6,7 @@
 ! Temperature :: delta_T
 0.4324
 ! solution parameters :: itrmax, maxit, solver_tol, simpler_tolc, simpler_tole, alpha_v, alpha_t, solver
-3000, 2e1, 1.0e-6, 3.0e-6, 3.0e-6, 0.7, 0.90, 2
+1000, 1e3, 1.0e-6, 1.0e-7, 1.0e-7, 0.951, 0.851, 3 
 ! test values
 0.0
 

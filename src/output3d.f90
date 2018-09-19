@@ -45,11 +45,28 @@ subroutine output3d
   write (5, '("delta_T: ", E15.4, /)', advance="no"), delta_T
   write (5, '("SIMPLER Algorithm Duration:", E15.4, /)', advance="no"), tf-t0
   write (5, *), "Solver #:", solver
-  write (5, *), "R_c, dR_c, R_e, dR_e"
+  write (5, *), "R_c, R_e, R_u, R_v, R_w, dR_c, dR_e, dR_u, dR_v, dR_w"
   do i = 1, itrmax
-    write (5,'(E12.5, ",", E12.5, ",", E12.5, ",", E12.5, /)', advance="no"), R_c(i,1), R_c(i,2), R_e(i,1), R_e(i,2)
+    write (5,'(E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, /)', advance="no"), &
+           R_c(i,1), R_e(i,1), R_u(i,1), R_v(i,1), R_w(i,1), R_c(i,3), R_e(i,3), R_u(i,3), R_v(i,3), R_w(i,3)
   end do
   close(5)
+
+  open(unit=8, file="output/time_data.dat")
+  write (8, '("Grid size: ", 5I, 1X, 5I, 5I, /)'), m, n, l
+  write (8, '("Rayleigh Number: ", E15.4, /)', advance="no"), Ra
+  write (8, '("Prandtl Number: ", E15.4, /)', advance="no"), Pr
+  write (8, '("delta_T: ", E15.4, /)', advance="no"), delta_T
+  write (8, '("SIMPLER Algorithm Duration:", E15.4, /)', advance="no"), tf-t0
+  write (8, '("SIMPLER Algorithm Start:", E15.4, /)', advance="no"), t0
+  write (8, *), "Solver #:", solver
+  write (8, *), "v_sol1, p_sol1, conv1, v_sol2, p_sol2, v_cor1, t_sol1"
+  do i = 1, itrmax
+    write (8,'(E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, /)', advance="no"), &
+           t_step(i,2)-t_step(i,1), t_step(i,3)-t_step(i,2), t_step(i,4)-t_step(i,3), t_step(i,5)-t_step(i,4), &
+           t_step(i,6)-t_step(i,5), t_step(i,7)-t_step(i,6), t_step(i,8)-t_step(i,7)
+  end do
+  close(8)
 
   return
 end subroutine output3d
