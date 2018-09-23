@@ -63,8 +63,8 @@ subroutine output3d
   write (8, *), "v_sol1, p_sol1, conv1, v_sol2, p_sol2, v_cor1, t_sol1"
   do i = 1, itrmax
     write (8,'(E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, ",", E12.5, /)', advance="no"), &
-           t_step(i,2)-t_step(i,1), t_step(i,3)-t_step(i,2), t_step(i,4)-t_step(i,3), t_step(i,5)-t_step(i,4), &
-           t_step(i,6)-t_step(i,5), t_step(i,7)-t_step(i,6), t_step(i,8)-t_step(i,7)
+           (t_step(i,2)-t_step(i,1))/4.0, (t_step(i,3)-t_step(i,2))/4.0, (t_step(i,4)-t_step(i,3))/4.0, (t_step(i,5)-t_step(i,4))/4.0, &
+           (t_step(i,6)-t_step(i,5))/4.0, (t_step(i,7)-t_step(i,6))/4.0, (t_step(i,8)-t_step(i,7))/4.0
   end do
   close(8)
 

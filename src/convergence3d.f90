@@ -121,8 +121,8 @@ subroutine convergence3d(itr)
     R_w(itr,2) = 1.0
   end if
 
-  if (itr .ge. 10) then
-    do i = itr, itr-10, -1
+  if (itr .ge. 30) then
+    do i = itr, itr-30, -1
       c_rms = c_rms + R_c(i,2)**(2.0)
       e_rms = e_rms + R_e(i,2)**(2.0)
       u_rms = u_rms + R_u(i,2)**(2.0)
@@ -130,11 +130,11 @@ subroutine convergence3d(itr)
       w_rms = w_rms + R_w(i,2)**(2.0)
     end do
 
-    R_c(itr,3) = (c_rms/10.0)**(0.5)
-    R_e(itr,3) = (e_rms/10.0)**(0.5)
-    R_u(itr,3) = (u_rms/10.0)**(0.5)
-    R_v(itr,3) = (v_rms/10.0)**(0.5)
-    R_w(itr,3) = (w_rms/10.0)**(0.5)
+    R_c(itr,3) = (c_rms/30.0)**(0.5)
+    R_e(itr,3) = (e_rms/30.0)**(0.5)
+    R_u(itr,3) = (u_rms/30.0)**(0.5)
+    R_v(itr,3) = (v_rms/30.0)**(0.5)
+    R_w(itr,3) = (w_rms/30.0)**(0.5)
 
   else
     do i = itr, 1, -1

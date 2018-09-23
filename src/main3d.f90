@@ -44,7 +44,7 @@ program main3d
   ! Stop clock
   call cpu_time(tf)
 
-  print *, "SIMPLER Algorithm duration: ", tf-t0
+  print *, "SIMPLER Algorithm duration: ", (tf-t0)/4.0
 
   ! Output results
   print *, "Writing results to file..."
